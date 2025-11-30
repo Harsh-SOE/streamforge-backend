@@ -86,6 +86,15 @@
         "webpackConfigPath": "apps/comments/webpack.config.js"
       }
     },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
     "contracts": {
       "type": "library",
       "root": "libs/contracts",
@@ -123,6 +132,24 @@
       "sourceRoot": "libs/errors/src",
       "compilerOptions": {
         "tsConfigPath": "libs/errors/tsconfig.lib.json"
+      }
+    },
+    "exceptions": {
+      "type": "library",
+      "root": "libs/exceptions",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
+      }
+    },
+    "handlers": {
+      "type": "library",
+      "root": "libs/handlers",
+      "entryFile": "index",
+      "sourceRoot": "libs/handlers/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/handlers/tsconfig.lib.json"
       }
     },
     "history": {

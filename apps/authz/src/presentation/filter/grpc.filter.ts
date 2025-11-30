@@ -1,17 +1,18 @@
 import { Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 
-import { InfrastructureException } from '@authz/infrastructure/exceptions';
-
-import { ErrorPayload } from '../types';
-import { GrpcApplicationException } from '../exceptions';
+import { InfrastructureException } from '@app/exceptions/infrastructure-exceptions';
+import {
+  GrpcApplicationException,
+  GrpcExceptionPayload,
+} from '@app/exceptions/grpc-exceptions';
 
 @Catch()
 export class GrpcFilter implements ExceptionFilter {
   catch(exception: any) {
     let code = GrpcStatus.UNKNOWN;
     const message = 'Internal server error';
-    let payload: ErrorPayload = {
+    let payload: GrpcExceptionPayload = {
       statusCode: 'UNKNOWN',
       serviceExceptionCode: GrpcStatus.UNKNOWN,
       httpExceptionCode: HttpStatus.INTERNAL_SERVER_ERROR,

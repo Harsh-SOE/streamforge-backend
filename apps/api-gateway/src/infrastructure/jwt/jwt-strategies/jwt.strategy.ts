@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
-import { CLIENT_PROVIDER } from '@app/clients/constant';
+import { SERVICES } from '@app/clients/constant';
 
 import { AppConfigService } from '@gateway/infrastructure/config';
 
@@ -26,7 +26,7 @@ export class JwtStrategy
 
   constructor(
     readonly configService: AppConfigService,
-    @Inject(CLIENT_PROVIDER.USER) private readonly userClient: ClientGrpc,
+    @Inject(SERVICES.USER) private readonly userClient: ClientGrpc,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([

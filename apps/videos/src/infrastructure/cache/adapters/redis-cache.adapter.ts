@@ -7,14 +7,11 @@ import {
 } from '@nestjs/common';
 import Redis from 'ioredis';
 
-import {
-  VideoCachePort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@videos/application/ports';
-import { AppConfigService } from '@videos/infrastructure/config';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache-handler';
 
-import { RedisFilter } from '../filters';
+import { VideoCachePort } from '@videos/application/ports';
+import { AppConfigService } from '@videos/infrastructure/config';
 
 @Injectable()
 export class RedisCacheAdapter
@@ -25,7 +22,7 @@ export class RedisCacheAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    private readonly redisfilter: RedisFilter,
+    private readonly redisCacheHandler: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.redisClient = new Redis({

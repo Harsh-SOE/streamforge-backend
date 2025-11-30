@@ -4,7 +4,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserPreferredThemeChangedResponse } from '@app/contracts/users';
 
 import {
-  USER_COMMAND_REROSITORY,
+  USER_COMMAND_REROSITORY_PORT,
   UserCommandRepositoryPort,
 } from '@users/application/ports';
 import { UserNotFoundException } from '@users/application/exceptions';
@@ -13,11 +13,9 @@ import { GrpcToDomainThemeEnumMapper } from '@users/infrastructure/anti-corrupti
 import { ChangeThemeCommand } from './change-theme.command';
 
 @CommandHandler(ChangeThemeCommand)
-export class ChangeThemeCommandHandler
-  implements ICommandHandler<ChangeThemeCommand>
-{
+export class ChangeThemeCommandHandler implements ICommandHandler<ChangeThemeCommand> {
   constructor(
-    @Inject(USER_COMMAND_REROSITORY)
+    @Inject(USER_COMMAND_REROSITORY_PORT)
     private readonly userRepository: UserCommandRepositoryPort,
   ) {}
 

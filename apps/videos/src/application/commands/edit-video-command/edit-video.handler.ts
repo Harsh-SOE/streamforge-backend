@@ -4,8 +4,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { VideoUpdatedResponse } from '@app/contracts/videos';
 
 import {
-  DATABASE_COMMAND_PORT,
-  DATABASE_QUERY_PORT,
+  VIDEOS_COMMAND_RESPOSITORY_PORT,
+  VIDEO_QUERY_RESPOSITORY_PORT,
   VideoCommandRepositoryPort,
   VideoQueryRepositoryPort,
 } from '@videos/application/ports';
@@ -19,9 +19,9 @@ import { EditVideoCommand } from './edit-video.command';
 @CommandHandler(EditVideoCommand)
 export class EditVideoHandler implements ICommandHandler<EditVideoCommand> {
   public constructor(
-    @Inject(DATABASE_COMMAND_PORT)
+    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
     private readonly videoCommandAdapter: VideoCommandRepositoryPort,
-    @Inject(DATABASE_QUERY_PORT)
+    @Inject(VIDEO_QUERY_RESPOSITORY_PORT)
     private readonly videoQueryAdapter: VideoQueryRepositoryPort,
   ) {}
 

@@ -1,11 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
-import {
-  LOGGER_PORT,
-  LoggerPort,
-  DatabaseFilter,
-  VideoCommandRepositoryPort,
-} from '@videos/application/ports';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
+import { VideoCommandRepositoryPort } from '@videos/application/ports';
 import { VideoAggregate } from '@videos/domain/aggregates';
 import {
   VideoDomainPublishStatus,
@@ -13,21 +13,16 @@ import {
 } from '@videos/domain/enums';
 import { PersistanceService } from '@videos/infrastructure/persistance/adapter';
 import { VideoAggregatePersistanceACL } from '@videos/infrastructure/anti-corruption';
-import { Components } from '@videos/infrastructure/config';
 import { VideoNotFoundException } from '@videos/application/exceptions';
 
 import { Prisma, Video } from '@peristance/videos';
 
-import { VideoRepoFilter } from '../../filters';
-
 @Injectable()
-export class VideoCommandRepositoryAdapter
-  implements VideoCommandRepositoryPort
-{
+export class VideoCommandRepositoryAdapter implements VideoCommandRepositoryPort {
   public constructor(
     @Inject(forwardRef(() => VideoAggregatePersistanceACL))
     private readonly videoPersistanceACL: VideoAggregatePersistanceACL,
-    private readonly videoRepoFilter: VideoRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
     private persistanceService: PersistanceService,
     @Inject(LOGGER_PORT) private logger: LoggerPort,
   ) {}
@@ -81,10 +76,13 @@ export class VideoCommandRepositoryAdapter
         data: this.videoPersistanceACL.toPersistance(model),
       });
     this.logger.info(`Creating video:`, model.getSnapshot());
-    const createdEntity = await this.videoRepoFilter.filter(createdEntityFunc, {
-      operationType: 'CREATE',
-      entry: this.videoPersistanceACL.toPersistance(model),
-    });
+    const createdEntity = await this.prismaDatabaseHandler.filter(
+      createdEntityFunc,
+      {
+        operationType: 'CREATE',
+        entry: this.videoPersistanceACL.toPersistance(model),
+      },
+    );
     return this.videoPersistanceACL.toAggregate(createdEntity);
   }
 
@@ -110,7 +108,7 @@ export class VideoCommandRepositoryAdapter
         ),
       });
 
-    const createdEntities = await this.videoRepoFilter.filter(
+    const createdEntities = await this.prismaDatabaseHandler.filter(
       createdEntitiesFunc,
       { operationType: 'CREATE', entry: dataToCreate },
     );
@@ -130,11 +128,14 @@ export class VideoCommandRepositoryAdapter
         data: { videoPublishStatus: newPublishStatus },
       });
 
-    const updatedLike = await this.videoRepoFilter.filter(updateLikeOperation, {
-      operationType: 'UPDATE',
-      entry: {},
-      filter: { newPublishStatus },
-    });
+    const updatedLike = await this.prismaDatabaseHandler.filter(
+      updateLikeOperation,
+      {
+        operationType: 'UPDATE',
+        entry: {},
+        filter: { newPublishStatus },
+      },
+    );
 
     return this.videoPersistanceACL.toAggregate(updatedLike);
   }
@@ -152,11 +153,14 @@ export class VideoCommandRepositoryAdapter
         data: { videoVisibiltyStatus: newVisibilityStatus },
       });
 
-    const updatedLike = await this.videoRepoFilter.filter(updateLikeOperation, {
-      operationType: 'UPDATE',
-      entry: {},
-      filter: { newVisibilityStatus: newVisibilityStatus },
-    });
+    const updatedLike = await this.prismaDatabaseHandler.filter(
+      updateLikeOperation,
+      {
+        operationType: 'UPDATE',
+        entry: {},
+        filter: { newVisibilityStatus: newVisibilityStatus },
+      },
+    );
 
     return this.videoPersistanceACL.toAggregate(updatedLike);
   }
@@ -183,7 +187,7 @@ export class VideoCommandRepositoryAdapter
         },
       });
 
-    const updatedLikes = await this.videoRepoFilter.filter(
+    const updatedLikes = await this.prismaDatabaseHandler.filter(
       updatedLikesOperation,
       {
         operationType: 'UPDATE',
@@ -202,10 +206,13 @@ export class VideoCommandRepositoryAdapter
       });
     };
 
-    const foundVideo = await this.videoRepoFilter.filter(findVideoOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundVideo = await this.prismaDatabaseHandler.filter(
+      findVideoOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     if (!foundVideo) {
       throw new VideoNotFoundException({
@@ -241,7 +248,7 @@ export class VideoCommandRepositoryAdapter
         },
       });
 
-    const updatedVideo = await this.videoRepoFilter.filter(
+    const updatedVideo = await this.prismaDatabaseHandler.filter(
       updatedLikesOperation,
       {
         operationType: 'UPDATE',
@@ -278,7 +285,7 @@ export class VideoCommandRepositoryAdapter
         },
       });
 
-    const updatedVideo = await this.videoRepoFilter.filter(
+    const updatedVideo = await this.prismaDatabaseHandler.filter(
       updatedLikesOperation,
       {
         operationType: 'UPDATE',

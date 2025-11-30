@@ -2,12 +2,12 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import Redis from 'ioredis';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
-  BufferPort,
-  DATABASE_PORT,
+  ViewsBufferPort,
+  VIEWS_REPOSITORY_PORT,
   ViewRepositoryPort,
-  LOGGER_PORT,
-  LoggerPort,
 } from '@views/application/ports';
 import { ViewAggregate } from '@views/domain/aggregates';
 import { AppConfigService } from '@views/infrastructure/config';
@@ -15,13 +15,14 @@ import { AppConfigService } from '@views/infrastructure/config';
 import { ViewMessage, StreamData } from '../types';
 
 @Injectable()
-export class RedisStreamBufferAdapter implements OnModuleInit, BufferPort {
+export class RedisStreamBufferAdapter implements OnModuleInit, ViewsBufferPort {
   private redisClient: Redis;
 
   public constructor(
     private readonly configService: AppConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @Inject(DATABASE_PORT) private readonly viewsRepo: ViewRepositoryPort,
+    @Inject(VIEWS_REPOSITORY_PORT)
+    private readonly viewsRepo: ViewRepositoryPort,
   ) {
     this.redisClient = new Redis({
       host: configService.CACHE_HOST,

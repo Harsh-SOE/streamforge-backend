@@ -27,7 +27,7 @@ import {
 import {
   FindChannelByIdQuery,
   FindChannelByUserIdQuery,
-} from '@channel/application/query';
+} from '@channel/application/queries';
 
 @Injectable()
 export class GrpcService {

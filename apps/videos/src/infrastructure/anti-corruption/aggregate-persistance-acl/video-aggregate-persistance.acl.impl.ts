@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
 import { VideoAggregate } from '@videos/domain/aggregates';
 import { VideoEntity } from '@videos/domain/entities';
@@ -20,13 +20,10 @@ import {
 import { Video } from '@peristance/videos';
 
 @Injectable()
-export class VideoAggregatePersistanceACL
-  implements
-    IAggregatePersistanceACL<
-      VideoAggregate,
-      Omit<Video, 'publishedAt' | 'updatedAt'>
-    >
-{
+export class VideoAggregatePersistanceACL implements IAggregatePersistanceACL<
+  VideoAggregate,
+  Omit<Video, 'publishedAt' | 'updatedAt'>
+> {
   public toAggregate(
     persistance: Omit<Video, 'publishedAt' | 'updatedAt'>,
   ): VideoAggregate {

@@ -1,20 +1,16 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { LogExecutionTime } from '@app/utils';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+import { DatabaseFilter, DatabaseQueryFilter } from '@app/common/types';
 
-import {
-  DatabaseFilter,
-  DatabaseQueryFilter,
-  VideoQueryRepositoryPort,
-} from '@videos/application/ports';
-import { VideoQueryModel } from '@videos/query';
+import { VideoQueryRepositoryPort } from '@videos/application/ports';
+import { VideoQueryModel } from '@videos/query-model';
 import { PersistanceService } from '@videos/infrastructure/persistance/adapter';
 import { VideoQueryPeristanceACL } from '@videos/infrastructure/anti-corruption';
 import { VideoNotFoundException } from '@videos/application/exceptions';
 
 import { Prisma, Video } from '@peristance/videos';
-
-import { VideoRepoFilter } from '../../filters';
 
 @Injectable()
 export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
@@ -22,7 +18,7 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
     @Inject(forwardRef(() => VideoQueryPeristanceACL))
     private readonly videoQueryPersistanceACL: VideoQueryPeristanceACL,
     private readonly persistanceService: PersistanceService,
-    private readonly videoRepoFilter: VideoRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
   ) {}
 
   toPrismaFilter(
@@ -79,10 +75,13 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
       });
     };
 
-    const foundVideo = await this.videoRepoFilter.filter(findVideoOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundVideo = await this.prismaDatabaseHandler.filter(
+      findVideoOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     if (!foundVideo) {
       throw new VideoNotFoundException({
@@ -109,10 +108,13 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
       });
     };
 
-    const foundVideos = await this.videoRepoFilter.filter(findVideosOperation, {
-      operationType: 'READ',
-      filter,
-    });
+    const foundVideos = await this.prismaDatabaseHandler.filter(
+      findVideosOperation,
+      {
+        operationType: 'READ',
+        filter,
+      },
+    );
 
     if (!foundVideos) {
       throw new VideoNotFoundException({
@@ -132,10 +134,13 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
       });
     };
 
-    const foundVideo = await this.videoRepoFilter.filter(findVideoOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundVideo = await this.prismaDatabaseHandler.filter(
+      findVideoOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     if (!foundVideo) {
       throw new VideoNotFoundException({

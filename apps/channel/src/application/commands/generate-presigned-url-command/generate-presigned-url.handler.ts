@@ -6,16 +6,21 @@ import {
   GetPreSignedUrlResponse,
 } from '@app/contracts/channel';
 
-import { STORAGE_PORT, StoragePort } from '@channel/application/ports';
+import {
+  CHANNEL_STORAGE_PORT,
+  ChannelStoragePort,
+} from '@channel/application/ports';
 
 import { GeneratePreSignedUrlCommand } from './generate-presigned-url.command';
 
 @CommandHandler(GeneratePreSignedUrlCommand)
-export class GeneratePreSignedUrlHandler
-  implements ICommandHandler<GetPresignedUrlDto, GetPreSignedUrlResponse>
-{
+export class GeneratePreSignedUrlHandler implements ICommandHandler<
+  GetPresignedUrlDto,
+  GetPreSignedUrlResponse
+> {
   public constructor(
-    @Inject(STORAGE_PORT) private readonly storageAdapter: StoragePort,
+    @Inject(CHANNEL_STORAGE_PORT)
+    private readonly storageAdapter: ChannelStoragePort,
   ) {}
 
   public async execute({

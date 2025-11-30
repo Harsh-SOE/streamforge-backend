@@ -1,25 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  LOGGER_PORT,
-  LoggerPort,
-  DatabaseFilter,
-  UserCommandRepositoryPort,
-} from '@users/application/ports';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
 import { UserAggregate } from '@users/domain/aggregates';
-import { Components } from '@users/infrastructure/config';
+import { UserCommandRepositoryPort } from '@users/application/ports';
 import { PersistanceService } from '@users/infrastructure/persistance/adapter';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption';
 
 import { Prisma, User } from '@peristance/user';
 
-import { UserRepoFilter } from '../../filters';
-
 @Injectable()
 export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
   public constructor(
     private userPersistanceACL: UserAggregatePersistanceACL,
-    private readonly userRepoFilter: UserRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
     private persistanceService: PersistanceService,
     @Inject(LOGGER_PORT) private logger: LoggerPort,
   ) {}
@@ -72,10 +69,13 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       await this.persistanceService.user.create({
         data: this.userPersistanceACL.toPersistance(model),
       });
-    const createdUser = await this.userRepoFilter.filter(saveUserOperation, {
-      operationType: 'CREATE',
-      entry: this.userPersistanceACL.toPersistance(model),
-    });
+    const createdUser = await this.prismaDatabaseHandler.filter(
+      saveUserOperation,
+      {
+        operationType: 'CREATE',
+        entry: this.userPersistanceACL.toPersistance(model),
+      },
+    );
     return this.userPersistanceACL.toAggregate(createdUser);
   }
 
@@ -101,7 +101,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
         ),
       });
 
-    const createdEntities = await this.userRepoFilter.filter(
+    const createdEntities = await this.prismaDatabaseHandler.filter(
       saveManyUsersOperations,
       { operationType: 'CREATE', entry: usersToCreate },
     );
@@ -118,7 +118,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
         data: this.userPersistanceACL.toPersistance(updatedUserModel),
       });
 
-    const updatedUser = await this.userRepoFilter.filter(
+    const updatedUser = await this.prismaDatabaseHandler.filter(
       updateUserByIdOperation,
       {
         operationType: 'UPDATE',
@@ -143,11 +143,14 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
         data: this.userPersistanceACL.toPersistance(updatedUserModel),
       });
 
-    const updatedUser = await this.userRepoFilter.filter(updateUserOperation, {
-      operationType: 'UPDATE',
-      entry: this.userPersistanceACL.toPersistance(updatedUserModel),
-      filter,
-    });
+    const updatedUser = await this.prismaDatabaseHandler.filter(
+      updateUserOperation,
+      {
+        operationType: 'UPDATE',
+        entry: this.userPersistanceACL.toPersistance(updatedUserModel),
+        filter,
+      },
+    );
 
     return this.userPersistanceACL.toAggregate(updatedUser);
   }
@@ -162,7 +165,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
         data: this.userPersistanceACL.toPersistance(updatedUserModel),
       });
 
-    const updatedUsers = await this.userRepoFilter.filter(
+    const updatedUsers = await this.prismaDatabaseHandler.filter(
       updateManyUsersOperation,
       {
         operationType: 'UPDATE',
@@ -181,10 +184,13 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const foundUser = await this.userRepoFilter.filter(findUserByIdOperation, {
-      operationType: 'READ',
-      filter: { id },
-    });
+    const foundUser = await this.prismaDatabaseHandler.filter(
+      findUserByIdOperation,
+      {
+        operationType: 'READ',
+        filter: { id },
+      },
+    );
 
     return foundUser ? this.userPersistanceACL.toAggregate(foundUser) : null;
   }
@@ -199,10 +205,13 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const foundUser = await this.userRepoFilter.filter(findUserOperation, {
-      operationType: 'READ',
-      filter,
-    });
+    const foundUser = await this.prismaDatabaseHandler.filter(
+      findUserOperation,
+      {
+        operationType: 'READ',
+        filter,
+      },
+    );
 
     return foundUser ? this.userPersistanceACL.toAggregate(foundUser) : null;
   }
@@ -214,7 +223,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const foundUsers = await this.userRepoFilter.filter(
+    const foundUsers = await this.prismaDatabaseHandler.filter(
       findManyUsersOperation,
       {
         operationType: 'READ',
@@ -232,7 +241,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const deletedUser = await this.userRepoFilter.filter(
+    const deletedUser = await this.prismaDatabaseHandler.filter(
       deleteUserByIdOperation,
       {
         operationType: 'DELETE',
@@ -253,10 +262,13 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const deletedUser = await this.userRepoFilter.filter(deleteUserOperation, {
-      operationType: 'DELETE',
-      filter,
-    });
+    const deletedUser = await this.prismaDatabaseHandler.filter(
+      deleteUserOperation,
+      {
+        operationType: 'DELETE',
+        filter,
+      },
+    );
 
     return deletedUser ? true : false;
   }
@@ -268,7 +280,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
       });
     };
 
-    const deletedUsers = await this.userRepoFilter.filter(
+    const deletedUsers = await this.prismaDatabaseHandler.filter(
       deleteManyUsersOperation,
       {
         operationType: 'DELETE',
@@ -291,7 +303,7 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
         },
       });
 
-    const updatedUser = await this.userRepoFilter.filter(
+    const updatedUser = await this.prismaDatabaseHandler.filter(
       userOnBoardedOperation,
       {
         operationType: 'UPDATE',

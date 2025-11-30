@@ -4,9 +4,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ViewsVideoResponse } from '@app/contracts/views';
 
 import {
-  BUFFER_PORT,
-  BufferPort,
-  CACHE_PORT,
+  VIEWS_BUFFER_PORT,
+  ViewsBufferPort,
+  VIEWS_CACHE_PORT,
   ViewCachePort,
 } from '@views/application/ports';
 import { ViewAggregate } from '@views/domain/aggregates';
@@ -14,12 +14,13 @@ import { ViewAggregate } from '@views/domain/aggregates';
 import { WatchVideoCommand } from './watch-video.command';
 
 @CommandHandler(WatchVideoCommand)
-export class WatchVideoHandler
-  implements ICommandHandler<WatchVideoCommand, ViewsVideoResponse>
-{
+export class WatchVideoHandler implements ICommandHandler<
+  WatchVideoCommand,
+  ViewsVideoResponse
+> {
   public constructor(
-    @Inject(CACHE_PORT) private readonly cacheAdapter: ViewCachePort,
-    @Inject(BUFFER_PORT) private readonly bufferAdapter: BufferPort,
+    @Inject(VIEWS_CACHE_PORT) private readonly cacheAdapter: ViewCachePort,
+    @Inject(VIEWS_BUFFER_PORT) private readonly bufferAdapter: ViewsBufferPort,
   ) {}
 
   public async execute({

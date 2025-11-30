@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
 import { CommentAggregate } from '@comments/domain/aggregates';
 import { CommentEntity } from '@comments/domain/entities';
@@ -9,13 +9,10 @@ import { CommentText, UserId, VideoId } from '@comments/domain/value-objects';
 import { Comment } from '@peristance/comments';
 
 @Injectable()
-export class CommentAggregatePersistance
-  implements
-    IAggregatePersistanceACL<
-      CommentAggregate,
-      Omit<Comment, 'createdAt' | 'updatedAt'>
-    >
-{
+export class CommentAggregatePersistance implements IAggregatePersistanceACL<
+  CommentAggregate,
+  Omit<Comment, 'createdAt' | 'updatedAt'>
+> {
   public toAggregate(
     persistance: Omit<Comment, 'createdAt' | 'updatedAt'>,
   ): CommentAggregate {

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
 import { Channel } from '@peristance/channel';
 
-import { ChannelAggregate } from 'apps/channel/src/domain/aggregates';
-import { ChannelEntity } from 'apps/channel/src/domain/entities';
+import { ChannelAggregate } from '@channel/domain/aggregates';
+import { ChannelEntity } from '@channel/domain/entities';
 import {
   ChannelBio,
   ChannelCoverImage,
@@ -13,13 +13,10 @@ import {
 } from '@channel/domain/value-objects';
 
 @Injectable()
-export class ChannelAggregatePersistanceACL
-  implements
-    IAggregatePersistanceACL<
-      ChannelAggregate,
-      Omit<Channel, 'createdAt' | 'updatedAt'>
-    >
-{
+export class ChannelAggregatePersistanceACL implements IAggregatePersistanceACL<
+  ChannelAggregate,
+  Omit<Channel, 'createdAt' | 'updatedAt'>
+> {
   toAggregate(
     schema: Omit<Channel, 'createdAt' | 'updatedAt'>,
   ): ChannelAggregate {

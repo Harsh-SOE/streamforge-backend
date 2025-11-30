@@ -1,20 +1,14 @@
 import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-import {
-  LOGGER_PORT,
-  LoggerPort,
-  MESSAGE_BROKER,
-  MessageBrokerPort,
-} from '@users/application/ports';
 import { USERS } from '@app/clients';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { MESSAGE_BROKER, MessageBrokerPort } from '@app/ports/message-broker';
 
 import { CreateProfileEvent } from './create-profile.event';
 
 @EventsHandler(CreateProfileEvent)
-export class CompleteProfileEventHandler
-  implements IEventHandler<CreateProfileEvent>
-{
+export class CompleteProfileEventHandler implements IEventHandler<CreateProfileEvent> {
   constructor(
     @Inject(MESSAGE_BROKER) private readonly messageBroker: MessageBrokerPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
@@ -31,7 +25,7 @@ export class CompleteProfileEventHandler
     };
 
     await this.messageBroker.publishMessage(
-      USERS.USER_CREATED_EVENT,
+      USERS.USER_ONBOARDED_EVENT,
       JSON.stringify(sendMailPayload),
     );
 

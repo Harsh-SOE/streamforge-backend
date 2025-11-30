@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { IQueryPersistanceACL } from '@app/infrastructure';
+import { IQueryPersistanceACL } from '@app/ports/anti-corruption';
 
-import { ChannelQueryModel } from '@channel/application/query';
+import { ChannelQueryModel } from '@channel/application/queries';
 
 import { Channel } from '@peristance/channel';
 
 @Injectable()
-export class ChannelQueryPersistanceACL
-  implements
-    IQueryPersistanceACL<
-      ChannelQueryModel,
-      Omit<Channel, 'createdAt' | 'updatedAt'>
-    >
-{
+export class ChannelQueryPersistanceACL implements IQueryPersistanceACL<
+  ChannelQueryModel,
+  Omit<Channel, 'createdAt' | 'updatedAt'>
+> {
   public toQueryModel(
     persistance: Omit<Channel, 'createdAt' | 'updatedAt'>,
   ): ChannelQueryModel {

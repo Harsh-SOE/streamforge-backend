@@ -3,7 +3,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  USER_COMMAND_REROSITORY,
+  USER_COMMAND_REROSITORY_PORT,
   UserCommandRepositoryPort,
 } from '@users/application/ports';
 import { UserAggregate } from '@users/domain/aggregates';
@@ -13,11 +13,9 @@ import { UserProfileCreatedResponse } from '@app/contracts/users';
 import { CreateProfileCommand } from './create-profile.command';
 
 @CommandHandler(CreateProfileCommand)
-export class CompleteSignupCommandHandler
-  implements ICommandHandler<CreateProfileCommand>
-{
+export class CompleteSignupCommandHandler implements ICommandHandler<CreateProfileCommand> {
   constructor(
-    @Inject(USER_COMMAND_REROSITORY)
+    @Inject(USER_COMMAND_REROSITORY_PORT)
     private readonly userRepository: UserCommandRepositoryPort,
     private readonly eventPublisher: EventPublisher,
   ) {}

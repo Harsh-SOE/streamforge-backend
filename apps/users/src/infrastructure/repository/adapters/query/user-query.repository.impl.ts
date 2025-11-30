@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
 
 import { LogExecutionTime } from '@app/utils';
+import { DatabaseFilter } from '@app/common/types';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
 
-import {
-  DatabaseFilter,
-  UserQueryRepositoryPort,
-} from '@users/application/ports';
+import { UserQueryRepositoryPort } from '@users/application/ports';
 import { UserQueryModel } from '@users/application/queries';
 import { PersistanceService } from '@users/infrastructure/persistance/adapter';
 import { UserQueryPersistanceACL } from '@users/infrastructure/anti-corruption';
 
 import { Prisma, User } from '@peristance/user';
 
-import { UserRepoFilter } from '../../filters';
-
 @Injectable()
 export class UserQueryRepositoryAdapter implements UserQueryRepositoryPort {
   constructor(
     private readonly queryPersistanceACL: UserQueryPersistanceACL,
     private readonly persistanceService: PersistanceService,
-    private readonly userRepoFilter: UserRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
   ) {}
 
   toPrismaFilter(
@@ -76,10 +73,13 @@ export class UserQueryRepositoryAdapter implements UserQueryRepositoryPort {
       });
     };
 
-    const foundUser = await this.userRepoFilter.filter(findUserOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundUser = await this.prismaDatabaseHandler.filter(
+      findUserOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     return foundUser ? this.queryPersistanceACL.toQueryModel(foundUser) : null;
   }
@@ -94,7 +94,7 @@ export class UserQueryRepositoryAdapter implements UserQueryRepositoryPort {
       });
     };
 
-    const foundUsers = await this.userRepoFilter.filter(
+    const foundUsers = await this.prismaDatabaseHandler.filter(
       findManyUsersOperation,
       {
         operationType: 'CREATE',
@@ -114,10 +114,13 @@ export class UserQueryRepositoryAdapter implements UserQueryRepositoryPort {
       });
     };
 
-    const foundUser = await this.userRepoFilter.filter(findUserByIdOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundUser = await this.prismaDatabaseHandler.filter(
+      findUserByIdOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     return foundUser ? this.queryPersistanceACL.toQueryModel(foundUser) : null;
   }

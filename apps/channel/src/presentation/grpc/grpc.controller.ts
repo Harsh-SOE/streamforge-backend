@@ -19,7 +19,7 @@ import {
   ChannelFoundResponse,
 } from '@app/contracts/channel';
 
-import { LOGGER_PORT, LoggerPort } from '@channel/application/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { GrpcService } from './grpc.service';
 import { GrpcFilter } from '../filters';

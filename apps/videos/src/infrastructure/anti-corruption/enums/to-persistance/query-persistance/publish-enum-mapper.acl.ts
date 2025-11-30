@@ -1,4 +1,4 @@
-import { VideoQueryPublishStatus } from '@videos/query';
+import { VideoQueryPublishStatus } from '@videos/query-model';
 
 import { VideoPersistancePublishStatus } from '@peristance/videos';
 

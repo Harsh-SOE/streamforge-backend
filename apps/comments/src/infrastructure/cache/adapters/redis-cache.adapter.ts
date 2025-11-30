@@ -4,16 +4,13 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { getShardFor } from '@app/counters';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache-handler';
 
-import {
-  CommentCachePort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@comments/application/ports';
+import { CommentCachePort } from '@comments/application/ports';
 import { AppConfigService } from '@comments/infrastructure/config';
 
 import { RedisWithCommands } from '../types';
-import { RedisCacheFilter } from '../filters';
 
 @Injectable()
 export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
@@ -22,7 +19,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
 
   public constructor(
     private readonly configService: AppConfigService,
-    private readonly redisHandler: RedisCacheFilter,
+    private readonly redisHandler: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.redisClient = new Redis({

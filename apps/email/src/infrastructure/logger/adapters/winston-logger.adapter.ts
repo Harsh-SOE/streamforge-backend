@@ -9,7 +9,8 @@ import winston, {
   transports,
 } from 'winston';
 
-import { LoggerPort } from '@email/application/ports';
+import { LoggerPort } from '@app/ports/logger';
+
 import { AppConfigService } from '@email/infrastructure/config';
 
 const levels = {

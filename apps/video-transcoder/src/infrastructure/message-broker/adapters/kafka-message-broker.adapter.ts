@@ -1,10 +1,10 @@
 import { Consumer, Kafka, Producer } from 'kafkajs';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
-import { MessageBrokerPort } from '@transcoder/application/ports';
-import { AppConfigService } from '@transcoder/infrastructure/config';
+import { MessageBrokerPort } from '@app/ports/message-broker';
+import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
 
-import { KafkaMessageHandler } from '../filter';
+import { AppConfigService } from '@transcoder/infrastructure/config';
 
 @Injectable()
 export class KafkaMessageBrokerAdapter
@@ -16,7 +16,7 @@ export class KafkaMessageBrokerAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    private kafkaFilter: KafkaMessageHandler,
+    private kafkaFilter: KafkaMessageBrokerHandler,
   ) {
     this.kafka = new Kafka({
       brokers: [

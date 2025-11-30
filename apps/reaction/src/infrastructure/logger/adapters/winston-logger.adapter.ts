@@ -9,7 +9,8 @@ import winston, {
   transports,
 } from 'winston';
 
-import { ReactionLoggerPort } from '@reaction/application/ports';
+import { LoggerPort } from '@app/ports/logger';
+
 import { AppConfigService } from '@reaction/infrastructure/config';
 
 const levels = {
@@ -38,7 +39,7 @@ export interface MyConsoleLogCompleteInfo extends Logform.TransformableInfo {
 }
 
 @Injectable()
-export class WinstonLoggerAdapter implements ReactionLoggerPort {
+export class WinstonLoggerAdapter implements LoggerPort {
   private logger: Logger;
 
   public constructor(private readonly configService: AppConfigService) {

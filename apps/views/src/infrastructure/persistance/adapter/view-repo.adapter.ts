@@ -5,8 +5,10 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@views/application/ports';
-import { AppConfigService, Components } from '@views/infrastructure/config';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
+import { AppConfigService } from '@views/infrastructure/config';
 
 import { Prisma, PrismaClient } from '@persistance/views';
 

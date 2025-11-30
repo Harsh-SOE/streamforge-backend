@@ -1,27 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  LOGGER_PORT,
-  LoggerPort,
-  DatabaseFilter,
-  ChannelCommandRepositoryPort,
-} from '@channel/application/ports';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
 import { ChannelAggregate } from '@channel/domain/aggregates';
-import { Components } from '@channel/infrastructure/config';
 import { PersistanceService } from '@channel/infrastructure/persistance/adapter';
 import { ChannelAggregatePersistanceACL } from '@channel/infrastructure/anti-corruption';
+import { ChannelCommandRepositoryPort } from '@channel/application/ports';
 
 import { Prisma, Channel } from '@peristance/channel';
 
-import { ChannelRepoFilter } from '../../filters';
-
 @Injectable()
-export class ChannelCommandRepositoryAdapter
-  implements ChannelCommandRepositoryPort
-{
+export class ChannelCommandRepositoryAdapter implements ChannelCommandRepositoryPort {
   public constructor(
     private channelPersistanceACL: ChannelAggregatePersistanceACL,
-    private readonly channelRepoFilter: ChannelRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
     private persistanceService: PersistanceService,
     @Inject(LOGGER_PORT) private logger: LoggerPort,
   ) {}
@@ -75,7 +70,7 @@ export class ChannelCommandRepositoryAdapter
       await this.persistanceService.channel.create({
         data: this.channelPersistanceACL.toPersistance(model),
       });
-    const createdChannel = await this.channelRepoFilter.filter(
+    const createdChannel = await this.prismaDatabaseHandler.filter(
       saveChannelOperation,
       {
         operationType: 'CREATE',
@@ -107,7 +102,7 @@ export class ChannelCommandRepositoryAdapter
         ),
       });
 
-    const createdEntities = await this.channelRepoFilter.filter(
+    const createdEntities = await this.prismaDatabaseHandler.filter(
       saveManyChannelsOperations,
       { operationType: 'CREATE', entry: channelsToCreate },
     );
@@ -124,7 +119,7 @@ export class ChannelCommandRepositoryAdapter
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannel = await this.channelRepoFilter.filter(
+    const updatedChannel = await this.prismaDatabaseHandler.filter(
       updateChannelByIdOperation,
       {
         operationType: 'UPDATE',
@@ -149,7 +144,7 @@ export class ChannelCommandRepositoryAdapter
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannel = await this.channelRepoFilter.filter(
+    const updatedChannel = await this.prismaDatabaseHandler.filter(
       updateChannelOperation,
       {
         operationType: 'UPDATE',
@@ -171,7 +166,7 @@ export class ChannelCommandRepositoryAdapter
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannels = await this.channelRepoFilter.filter(
+    const updatedChannels = await this.prismaDatabaseHandler.filter(
       updateManyChannelsOperation,
       {
         operationType: 'UPDATE',
@@ -190,7 +185,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const foundChannel = await this.channelRepoFilter.filter(
+    const foundChannel = await this.prismaDatabaseHandler.filter(
       findChannelByIdOperation,
       {
         operationType: 'READ',
@@ -215,7 +210,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const foundChannel = await this.channelRepoFilter.filter(
+    const foundChannel = await this.prismaDatabaseHandler.filter(
       findChannelOperation,
       {
         operationType: 'READ',
@@ -235,7 +230,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const foundChannels = await this.channelRepoFilter.filter(
+    const foundChannels = await this.prismaDatabaseHandler.filter(
       findManyChannelsOperation,
       {
         operationType: 'READ',
@@ -255,7 +250,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const deletedChannel = await this.channelRepoFilter.filter(
+    const deletedChannel = await this.prismaDatabaseHandler.filter(
       deleteChannelByIdOperation,
       {
         operationType: 'DELETE',
@@ -276,7 +271,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const deletedChannel = await this.channelRepoFilter.filter(
+    const deletedChannel = await this.prismaDatabaseHandler.filter(
       deleteChannelOperation,
       {
         operationType: 'DELETE',
@@ -294,7 +289,7 @@ export class ChannelCommandRepositoryAdapter
       });
     };
 
-    const deletedChannels = await this.channelRepoFilter.filter(
+    const deletedChannels = await this.prismaDatabaseHandler.filter(
       deleteManyChannelsOperation,
       {
         operationType: 'DELETE',

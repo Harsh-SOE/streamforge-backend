@@ -2,9 +2,8 @@ import { Controller, Inject } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
 import { VIDEO_TRANSCODER } from '@app/clients';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { TranscodeVideoMessage } from '@app/contracts/video-transcoder';
-
-import { LOGGER_PORT, LoggerPort } from '@transcoder/application/ports';
 
 import { VideoTranscoderService } from './message-broker.service';
 
@@ -15,7 +14,7 @@ export class VideoTranscoderController {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  @EventPattern(VIDEO_TRANSCODER.TRANSCODE_VIDEO_EVENT)
+  @EventPattern(VIDEO_TRANSCODER.VIDEO_TRANSCODE_EVENT)
   transcodeVideo(@Payload() transcodeVideoMessage: TranscodeVideoMessage) {
     this.logger.info(`Transcoding video with info: `, transcodeVideoMessage);
 

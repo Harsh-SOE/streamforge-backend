@@ -1,12 +1,15 @@
 import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
 
+import { LOGGER_PORT } from '@app/ports/logger';
+import { MESSAGE_BROKER } from '@app/ports/message-broker';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
+
 import {
-  USER_COMMAND_REROSITORY,
-  USER_QUERY_REROSITORY,
-  MESSAGE_BROKER,
-  LOGGER_PORT,
-  STORAGE_PORT,
+  USER_COMMAND_REROSITORY_PORT,
+  USER_QUERY_REROSITORY_PORT,
+  USERS_STORAGE_PORT,
 } from '@users/application/ports';
 import {
   AppConfigModule,
@@ -26,9 +29,7 @@ import {
 } from '@users/infrastructure/anti-corruption';
 import { PersistanceService } from '@users/infrastructure/persistance/adapter';
 import { KafkaMessageBrokerAdapter } from '@users/infrastructure/message-broker/adapters';
-import { KafkaMessageHandler } from '@users/infrastructure/message-broker/filter';
 import { WinstonLoggerAdapter } from '@users/infrastructure/logger';
-import { UserRepoFilter } from '@users/infrastructure/repository/filters';
 import { AwsS3StorageAdapter } from '@users/infrastructure/storage/adapters';
 
 import { GrpcService } from './grpc.service';
@@ -43,14 +44,14 @@ import { GrpcController } from './grpc.controller';
     AppConfigService,
     UserAggregatePersistanceACL,
     UserQueryPersistanceACL,
-    KafkaMessageHandler,
-    UserRepoFilter,
+    KafkaMessageBrokerHandler,
+    PrismaDatabaseHandler,
     {
-      provide: USER_COMMAND_REROSITORY,
+      provide: USER_COMMAND_REROSITORY_PORT,
       useClass: UserCommandRepositoryAdapter,
     },
     {
-      provide: USER_QUERY_REROSITORY,
+      provide: USER_QUERY_REROSITORY_PORT,
       useClass: UserQueryRepositoryAdapter,
     },
     {
@@ -58,7 +59,7 @@ import { GrpcController } from './grpc.controller';
       useClass: KafkaMessageBrokerAdapter,
     },
     { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
-    { provide: STORAGE_PORT, useClass: AwsS3StorageAdapter },
+    { provide: USERS_STORAGE_PORT, useClass: AwsS3StorageAdapter },
     ...UserCommandHandlers,
     ...UserEventHandlers,
     ...UserQueryHandlers,

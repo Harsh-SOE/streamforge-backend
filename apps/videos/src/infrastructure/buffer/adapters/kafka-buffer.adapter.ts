@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
-  BufferPort,
-  LoggerPort,
-  LOGGER_PORT,
-  DATABASE_COMMAND_PORT,
+  VideosBufferPort,
+  VIDEOS_COMMAND_RESPOSITORY_PORT,
   VideoCommandRepositoryPort,
 } from '@videos/application/ports';
 import { VideoAggregate } from '@videos/domain/aggregates';
@@ -22,7 +22,7 @@ export const VIDEO_BUFFER_TOPIC = 'videos';
 
 @Injectable()
 export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, BufferPort
+  implements OnModuleInit, OnModuleDestroy, VideosBufferPort
 {
   private readonly kafkaClient: Kafka;
   private readonly producer: Producer;
@@ -30,8 +30,8 @@ export class KafkaBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(DATABASE_COMMAND_PORT)
-    private readonly likesRepo: VideoCommandRepositoryPort,
+    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
+    private readonly videosRepository: VideoCommandRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
@@ -105,7 +105,7 @@ export class KafkaBufferAdapter
 
         this.logger.info(`Saving ${models.length} likes in database`);
 
-        await this.likesRepo.saveMany(models);
+        await this.videosRepository.saveMany(models);
 
         this.logger.info(`${models.length} likes saved in database`);
       },

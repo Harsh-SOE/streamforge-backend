@@ -11,9 +11,7 @@ import {
 import { UpdateChannelCommand } from './update-channel.command';
 
 @CommandHandler(UpdateChannelCommand)
-export class UpdateChannelCommandHandler
-  implements ICommandHandler<UpdateChannelCommand>
-{
+export class UpdateChannelCommandHandler implements ICommandHandler<UpdateChannelCommand> {
   constructor(
     @Inject(CHANNEL_COMMAND_REPOSITORY)
     private readonly channelCommandRepository: ChannelCommandRepositoryPort,
@@ -24,27 +22,22 @@ export class UpdateChannelCommandHandler
     channelUpdateByIdDto,
   }: UpdateChannelCommand): Promise<ChannelUpdateByIdResponse> {
     const { id, channelBio, channelCoverImage } = channelUpdateByIdDto;
-    const channelAggregate =
+    const foundChannelAggregate =
       await this.channelCommandRepository.findOneById(id);
 
-    if (!channelAggregate) {
+    if (!foundChannelAggregate) {
       throw new Error();
     }
 
-    const channelAggregateWithEvents =
-      this.eventPublisher.mergeObjectContext(channelAggregate);
-
-    channelAggregateWithEvents.updateChannelDetails(
-      channelBio,
-      channelCoverImage,
+    const channelAggregate = this.eventPublisher.mergeObjectContext(
+      foundChannelAggregate,
     );
 
-    await this.channelCommandRepository.updateOneById(
-      id,
-      channelAggregateWithEvents,
-    );
+    channelAggregate.updateChannelDetails(channelBio, channelCoverImage);
 
-    channelAggregateWithEvents.commit();
+    await this.channelCommandRepository.updateOneById(id, channelAggregate);
+
+    channelAggregate.commit();
 
     return { response: 'channel updated successfully' };
   }

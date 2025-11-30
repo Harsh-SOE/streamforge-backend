@@ -4,17 +4,19 @@ import { Readable } from 'stream';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
   UploadResult,
   UploadOptions,
-  StoragePort,
-  LOGGER_PORT,
-  LoggerPort,
+  TranscoderStoragePort,
 } from '@transcoder/application/ports';
 import { AppConfigService } from '@transcoder/infrastructure/config';
 
 @Injectable()
-export class AwsS3StorageAdapter implements OnModuleInit, StoragePort {
+export class AwsS3StorageAdapter
+  implements OnModuleInit, TranscoderStoragePort
+{
   private readonly AWS_RAW_VIDEOS_KEY = `raw-videos`;
   private readonly AWS_TRANSCODED_VIDEOS_KEY = `transcoded-videos`;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
 import {
   UserHandle,
@@ -17,13 +17,10 @@ import { UserEntity } from '@users/domain/entities';
 import { User } from '@peristance/user';
 
 @Injectable()
-export class UserAggregatePersistanceACL
-  implements
-    IAggregatePersistanceACL<
-      UserAggregate,
-      Omit<User, 'createdAt' | 'updatedAt'>
-    >
-{
+export class UserAggregatePersistanceACL implements IAggregatePersistanceACL<
+  UserAggregate,
+  Omit<User, 'createdAt' | 'updatedAt'>
+> {
   public toAggregate(
     persistance: Omit<User, 'createdAt' | 'updatedAt'>,
   ): UserAggregate {

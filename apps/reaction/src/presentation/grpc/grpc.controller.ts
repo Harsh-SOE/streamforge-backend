@@ -17,6 +17,7 @@ import {
 } from '@app/contracts/reaction';
 
 import { GrpcService } from './grpc.service';
+
 import { GrpcFilter } from '../filters';
 
 @UseFilters(GrpcFilter)
@@ -25,6 +26,7 @@ import { GrpcFilter } from '../filters';
 export class GrpcController implements ReactionServiceController {
   constructor(private readonly grpcService: GrpcService) {}
 
+  // TODO: Remove it
   check(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     reactionHealthCheckRequest: ReactionHealthCheckRequest,

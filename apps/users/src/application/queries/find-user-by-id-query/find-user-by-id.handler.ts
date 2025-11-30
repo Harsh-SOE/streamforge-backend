@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import {
-  USER_QUERY_REROSITORY,
+  USER_QUERY_REROSITORY_PORT,
   UserQueryRepositoryPort,
 } from '@users/application/ports';
 import { UserNotFoundException } from '@users/application/exceptions';
@@ -14,7 +14,7 @@ import { FindUserByIdQuery } from './find-user-by-id.query';
 @QueryHandler(FindUserByIdQuery)
 export class FindUserByIdHandler implements IQueryHandler<FindUserByIdQuery> {
   constructor(
-    @Inject(USER_QUERY_REROSITORY)
+    @Inject(USER_QUERY_REROSITORY_PORT)
     private readonly userRepo: UserQueryRepositoryPort,
   ) {}
 

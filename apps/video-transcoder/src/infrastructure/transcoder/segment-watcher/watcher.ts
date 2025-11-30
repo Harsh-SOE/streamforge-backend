@@ -9,11 +9,12 @@ import { Queue } from 'bullmq';
 import chokidar, { FSWatcher } from 'chokidar';
 import path from 'path';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
   SEGMENT_UPLOADER,
   SEGMENT_UPLOADER_QUEUE,
 } from '@transcoder/utils/constants';
-import { LOGGER_PORT, LoggerPort } from '@transcoder/application/ports';
 
 @Injectable()
 export class SegmentWatcher implements OnModuleInit, OnModuleDestroy {

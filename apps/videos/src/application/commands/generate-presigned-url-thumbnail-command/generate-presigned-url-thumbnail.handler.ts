@@ -2,27 +2,20 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { GetPreSignedUrlResponse } from '@app/contracts/videos';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  LOGGER_PORT,
-  STORAGE_PORT,
-  StoragePort,
-} from '@videos/application/ports';
-import { WinstonLoggerAdapter } from '@videos/infrastructure/logger';
+import { STORAGE_PORT, VideosStoragePort } from '@videos/application/ports';
 
 import { GeneratePreSignedUrlThumbnailCommand } from './generate-presigned-url-thumbnail.command';
 
 @CommandHandler(GeneratePreSignedUrlThumbnailCommand)
-export class GeneratePreSignedUrlThumbnailHandler
-  implements
-    ICommandHandler<
-      GeneratePreSignedUrlThumbnailCommand,
-      GetPreSignedUrlResponse
-    >
-{
+export class GeneratePreSignedUrlThumbnailHandler implements ICommandHandler<
+  GeneratePreSignedUrlThumbnailCommand,
+  GetPreSignedUrlResponse
+> {
   public constructor(
-    @Inject(STORAGE_PORT) private readonly storageAdapter: StoragePort,
-    @Inject(LOGGER_PORT) private readonly loggerPort: WinstonLoggerAdapter,
+    @Inject(STORAGE_PORT) private readonly storageAdapter: VideosStoragePort,
+    @Inject(LOGGER_PORT) private readonly loggerPort: LoggerPort,
   ) {}
 
   public async execute({

@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
-  BufferPort,
+  ViewsBufferPort,
   ViewRepositoryPort,
-  LoggerPort,
-  LOGGER_PORT,
-  DATABASE_PORT,
+  VIEWS_REPOSITORY_PORT,
 } from '@views/application/ports';
 import { ViewAggregate } from '@views/domain/aggregates';
 import { AppConfigService } from '@views/infrastructure/config';
@@ -22,7 +22,7 @@ export const VIEW_BUFFER_TOPIC = 'views';
 
 @Injectable()
 export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, BufferPort
+  implements OnModuleInit, OnModuleDestroy, ViewsBufferPort
 {
   private readonly kafkaClient: Kafka;
   private readonly producer: Producer;
@@ -30,7 +30,8 @@ export class KafkaBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(DATABASE_PORT) private readonly viewsRepo: ViewRepositoryPort,
+    @Inject(VIEWS_REPOSITORY_PORT)
+    private readonly viewsRepo: ViewRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({

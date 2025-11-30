@@ -4,18 +4,16 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UserFoundResponse } from '@app/contracts/users';
 
 import {
-  USER_QUERY_REROSITORY,
+  USER_QUERY_REROSITORY_PORT,
   UserQueryRepositoryPort,
 } from '@users/application/ports';
 
 import { FindUserByAuthIdQuery } from './find-by-auth-id.query';
 
 @QueryHandler(FindUserByAuthIdQuery)
-export class FindUserByAuthIdQueryHandler
-  implements IQueryHandler<FindUserByAuthIdQuery>
-{
+export class FindUserByAuthIdQueryHandler implements IQueryHandler<FindUserByAuthIdQuery> {
   constructor(
-    @Inject(USER_QUERY_REROSITORY)
+    @Inject(USER_QUERY_REROSITORY_PORT)
     private readonly userRepo: UserQueryRepositoryPort,
   ) {}
 

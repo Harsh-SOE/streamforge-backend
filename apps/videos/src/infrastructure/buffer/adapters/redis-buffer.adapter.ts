@@ -2,11 +2,11 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import Redis from 'ioredis';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
-  BufferPort,
-  DATABASE_COMMAND_PORT,
-  LOGGER_PORT,
-  LoggerPort,
+  VideosBufferPort,
+  VIDEOS_COMMAND_RESPOSITORY_PORT,
   VideoCommandRepositoryPort,
 } from '@videos/application/ports';
 import { VideoAggregate } from '@videos/domain/aggregates';
@@ -15,14 +15,16 @@ import { AppConfigService } from '@videos/infrastructure/config';
 import { VideoMessage, StreamData } from '../types';
 
 @Injectable()
-export class RedisStreamBufferAdapter implements OnModuleInit, BufferPort {
+export class RedisStreamBufferAdapter
+  implements OnModuleInit, VideosBufferPort
+{
   private redisClient: Redis;
 
   public constructor(
     private readonly configService: AppConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @Inject(DATABASE_COMMAND_PORT)
-    private readonly likesRepo: VideoCommandRepositoryPort,
+    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
+    private readonly videosRepository: VideoCommandRepositoryPort,
   ) {
     this.redisClient = new Redis({
       host: configService.CACHE_HOST,
@@ -130,7 +132,8 @@ export class RedisStreamBufferAdapter implements OnModuleInit, BufferPort {
       });
     });
 
-    const processedMessagesNumber = await this.likesRepo.saveMany(models);
+    const processedMessagesNumber =
+      await this.videosRepository.saveMany(models);
 
     await this.redisClient.xack(
       this.configService.BUFFER_KEY,

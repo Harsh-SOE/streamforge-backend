@@ -3,20 +3,21 @@ import Ffmpeg from 'fluent-ffmpeg';
 import * as fs from 'fs/promises';
 import path from 'path';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
   TranscoderPort,
   TranscodeVideoOptions,
-  STORAGE_PORT,
-  StoragePort,
-  LOGGER_PORT,
-  LoggerPort,
+  TRANSCODER_STORAGE_PORT,
+  TranscoderStoragePort,
 } from '@transcoder/application/ports';
 
 export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
   private readonly transcodedVideoDir = '/@streamforge/transcoded-videos';
 
   public constructor(
-    @Inject(STORAGE_PORT) private readonly storageAdapter: StoragePort,
+    @Inject(TRANSCODER_STORAGE_PORT)
+    private readonly storageAdapter: TranscoderStoragePort,
     @Inject(LOGGER_PORT) private readonly loggerAdapter: LoggerPort,
   ) {}
 

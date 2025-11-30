@@ -11,9 +11,7 @@ import {
 import { ActivateMonitizationCommand } from './activate-monitization.command';
 
 @CommandHandler(ActivateMonitizationCommand)
-export class ActivateMonitizationCommandHandler
-  implements ICommandHandler<ActivateMonitizationCommand>
-{
+export class ActivateMonitizationCommandHandler implements ICommandHandler<ActivateMonitizationCommand> {
   public constructor(
     @Inject(CHANNEL_COMMAND_REPOSITORY)
     private readonly channelRespository: ChannelCommandRepositoryPort,

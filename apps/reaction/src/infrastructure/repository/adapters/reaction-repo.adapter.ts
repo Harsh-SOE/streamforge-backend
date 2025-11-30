@@ -1,27 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  ReactionRepositoryPort,
-  LOGGER_PORT,
-  ReactionLoggerPort,
-  DatabaseFilter,
-} from '@reaction/application/ports';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
+import { ReactionRepositoryPort } from '@reaction/application/ports';
 import { ReactionAggregate } from '@reaction/domain/aggregates';
 import { ReactionDomainStatus } from '@reaction/domain/enums';
 import { PersistanceService } from '@reaction/infrastructure/persistance/adapter';
 import { ReactionPersistanceACL } from '@reaction/infrastructure/anti-corruption';
-import { Components } from '@reaction/infrastructure/config';
 
 import { Prisma, VideoReactions } from '@peristance/reaction';
-import { ReactionRepoFilter } from '../filters';
 
 @Injectable()
 export class ReactionRepositoryAdapter implements ReactionRepositoryPort {
   public constructor(
     private reactionPersistanceACL: ReactionPersistanceACL,
-    private readonly reactionRepoFilter: ReactionRepoFilter,
+    private readonly reactionRepoFilter: PrismaDatabaseHandler,
     private persistanceService: PersistanceService,
-    @Inject(LOGGER_PORT) private logger: ReactionLoggerPort,
+    @Inject(LOGGER_PORT) private logger: LoggerPort,
   ) {}
 
   public toPrismaFilter(

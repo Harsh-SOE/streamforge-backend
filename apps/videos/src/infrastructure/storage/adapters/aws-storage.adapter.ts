@@ -2,15 +2,13 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-import {
-  StoragePort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@videos/application/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
+import { VideosStoragePort } from '@videos/application/ports';
 import { AppConfigService } from '@videos/infrastructure/config';
 
 @Injectable()
-export class AwsS3StorageAdapter implements OnModuleInit, StoragePort {
+export class AwsS3StorageAdapter implements OnModuleInit, VideosStoragePort {
   private readonly AWS_S3_RAW_VIDEOS_PATH = 'raw-videos';
   private readonly AWS_S3_RAW_THUMBNAIL_PATH = 'raw-thumbnail';
   private s3Client: S3Client;

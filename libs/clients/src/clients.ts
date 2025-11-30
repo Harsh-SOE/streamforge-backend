@@ -1,7 +1,8 @@
 export enum USERS {
-  USER_CREATED_EVENT = 'user-created',
+  USER_ONBOARDED_EVENT = 'user.onboarded',
 }
 
 export enum VIDEO_TRANSCODER {
-  TRANSCODE_VIDEO_EVENT = 'video.transcode',
+  VIDEO_TRANSCODE_EVENT = 'video.transcode',
+  VIDEO_TRANSCODED_EVENT = 'video.transcoded',
 }

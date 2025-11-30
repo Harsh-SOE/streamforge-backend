@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CreatedUserMessageDto } from '@app/contracts/email';
-import { EMAIL, EmailPort } from '../../application/ports';
+
+import { EMAIL_PORT, EmailPort } from '@email/application/ports';
 
 @Injectable()
 export class KafkaService {
-  constructor(@Inject(EMAIL) private email: EmailPort) {}
+  constructor(@Inject(EMAIL_PORT) private email: EmailPort) {}
 
   async sendEMail(createdUserMessageDto: CreatedUserMessageDto) {
     await this.email.sendEmail({

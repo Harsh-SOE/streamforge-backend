@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
-import { ViewAggregate } from '@views/domain/aggregates';
 import { ViewEntity } from '@views/domain/entities';
+import { ViewAggregate } from '@views/domain/aggregates';
 import { UserId, VideoId } from '@views/domain/value-objects';
 
 import { View } from '@persistance/views';
 
 @Injectable()
-export class ViewPeristanceAggregateACL
-  implements IAggregatePersistanceACL<ViewAggregate, Omit<View, 'watchedAt'>>
-{
+export class ViewPeristanceAggregateACL implements IAggregatePersistanceACL<
+  ViewAggregate,
+  Omit<View, 'watchedAt'>
+> {
   public toAggregate(persistance: Omit<View, 'watchedAt'>): ViewAggregate {
     const viewEntity = new ViewEntity(
       persistance.id,

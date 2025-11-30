@@ -4,9 +4,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ReactionResponse } from '@app/contracts/reaction';
 
 import {
-  CACHE_PORT,
+  REACTION_CACHE_PORT,
   ReactionCachePort,
-  BUFFER_PORT,
+  REACTION_BUFFER_PORT,
   ReactionBufferPort,
 } from '@reaction/application/ports';
 import { ReactionAggregate } from '@reaction/domain/aggregates';
@@ -15,12 +15,15 @@ import { GrpcDomainReactionStatusEnumMapper } from '@reaction/infrastructure/ant
 import { DislikeCommand } from './dislike.command';
 
 @CommandHandler(DislikeCommand)
-export class DislikeCommandHandler
-  implements ICommandHandler<DislikeCommand, ReactionResponse>
-{
+export class DislikeCommandHandler implements ICommandHandler<
+  DislikeCommand,
+  ReactionResponse
+> {
   public constructor(
-    @Inject(CACHE_PORT) private readonly cacheAdapter: ReactionCachePort,
-    @Inject(BUFFER_PORT) private readonly bufferAdapter: ReactionBufferPort,
+    @Inject(REACTION_CACHE_PORT)
+    private readonly cacheAdapter: ReactionCachePort,
+    @Inject(REACTION_BUFFER_PORT)
+    private readonly bufferAdapter: ReactionBufferPort,
   ) {}
 
   public async execute({

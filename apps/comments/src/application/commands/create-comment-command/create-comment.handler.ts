@@ -4,9 +4,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CommentVideoResponse } from '@app/contracts/comments';
 
 import {
-  BUFFER_PORT,
+  COMMENTS_BUFFER_PORT,
   CommentBufferPort,
-  CACHE_PORT,
+  COMMENTS_CACHE_PORT,
   CommentCachePort,
 } from '@comments/application/ports';
 import { CommentAggregate } from '@comments/domain/aggregates';
@@ -14,12 +14,13 @@ import { CommentAggregate } from '@comments/domain/aggregates';
 import { CreateCommentCommand } from './create-comment.command';
 
 @CommandHandler(CreateCommentCommand)
-export class CreateCommentCommandHandler
-  implements ICommandHandler<CreateCommentCommand, CommentVideoResponse>
-{
+export class CreateCommentCommandHandler implements ICommandHandler<
+  CreateCommentCommand,
+  CommentVideoResponse
+> {
   public constructor(
-    @Inject(BUFFER_PORT) private buffer: CommentBufferPort,
-    @Inject(CACHE_PORT) private cache: CommentCachePort,
+    @Inject(COMMENTS_BUFFER_PORT) private buffer: CommentBufferPort,
+    @Inject(COMMENTS_CACHE_PORT) private cache: CommentCachePort,
   ) {}
 
   public async execute({

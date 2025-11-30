@@ -9,15 +9,12 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 import { getShardFor } from '@app/counters';
+import { RedisCacheHandler } from '@app/handlers/cache-handler';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  ReactionCachePort,
-  LOGGER_PORT,
-  ReactionLoggerPort,
-} from '@reaction/application/ports';
+import { ReactionCachePort } from '@reaction/application/ports';
 import { AppConfigService } from '@reaction/infrastructure/config';
 
-import { RedisFilter } from '../filters';
 import { RedisWithCommands } from '../types';
 
 @Injectable()
@@ -29,8 +26,8 @@ export class RedisCacheAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    private readonly redisfilter: RedisFilter,
-    @Inject(LOGGER_PORT) private readonly logger: ReactionLoggerPort,
+    private readonly redisCacheHandler: RedisCacheHandler,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.redisClient = new Redis({
       host: configService.CACHE_HOST,
@@ -124,7 +121,7 @@ export class RedisCacheAdapter
     const getValuesOperations = async () =>
       await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisfilter.filter(getValuesOperations, {
+    const values = await this.redisCacheHandler.filter(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,
@@ -148,7 +145,7 @@ export class RedisCacheAdapter
     const getValuesOperations = async () =>
       await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisfilter.filter(getValuesOperations, {
+    const values = await this.redisCacheHandler.filter(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,

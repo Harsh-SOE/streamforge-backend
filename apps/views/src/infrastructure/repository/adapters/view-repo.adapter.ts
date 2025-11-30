@@ -1,25 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  ViewRepositoryPort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@views/application/ports';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
+import { ViewRepositoryPort } from '@views/application/ports';
 import { ViewAggregate } from '@views/domain/aggregates';
 import { PersistanceService } from '@views/infrastructure/persistance/adapter';
 import { ViewPeristanceAggregateACL } from '@views/infrastructure/anti-corruption';
-import { Components } from '@views/infrastructure/config';
 
 import { Prisma, View } from '@persistance/views';
-
-import { ViewRepoFilter } from '../filters';
-import { DatabaseFilter } from '../types';
 
 @Injectable()
 export class ViewRepositoryAdapter implements ViewRepositoryPort {
   public constructor(
     private readonly viewPersistanceACL: ViewPeristanceAggregateACL,
-    private readonly viewRepoFilter: ViewRepoFilter,
+    private readonly databaseHandler: PrismaDatabaseHandler,
     private readonly persistanceService: PersistanceService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
@@ -96,7 +93,7 @@ export class ViewRepositoryAdapter implements ViewRepositoryPort {
         ),
       });
 
-    const createdEntities = await this.viewRepoFilter.filter(
+    const createdEntities = await this.databaseHandler.filter(
       createdEntitiesFunc,
       { operationType: 'CREATE', entry: dataToCreate },
     );

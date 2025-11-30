@@ -13,9 +13,7 @@ import {
 import { CreateChannelCommand } from './create-channel.command';
 
 @CommandHandler(CreateChannelCommand)
-export class CreateChannelCommandHandler
-  implements ICommandHandler<CreateChannelCommand>
-{
+export class CreateChannelCommandHandler implements ICommandHandler<CreateChannelCommand> {
   public constructor(
     @Inject(CHANNEL_COMMAND_REPOSITORY)
     private readonly channelCommandRepository: ChannelCommandRepositoryPort,

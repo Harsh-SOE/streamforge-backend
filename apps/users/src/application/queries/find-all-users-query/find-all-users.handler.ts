@@ -4,7 +4,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UsersFoundResponse } from '@app/contracts/users';
 
 import {
-  USER_QUERY_REROSITORY,
+  USER_QUERY_REROSITORY_PORT,
   UserQueryRepositoryPort,
 } from '@users/application/ports';
 
@@ -13,7 +13,7 @@ import { FindAllUsersQuery } from './find-all-user.query';
 @QueryHandler(FindAllUsersQuery)
 export class FindAllUsersHandler implements IQueryHandler<FindAllUsersQuery> {
   public constructor(
-    @Inject(USER_QUERY_REROSITORY)
+    @Inject(USER_QUERY_REROSITORY_PORT)
     private readonly userRepo: UserQueryRepositoryPort,
   ) {}
 

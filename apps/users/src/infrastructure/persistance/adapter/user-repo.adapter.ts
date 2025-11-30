@@ -5,8 +5,10 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@users/application/ports';
-import { AppConfigService, Components } from '@users/infrastructure/config';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { Components } from '@app/common/components';
+
+import { AppConfigService } from '@users/infrastructure/config';
 
 import { Prisma, PrismaClient } from '@peristance/user';
 
@@ -50,7 +52,7 @@ export class PersistanceService
     );
 
     this.$on('query', (e) => {
-      this.logger.info('--- MongoDB Query Info Begins ---', {
+      this.logger.info('--- Database Query Info Begins ---', {
         component: Components.DATABASE,
       });
       this.logger.info(`AGGREGATOR :: Operation: ${e.query}`, {
@@ -62,7 +64,7 @@ export class PersistanceService
       this.logger.info(`AGGREGATOR :: Duration: ${e.duration}ms`, {
         component: Components.DATABASE,
       });
-      this.logger.info('--- MongoDB Query Info Ends ---', {
+      this.logger.info('--- Database Query Info Ends ---', {
         component: Components.DATABASE,
       });
     });

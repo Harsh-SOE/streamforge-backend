@@ -1,12 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
-import {
-  EmailPort,
-  LOGGER_PORT,
-  LoggerPort,
-  SendMailOptions,
-} from '@email/application/ports';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
+import { EmailPort, SendMailOptions } from '@email/application/ports';
 import { AppConfigService } from '@email/infrastructure/config';
 
 export class MailerSendEmailAdapter implements EmailPort {

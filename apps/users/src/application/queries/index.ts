@@ -15,4 +15,4 @@ export * from './find-all-users-query/find-all-user.query';
 export * from './find-by-auth-id-query/find-by-auth-id.handler';
 export * from './find-by-auth-id-query/find-by-auth-id.query';
 
-export * from './dto/user-query.model';
+export * from './model/users.query-model';

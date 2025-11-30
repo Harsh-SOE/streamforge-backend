@@ -1,17 +1,15 @@
 import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-import { DATABASE_COMMAND_PORT } from '@videos/application/ports';
+import { VIDEOS_COMMAND_RESPOSITORY_PORT } from '@videos/application/ports';
 import { VideoCommandRepositoryAdapter } from '@videos/infrastructure/repository/adapters';
 
 import { VideoTranscodedEvent } from './video-transcoded.event';
 
 @EventsHandler(VideoTranscodedEvent)
-export class VideoTranscodedEventHandler
-  implements IEventHandler<VideoTranscodedEvent>
-{
+export class VideoTranscodedEventHandler implements IEventHandler<VideoTranscodedEvent> {
   constructor(
-    @Inject(DATABASE_COMMAND_PORT)
+    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
     private videoRepoAdapter: VideoCommandRepositoryAdapter,
   ) {}
 

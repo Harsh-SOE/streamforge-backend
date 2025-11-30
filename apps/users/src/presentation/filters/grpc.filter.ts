@@ -2,13 +2,15 @@ import { throwError } from 'rxjs';
 import { Catch, ExceptionFilter, HttpStatus, Inject } from '@nestjs/common';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 
-import { DomainException } from '@users/domain/exceptions';
-import { InfrastructureException } from '@users/infrastructure/exceptions';
-import { ApplicationException } from '@users/application/exceptions';
-import { LOGGER_PORT, LoggerPort } from '@users/application/ports';
+import {
+  GrpcApplicationException,
+  GrpcExceptionPayload,
+} from '@app/exceptions/grpc-exceptions';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { InfrastructureException } from '@app/exceptions/infrastructure-exceptions';
 
-import { ErrorPayload } from '../types';
-import { GrpcApplicationException } from '../exceptions';
+import { DomainException } from '@users/domain/exceptions';
+import { ApplicationException } from '@users/application/exceptions';
 
 @Catch()
 export class GrpcFilter implements ExceptionFilter {
@@ -17,7 +19,7 @@ export class GrpcFilter implements ExceptionFilter {
   catch(exception: any) {
     let code = GrpcStatus.UNKNOWN;
     let message = 'Internal server error';
-    let payload: ErrorPayload = {
+    let payload: GrpcExceptionPayload = {
       statusCode: 'UNKNOWN',
       serviceExceptionCode: GrpcStatus.UNKNOWN,
       httpExceptionCode: HttpStatus.INTERNAL_SERVER_ERROR,

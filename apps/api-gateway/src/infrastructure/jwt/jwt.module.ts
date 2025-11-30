@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 
-import { CLIENT_PROVIDER } from '@app/clients';
+import { SERVICES } from '@app/clients';
 
 import {
   AppConfigModule,
@@ -25,7 +25,7 @@ import { JwtStrategy } from './jwt-strategies';
       {
         imports: [AppConfigModule],
         inject: [AppConfigService],
-        name: CLIENT_PROVIDER.USER,
+        name: SERVICES.USER,
         useFactory: (configService: AppConfigService) =>
           configService.USER_SERVICE_OPTIONS,
       },

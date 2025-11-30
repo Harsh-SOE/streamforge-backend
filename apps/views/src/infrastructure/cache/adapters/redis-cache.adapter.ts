@@ -9,15 +9,12 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 import { getShardFor } from '@app/counters';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache-handler';
 
-import {
-  ViewCachePort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@views/application/ports';
+import { ViewCachePort } from '@views/application/ports';
 import { AppConfigService } from '@views/infrastructure/config';
 
-import { RedisFilter } from '../filters';
 import { RedisWithCommands } from '../types';
 
 @Injectable()
@@ -29,7 +26,7 @@ export class ViewCacheAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    private readonly redisfilter: RedisFilter,
+    private readonly redisfilter: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.redisClient = new Redis({

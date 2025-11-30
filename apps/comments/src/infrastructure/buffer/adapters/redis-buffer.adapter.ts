@@ -2,17 +2,16 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import Redis from 'ioredis';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { CommentMessage, StreamData } from '@app/common/types';
+
 import {
   CommentBufferPort,
-  DATABASE_PORT,
+  COMMENTS_REPOSITORY_PORT,
   CommentRepositoryPort,
-  LOGGER_PORT,
-  LoggerPort,
 } from '@comments/application/ports';
 import { CommentAggregate } from '@comments/domain/aggregates';
 import { AppConfigService } from '@comments/infrastructure/config';
-
-import { CommentMessage, StreamData } from '../types';
 
 @Injectable()
 export class RedisStreamBufferAdapter
@@ -22,7 +21,7 @@ export class RedisStreamBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(DATABASE_PORT)
+    @Inject(COMMENTS_REPOSITORY_PORT)
     private readonly commentsRepo: CommentRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/infrastructure';
+import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
 
 import { ReactionAggregate } from '@reaction/domain/aggregates';
 import { ReactionEntity } from '@reaction/domain/entities';
@@ -13,13 +13,10 @@ import {
 import { VideoReactions } from '@peristance/reaction';
 
 @Injectable()
-export class ReactionPersistanceACL
-  implements
-    IAggregatePersistanceACL<
-      ReactionAggregate,
-      Omit<VideoReactions, 'createdAt' | 'updatedAt'>
-    >
-{
+export class ReactionPersistanceACL implements IAggregatePersistanceACL<
+  ReactionAggregate,
+  Omit<VideoReactions, 'createdAt' | 'updatedAt'>
+> {
   public toAggregate(
     schema: Omit<VideoReactions, 'createdAt' | 'updatedAt'>,
   ): ReactionAggregate {

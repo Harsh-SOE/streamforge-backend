@@ -1,25 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  CommentRepositoryPort,
-  DatabaseFilter,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@comments/application/ports';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { DatabaseFilter } from '@app/common/types';
+import { Components } from '@app/common/components';
+
+import { CommentRepositoryPort } from '@comments/application/ports';
 import { CommentAggregate } from '@comments/domain/aggregates';
 import { PersistanceService } from '@comments/infrastructure/persistance/adapter';
 import { CommentAggregatePersistance } from '@comments/infrastructure/anti-corruption';
-import { Components } from '@comments/infrastructure/config';
 
 import { Prisma } from '@peristance/comments';
-
-import { CommentsRepoFilter } from '../filters';
 
 @Injectable()
 export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
   public constructor(
     private readonly commentPersistanceACL: CommentAggregatePersistance,
-    private readonly commentsRepoFilter: CommentsRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
     private readonly persistanceService: PersistanceService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
@@ -87,7 +84,7 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
       `Saving: ${dataToCreate.length} documents into the database as a batch`,
       {
         component: Components.DATABASE,
-        service: 'LIKE',
+        service: 'COMMENTS',
       },
     );
     const createdEntitiesFunc = async () =>
@@ -97,7 +94,7 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
         ),
       });
 
-    const createdEntities = await this.commentsRepoFilter.filter(
+    const createdEntities = await this.prismaDatabaseHandler.filter(
       createdEntitiesFunc,
       { operationType: 'CREATE', entry: dataToCreate },
     );
@@ -117,7 +114,7 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
         data: { commentText: newCommentText },
       });
 
-    const updatedLike = await this.commentsRepoFilter.filter(
+    const updatedLike = await this.prismaDatabaseHandler.filter(
       updateLikeOperation,
       {
         operationType: 'UPDATE',
@@ -139,7 +136,7 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
         data: { commentText: newCommentText },
       });
 
-    const updatedLikes = await this.commentsRepoFilter.filter(
+    const updatedLikes = await this.prismaDatabaseHandler.filter(
       updatedLikesOperation,
       {
         operationType: 'UPDATE',

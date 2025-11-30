@@ -13,7 +13,8 @@ import {
   VideoReactionDto,
 } from '@app/contracts/reaction';
 
-import { LOGGER_PORT, ReactionLoggerPort } from '@reaction/application/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
   DislikeCommand,
   LikeCommand,
@@ -32,7 +33,7 @@ export class GrpcService {
   public constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-    @Inject(LOGGER_PORT) private readonly logger: ReactionLoggerPort,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
   public async reactToVideo(

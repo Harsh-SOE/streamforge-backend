@@ -1,14 +1,8 @@
-export * from './repository/video-command.repo';
-export * from './repository/video-query.repo';
-export * from './repository/types';
+export * from './videos-repository/video-command.repo';
+export * from './videos-repository/video-query.repo';
 
-export * from './buffer/buffer.port';
+export * from './videos-buffer/videos-buffer.port';
 
-export * from './cache/cache.port';
-export * from './cache/types/options';
+export * from './videos-cache/videos-cache.port';
 
-export * from './logger/logger.port';
-
-export * from './message-broker/message-broker.port';
-
-export * from './storage/storage.port';
+export * from './videos-storage/videos-storage.port';

@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import {
   ReactionBufferPort,
   ReactionRepositoryPort,
-  ReactionLoggerPort,
-  LOGGER_PORT,
-  DATABASE_PORT,
+  REACTION_DATABASE_PORT,
 } from '@reaction/application/ports';
 import { ReactionAggregate } from '@reaction/domain/aggregates';
 import { AppConfigService } from '@reaction/infrastructure/config';
@@ -31,9 +31,9 @@ export class KafkaBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(DATABASE_PORT)
+    @Inject(REACTION_DATABASE_PORT)
     private readonly reactionsRepo: ReactionRepositoryPort,
-    @Inject(LOGGER_PORT) private readonly logger: ReactionLoggerPort,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
       brokers: [

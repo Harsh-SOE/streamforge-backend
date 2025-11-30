@@ -1,16 +1,19 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
+import { MESSAGE_BROKER } from '@app/ports/message-broker';
+import { LOGGER_PORT } from '@app/ports/logger';
+import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+
 import {
   CHANNEL_COMMAND_REPOSITORY,
   CHANNEL_QUERY_REPOSITORY,
-  LOGGER_PORT,
-  MESSAGE_BROKER,
-  STORAGE_PORT,
+  CHANNEL_STORAGE_PORT,
 } from '@channel/application/ports';
 import { ChannelCommandHandlers } from '@channel/application/commands';
 import { ChannelEventHandler } from '@channel/application/events';
-import { ChannelQueryHandler } from '@channel/application/query';
+import { ChannelQueryHandler } from '@channel/application/queries';
 import { PersistanceService } from '@channel/infrastructure/persistance/adapter';
 import { AppConfigService } from '@channel/infrastructure/config';
 import {
@@ -24,8 +27,6 @@ import {
 import { KafkaMessageBrokerAdapter } from '@channel/infrastructure/message-broker/adapters';
 import { AwsS3StorageAdapter } from '@channel/infrastructure/storage/adapters';
 import { WinstonLoggerAdapter } from '@channel/infrastructure/logger';
-import { KafkaMessageHandler } from '@channel/infrastructure/message-broker/filter';
-import { ChannelRepoFilter } from '@channel/infrastructure/repository/filters';
 
 import { GrpcController } from './grpc.controller';
 import { GrpcService } from './grpc.service';
@@ -36,9 +37,9 @@ import { GrpcService } from './grpc.service';
     GrpcService,
     PersistanceService,
     AppConfigService,
-    KafkaMessageHandler,
+    KafkaMessageBrokerHandler,
     ChannelAggregatePersistanceACL,
-    ChannelRepoFilter,
+    PrismaDatabaseHandler,
     ChannelQueryPersistanceACL,
     {
       provide: CHANNEL_COMMAND_REPOSITORY,
@@ -49,7 +50,7 @@ import { GrpcService } from './grpc.service';
       useClass: ChannelQueryRepositoryAdapter,
     },
     { provide: MESSAGE_BROKER, useClass: KafkaMessageBrokerAdapter },
-    { provide: STORAGE_PORT, useClass: AwsS3StorageAdapter },
+    { provide: CHANNEL_STORAGE_PORT, useClass: AwsS3StorageAdapter },
     { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
     ...ChannelCommandHandlers,
     ...ChannelEventHandler,

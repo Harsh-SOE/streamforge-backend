@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OpenFgaClient } from '@openfga/sdk';
+
+import { LOGGER_PORT, LoggerPort } from '@app/ports';
 
 import { AppConfigService } from '@authz/infrastructure/config';
 import {
@@ -14,7 +16,10 @@ import {
 export class OpenFGAAuthAdapter implements AuthorizePort {
   private readonly client: OpenFgaClient;
 
-  constructor(private readonly configService: AppConfigService) {
+  constructor(
+    private readonly configService: AppConfigService,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+  ) {
     this.client = new OpenFgaClient({
       apiUrl: this.configService.FGA_API_URL,
       storeId: this.configService.FGA_STORE_ID,

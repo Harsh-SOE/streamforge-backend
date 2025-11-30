@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { VideoPublishedResponse } from '@app/contracts/videos';
 
 import {
-  DATABASE_COMMAND_PORT,
+  VIDEOS_COMMAND_RESPOSITORY_PORT,
   VideoCommandRepositoryPort,
 } from '@videos/application/ports';
 import { VideoAggregate } from '@videos/domain/aggregates';
@@ -17,11 +17,9 @@ import {
 import { PublishVideoCommand } from './publish-video.command';
 
 @CommandHandler(PublishVideoCommand)
-export class PublishVideoHandler
-  implements ICommandHandler<PublishVideoCommand>
-{
+export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand> {
   constructor(
-    @Inject(DATABASE_COMMAND_PORT)
+    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
     private readonly video: VideoCommandRepositoryPort,
     private readonly eventPublisher: EventPublisher,
   ) {}

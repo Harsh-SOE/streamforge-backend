@@ -19,132 +19,46 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/cache": [
-        "libs/cache/src"
-      ],
-      "@app/cache/*": [
-        "libs/cache/src/*"
-      ],
-      "@app/clients": [
-        "libs/clients/src"
-      ],
-      "@app/clients/*": [
-        "libs/clients/src/*"
-      ],
-      "@app/contracts": [
-        "libs/contracts/src"
-      ],
-      "@app/contracts/*": [
-        "libs/contracts/src/*"
-      ],
-      "@app/counters": [
-        "libs/counters/src"
-      ],
-      "@app/counters/*": [
-        "libs/counters/src/*"
-      ],
-      "@app/errors": [
-        "libs/errors/src"
-      ],
-      "@app/errors/*": [
-        "libs/errors/src/*"
-      ],
-      "@app/infrastructure": [
-        "libs/infrastructure/src"
-      ],
-      "@app/infrastructure/*": [
-        "libs/infrastructure/src/*"
-      ],
-      "@app/observable-stream": [
-        "libs/observable-stream/src"
-      ],
-      "@app/observable-stream/*": [
-        "libs/observable-stream/src/*"
-      ],
-      "@app/proto": [
-        "libs/proto/src"
-      ],
-      "@app/proto/*": [
-        "libs/proto/src/*"
-      ],
-      "@app/testing": [
-        "libs/testing/src"
-      ],
-      "@app/testing/*": [
-        "libs/testing/src/*"
-      ],
-      "@app/utils": [
-        "libs/utils/src"
-      ],
-      "@app/utils/*": [
-        "libs/utils/src/*"
-      ],
-      "@auth/*": [
-        "apps/auth/src/*"
-      ],
-      "@authz/*": [
-        "apps/authz/src/*"
-      ],
-      "@channel/*": [
-        "apps/channel/src/*"
-      ],
-      "@cloud/*": [
-        "apps/cloud/src/*"
-      ],
-      "@comments/*": [
-        "apps/comments/src/*"
-      ],
-      "@email/*": [
-        "apps/email/src/*"
-      ],
-      "@gateway/*": [
-        "apps/api-gateway/src/*"
-      ],
-      "@history/*": [
-        "apps/history/src/*"
-      ],
-      "@peristance/channel": [
-        "apps/channel/generated/prisma"
-      ],
-      "@peristance/comments": [
-        "apps/comments/generated/prisma"
-      ],
-      "@peristance/reaction": [
-        "apps/reaction/generated/prisma"
-      ],
-      "@peristance/user": [
-        "apps/users/generated/prisma"
-      ],
-      "@peristance/videos": [
-        "apps/videos/generated/prisma"
-      ],
-      "@persistance/auth": [
-        "apps/auth/generated/prisma"
-      ],
-      "@persistance/views": [
-        "apps/views/generated/prisma"
-      ],
-      "@playlist/*": [
-        "apps/playlist/src/*"
-      ],
-      "@reaction/*": [
-        "apps/reaction/src/*"
-      ],
-      "@subscribe/*": [
-        "apps/subscribe/src/*"
-      ],
-      "@transcoder/*": [
-        "apps/video-transcoder/src/*"
-      ],
-      "@users/*": [
-        "apps/users/src/*"
-      ],
-      "@videos/*": [
-        "apps/videos/src/*"
-      ],
-      "@views/*": [
-        "apps/views/src/*"
-      ]
+      "@app/clients": ["libs/clients/src"],
+      "@app/clients/*": ["libs/clients/src/*"],
+      "@app/common": ["libs/common/src"],
+      "@app/common/*": ["libs/common/src/*"],
+      "@app/contracts": ["libs/contracts/src"],
+      "@app/contracts/*": ["libs/contracts/src/*"],
+      "@app/counters": ["libs/counters/src"],
+      "@app/counters/*": ["libs/counters/src/*"],
+      "@app/exceptions": ["libs/exceptions/src"],
+      "@app/exceptions/*": ["libs/exceptions/src/*"],
+      "@app/handlers": ["libs/handlers/src"],
+      "@app/handlers/*": ["libs/handlers/src/*"],
+      "@app/ports": ["libs/ports/src"],
+      "@app/ports/*": ["libs/ports/src/*"],
+      "@app/proto": ["libs/proto/src"],
+      "@app/proto/*": ["libs/proto/src/*"],
+      "@app/utils": ["libs/utils/src"],
+      "@app/utils/*": ["libs/utils/src/*"],
+      "@auth/*": ["apps/auth/src/*"],
+      "@authz/*": ["apps/authz/src/*"],
+      "@channel/*": ["apps/channel/src/*"],
+      "@cloud/*": ["apps/cloud/src/*"],
+      "@comments/*": ["apps/comments/src/*"],
+      "@email/*": ["apps/email/src/*"],
+      "@gateway/*": ["apps/api-gateway/src/*"],
+      "@history/*": ["apps/history/src/*"],
+      "@peristance/channel": ["apps/channel/generated/prisma"],
+      "@peristance/comments": ["apps/comments/generated/prisma"],
+      "@peristance/reaction": ["apps/reaction/generated/prisma"],
+      "@peristance/user": ["apps/users/generated/prisma"],
+      "@peristance/videos": ["apps/videos/generated/prisma"],
+      "@persistance/auth": ["apps/auth/generated/prisma"],
+      "@persistance/views": ["apps/views/generated/prisma"],
+      "@playlist/*": ["apps/playlist/src/*"],
+      "@reaction/*": ["apps/reaction/src/*"],
+      "@subscribe/*": ["apps/subscribe/src/*"],
+      "@transcoder/*": ["apps/video-transcoder/src/*"],
+      "@users/*": ["apps/users/src/*"],
+      "@videos/*": ["apps/videos/src/*"],
+      "@views/*": ["apps/views/src/*"]
     }
   }
 }

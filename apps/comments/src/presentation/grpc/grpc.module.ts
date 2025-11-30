@@ -1,12 +1,18 @@
 import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+
+import { LOGGER_PORT } from '@app/ports/logger';
+import { MESSAGE_BROKER } from '@app/ports/message-broker';
+import { RedisCacheHandler } from '@app/handlers/cache-handler';
+import { RedisBufferHandler } from '@app/handlers/buffer-handler';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
 
 import {
-  BUFFER_PORT,
-  CACHE_PORT,
-  DATABASE_PORT,
-  LOGGER_PORT,
-  MESSAGE_BROKER,
+  COMMENTS_BUFFER_PORT,
+  COMMENTS_CACHE_PORT,
+  COMMENTS_REPOSITORY_PORT,
 } from '@comments/application/ports';
 import { CommentEventHandler } from '@comments/application/events';
 import { CommentCommandHandler } from '@comments/application/commands';
@@ -14,39 +20,32 @@ import { AppConfigModule } from '@comments/infrastructure/config';
 import { PrismaMongoDBRepositoryAdapter } from '@comments/infrastructure/repository/adapters';
 import { KafkaMessageBrokerAdapter } from '@comments/infrastructure/message-broker/adapters';
 import { RedisStreamBufferAdapter } from '@comments/infrastructure/buffer/adapters';
-import {
-  RedisCacheAdapter,
-  RedisCacheFilter,
-} from '@comments/infrastructure/cache';
-import { WinstonLoggerAdapter } from '@comments/infrastructure/logger';
-import { RedisBufferFilter } from '@comments/infrastructure/buffer/filters';
-import { KafkaMessageBrokerFilter } from '@comments/infrastructure/message-broker/filter';
+import { RedisCacheAdapter } from '@comments/infrastructure/cache/adapters';
+import { WinstonLoggerAdapter } from '@comments/infrastructure/logger/adapters';
 import { PersistanceService } from '@comments/infrastructure/persistance/adapter';
-import { CommentsRepoFilter } from '@comments/infrastructure/repository/filters';
 import { CommentAggregatePersistance } from '@comments/infrastructure/anti-corruption';
 
 import { GrpcService } from './grpc.service';
 import { GrpcController } from './grpc.controller';
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [AppConfigModule, CqrsModule, ScheduleModule.forRoot()],
   controllers: [GrpcController],
   providers: [
     GrpcService,
-    RedisBufferFilter,
-    RedisCacheFilter,
-    KafkaMessageBrokerFilter,
+    RedisBufferHandler,
+    RedisCacheHandler,
+    KafkaMessageBrokerHandler,
     PersistanceService,
-    CommentsRepoFilter,
+    PrismaDatabaseHandler,
     CommentAggregatePersistance,
     {
-      provide: DATABASE_PORT,
+      provide: COMMENTS_REPOSITORY_PORT,
       useClass: PrismaMongoDBRepositoryAdapter,
     },
-    { provide: CACHE_PORT, useClass: RedisCacheAdapter },
+    { provide: COMMENTS_CACHE_PORT, useClass: RedisCacheAdapter },
     { provide: MESSAGE_BROKER, useClass: KafkaMessageBrokerAdapter },
-    { provide: BUFFER_PORT, useClass: RedisStreamBufferAdapter },
+    { provide: COMMENTS_BUFFER_PORT, useClass: RedisStreamBufferAdapter },
     {
       provide: LOGGER_PORT,
       useClass: WinstonLoggerAdapter,

@@ -1,6 +1,6 @@
 import { VideoTransportPublishStatus } from '@app/contracts/videos';
 
-import { VideoQueryPublishStatus } from '@videos/query';
+import { VideoQueryPublishStatus } from '@videos/query-model';
 
 const QueryToTransportPublishEnumMapper = new Map<
   VideoQueryPublishStatus,

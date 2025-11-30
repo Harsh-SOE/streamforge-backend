@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { IQueryPersistanceACL } from '@app/infrastructure';
+import { IQueryPersistanceACL } from '@app/ports/anti-corruption';
 
-import { VideoQueryModel } from '@videos/query';
+import { VideoQueryModel } from '@videos/query-model';
 
 import { Video } from '@peristance/videos';
+
 import {
   PersistanceToQueryPublishEnumMapper,
   PersistanceToQueryVisibilityEnumMapper,
@@ -12,13 +13,10 @@ import {
 import { QueryToPersistancePublishEnumMapper } from '../enums/to-persistance';
 
 @Injectable()
-export class VideoQueryPeristanceACL
-  implements
-    IQueryPersistanceACL<
-      VideoQueryModel,
-      Omit<Video, 'publishedAt' | 'updatedAt'>
-    >
-{
+export class VideoQueryPeristanceACL implements IQueryPersistanceACL<
+  VideoQueryModel,
+  Omit<Video, 'publishedAt' | 'updatedAt'>
+> {
   public toQueryModel(
     schema: Omit<Video, 'publishedAt' | 'updatedAt'>,
   ): VideoQueryModel {

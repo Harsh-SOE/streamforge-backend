@@ -2,15 +2,13 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-import {
-  StoragePort,
-  LOGGER_PORT,
-  LoggerPort,
-} from '@channel/application/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
+import { ChannelStoragePort } from '@channel/application/ports';
 import { AppConfigService } from '@channel/infrastructure/config';
 
 @Injectable()
-export class AwsS3StorageAdapter implements OnModuleInit, StoragePort {
+export class AwsS3StorageAdapter implements OnModuleInit, ChannelStoragePort {
   private readonly AWS_S3_RAW_AVATAR_PATH = 'raw-cover-image';
   private s3Client: S3Client;
 

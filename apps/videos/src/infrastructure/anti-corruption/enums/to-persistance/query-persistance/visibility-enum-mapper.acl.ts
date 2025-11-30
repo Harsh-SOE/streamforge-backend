@@ -1,4 +1,4 @@
-import { VideoQueryVisibiltyStatus } from '@videos/query';
+import { VideoQueryVisibiltyStatus } from '@videos/query-model';
 
 import { VideoPersistanceVisibilityStatus } from '@peristance/videos';
 

@@ -4,7 +4,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { VideosFoundResponse } from '@app/contracts/videos';
 
 import {
-  DATABASE_QUERY_PORT,
+  VIDEO_QUERY_RESPOSITORY_PORT,
   VideoQueryRepositoryPort,
 } from '@videos/application/ports';
 import {
@@ -17,7 +17,7 @@ import { QueryVideo } from './query-video.query';
 @QueryHandler(QueryVideo)
 export class QueryVideoHandler implements IQueryHandler<QueryVideo> {
   constructor(
-    @Inject(DATABASE_QUERY_PORT)
+    @Inject(VIDEO_QUERY_RESPOSITORY_PORT)
     private readonly video: VideoQueryRepositoryPort,
   ) {}
 

@@ -1,27 +1,22 @@
 import { Injectable } from '@nestjs/common';
 
 import { LogExecutionTime } from '@app/utils';
+import { DatabaseFilter } from '@app/common/types';
+import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
 
-import {
-  DatabaseFilter,
-  ChannelQueryRepositoryPort,
-} from '@channel/application/ports';
-import { ChannelQueryModel } from '@channel/application/query';
+import { ChannelQueryRepositoryPort } from '@channel/application/ports';
+import { ChannelQueryModel } from '@channel/application/queries';
 import { PersistanceService } from '@channel/infrastructure/persistance/adapter';
 import { ChannelQueryPersistanceACL } from '@channel/infrastructure/anti-corruption';
 
 import { Prisma, Channel } from '@peristance/channel';
 
-import { ChannelRepoFilter } from '../../filters';
-
 @Injectable()
-export class ChannelQueryRepositoryAdapter
-  implements ChannelQueryRepositoryPort
-{
+export class ChannelQueryRepositoryAdapter implements ChannelQueryRepositoryPort {
   constructor(
     private readonly queryPersistanceACL: ChannelQueryPersistanceACL,
     private readonly persistanceService: PersistanceService,
-    private readonly channelRepoFilter: ChannelRepoFilter,
+    private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
   ) {}
 
   toPrismaFilter(
@@ -81,10 +76,13 @@ export class ChannelQueryRepositoryAdapter
       });
     };
 
-    const foundUser = await this.channelRepoFilter.filter(findUserOperation, {
-      operationType: 'CREATE',
-      entry: {},
-    });
+    const foundUser = await this.prismaDatabaseHandler.filter(
+      findUserOperation,
+      {
+        operationType: 'CREATE',
+        entry: {},
+      },
+    );
 
     return foundUser ? this.queryPersistanceACL.toQueryModel(foundUser) : null;
   }
@@ -101,7 +99,7 @@ export class ChannelQueryRepositoryAdapter
       });
     };
 
-    const foundUsers = await this.channelRepoFilter.filter(
+    const foundUsers = await this.prismaDatabaseHandler.filter(
       findManyUsersOperation,
       {
         operationType: 'CREATE',
@@ -121,7 +119,7 @@ export class ChannelQueryRepositoryAdapter
       });
     };
 
-    const foundUser = await this.channelRepoFilter.filter(
+    const foundUser = await this.prismaDatabaseHandler.filter(
       findUserByIdOperation,
       {
         operationType: 'CREATE',

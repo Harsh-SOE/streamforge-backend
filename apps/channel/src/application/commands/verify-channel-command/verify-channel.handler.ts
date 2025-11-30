@@ -11,9 +11,7 @@ import {
 import { VerifyChannelCommand } from './verify-channel.command';
 
 @CommandHandler(VerifyChannelCommand)
-export class VerifyChannelHandler
-  implements ICommandHandler<VerifyChannelCommand>
-{
+export class VerifyChannelHandler implements ICommandHandler<VerifyChannelCommand> {
   public constructor(
     @Inject(CHANNEL_COMMAND_REPOSITORY)
     private readonly channelRepository: ChannelCommandRepositoryPort,

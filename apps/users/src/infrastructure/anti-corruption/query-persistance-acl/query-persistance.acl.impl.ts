@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { IQueryPersistanceACL } from '@app/infrastructure';
+import { IQueryPersistanceACL } from '@app/ports/anti-corruption';
 
 import { UserQueryModel } from '@users/application/queries';
 
 import { User } from '@peristance/user';
 
 @Injectable()
-export class UserQueryPersistanceACL
-  implements
-    IQueryPersistanceACL<UserQueryModel, Omit<User, 'createdAt' | 'updatedAt'>>
-{
+export class UserQueryPersistanceACL implements IQueryPersistanceACL<
+  UserQueryModel,
+  Omit<User, 'createdAt' | 'updatedAt'>
+> {
   public toQueryModel(
     persistance: Omit<User, 'createdAt' | 'updatedAt'>,
   ): UserQueryModel {

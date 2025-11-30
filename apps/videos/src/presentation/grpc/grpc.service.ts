@@ -13,6 +13,7 @@ import {
   VideoUpdatedResponse,
   VideoUpdateDto,
 } from '@app/contracts/videos';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
   EditVideoCommand,
@@ -22,7 +23,6 @@ import {
 } from '@videos/application/commands';
 import { FindVideoQuery } from '@videos/application/queries';
 import { QueryVideo } from '@videos/application/queries/query-video/query-video.query';
-import { LOGGER_PORT, LoggerPort } from '@videos/application/ports';
 
 @Injectable()
 export class GrpcService {

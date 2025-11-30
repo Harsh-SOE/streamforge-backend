@@ -1,6 +1,6 @@
 import { VideoTransportVisibilityStatus } from '@app/contracts/videos';
 
-import { VideoQueryVisibiltyStatus } from '@videos/query';
+import { VideoQueryVisibiltyStatus } from '@videos/query-model';
 
 const TransportToQueryVisibilityEnumMapper = new Map<
   VideoTransportVisibilityStatus,

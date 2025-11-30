@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { AUTHORIZE_PORT } from '@authz/application/ports/auth';
 import { OpenFGAAuthAdapter } from '@authz/infrastructure/auth/adapters';
-import { LOGGER_PORT } from '@authz/application/ports/logger';
 import { WinstonLoggerAdapter } from '@authz/infrastructure/logger';
 import {
   AppConfigModule,
@@ -11,6 +10,7 @@ import {
 
 import { GrpcService } from './gprc.service';
 import { GrpcController } from './gprc.controller';
+import { LOGGER_PORT } from '@app/ports';
 
 @Module({
   imports: [AppConfigModule],

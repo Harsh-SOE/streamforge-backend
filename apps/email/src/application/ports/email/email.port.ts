@@ -4,4 +4,4 @@ export interface EmailPort {
   sendEmail(options: SendMailOptions): Promise<void>;
 }
 
-export const EMAIL = Symbol('EMAIL');
+export const EMAIL_PORT = Symbol('EMAIL_PORT');

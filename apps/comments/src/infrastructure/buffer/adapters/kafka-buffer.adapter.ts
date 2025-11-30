@@ -6,17 +6,16 @@ import {
 } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { CommentMessage } from '@app/common/types';
+
 import {
   CommentBufferPort,
-  DATABASE_PORT,
+  COMMENTS_REPOSITORY_PORT,
   CommentRepositoryPort,
-  LOGGER_PORT,
-  LoggerPort,
 } from '@comments/application/ports';
 import { CommentAggregate } from '@comments/domain/aggregates';
 import { AppConfigService } from '@comments/infrastructure/config';
-
-import { CommentMessage } from '../types';
 
 export const COMMENT_BUFFER_TOPIC = 'comment';
 
@@ -30,7 +29,7 @@ export class KafkaBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(DATABASE_PORT)
+    @Inject(COMMENTS_REPOSITORY_PORT)
     private readonly commentsRepo: CommentRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
