@@ -17,12 +17,14 @@ message UserCreateProfileDto {
   string authId = 1;
   string email = 2;
   string handle = 3;
+  string avatar = 4;
 }
 
 message UserUpdateProfileDto {
   string id = 1;
   optional string dob = 2;
   optional string phoneNumber = 3;
+  optional string avatar = 4;
 }
 
 message UserChangeNotificationStatusDto {
@@ -55,9 +57,9 @@ message UserFindByAuthIdDto {
 
 message UserUpdateByIdDto {
   string id = 1;
-  optional string email = 3;
-  optional string fullName = 4;
-  optional string dob = 5;
+  optional string fullName = 2;
+  optional string avatar =3;
+  optional string dob = 4;
 }
 
 message GetPreSignedUrlResponse {
@@ -99,15 +101,15 @@ message UserPayload {
   string id = 1;
   string authUserId = 2;
   string email = 3;
-  string handle = 4;
-  optional string dob = 5;
-  optional string phoneNumber = 6;
-  bool isPhoneNumberVerified = 7;
-  bool notification = 8;
-  string languagePreference = 9;
-  string themePreference = 10;
-  string region = 11;
-  bool onBoardingComplete = 12;
+  string avatar = 4;
+  string handle = 5;
+  optional string dob = 6;
+  optional string phoneNumber = 7;
+  bool isPhoneNumberVerified = 8;
+  bool notification = 9;
+  string languagePreference = 10;
+  string themePreference = 11;
+  string region = 12;
 }
 
 message UserFoundResponse {

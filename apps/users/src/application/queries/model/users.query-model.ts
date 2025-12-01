@@ -5,7 +5,7 @@ export class UserQueryModel {
   public readonly authUserId: string;
   public readonly email: string;
   public readonly handle: string;
-  public readonly onBoardingComplete: boolean;
+  public readonly avatar: string;
   public readonly dob: Date | null;
   public readonly phoneNumber: string | null;
   public readonly isPhoneNumberVerified: boolean;

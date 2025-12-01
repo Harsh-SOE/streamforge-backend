@@ -6,3 +6,4 @@ export * from './handle.vo';
 export * from './language-preference.vo';
 export * from './phone-number.vo';
 export * from './theme-preference.vo';
+export * from './avatar.vo';

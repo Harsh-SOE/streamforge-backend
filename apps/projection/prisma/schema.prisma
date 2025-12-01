@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  output        = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model VideoCard {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  videoId     String   @db.String
+  title       String
+  thumbnail   String
+  videoUrl    String
+  duration    Float
+  visibility  String
+  tags        String[]
+  publishedAt DateTime
+
+  ownerId          String
+  ownerName        String
+  ownerAvatar      String
+  ownerSubscribers Int
+
+  views         Int
+  likes         Int
+  commentsCount Int
+
+  @@index([videoId, ownerId])
+  @@map("video_cards")
+}
+
+model VideoDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  videoId     String   @unique
+  title       String
+  description String?
+  thumbnail   String
+  videoUrl    String
+  duration    Float
+  visibility  String
+  tags        String[]
+  publishedAt DateTime
+
+  ownerId          String
+  ownerName        String
+  ownerAvatar      String
+  ownerSubscribers Int
+
+  views         Int
+  likes         Int
+  commentsCount Int
+
+  relatedTags String[]
+  category    String?
+
+  @@map("video_details")
+}
+
+model ChannelCard {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  channelId   String   @unique
+  ownerId     String
+  name        String
+  avatar      String
+  banner      String?
+  description String?
+  subscribers Int
+  videosCount Int
+  createdAt   DateTime
+
+  @@map("channel_cards")
+}

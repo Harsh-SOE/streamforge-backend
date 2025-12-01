@@ -23,12 +23,12 @@ export class CompleteSignupCommandHandler implements ICommandHandler<CreateProfi
   async execute({
     userCreateProfileDto,
   }: CreateProfileCommand): Promise<UserProfileCreatedResponse> {
-    const { authId, email, handle } = userCreateProfileDto;
+    const { authId, email, handle, avatar } = userCreateProfileDto;
 
     const id = uuidv4();
 
     const userAggregate = this.eventPublisher.mergeObjectContext(
-      UserAggregate.create(id, authId, handle, email),
+      UserAggregate.create(id, authId, handle, email, avatar),
     );
 
     await this.userRepository.save(userAggregate);

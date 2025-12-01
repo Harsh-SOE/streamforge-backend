@@ -290,28 +290,4 @@ export class UserCommandRepositoryAdapter implements UserCommandRepositoryPort {
 
     return deletedUsers.count;
   }
-
-  async markAsOnboarded(id: string): Promise<UserAggregate> {
-    const userOnBoardedOperation = async () =>
-      await this.persistanceService.user.update({
-        where: this.toPrismaFilter(
-          { id },
-          'unique',
-        ) as Prisma.UserWhereUniqueInput,
-        data: {
-          onBoardingComplete: true,
-        },
-      });
-
-    const updatedUser = await this.prismaDatabaseHandler.filter(
-      userOnBoardedOperation,
-      {
-        operationType: 'UPDATE',
-        entry: {},
-        filter: { id },
-      },
-    );
-
-    return this.userPersistanceACL.toAggregate(updatedUser);
-  }
 }

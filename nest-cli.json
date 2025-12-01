@@ -194,6 +194,15 @@
         "watchAssets": true
       }
     },
+    "projection": {
+      "type": "application",
+      "root": "apps/projection",
+      "entryFile": "main",
+      "sourceRoot": "apps/projection/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/projection/tsconfig.app.json"
+      }
+    },
     "proto": {
       "type": "library",
       "root": "libs/proto",

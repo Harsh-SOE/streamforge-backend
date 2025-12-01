@@ -32,8 +32,6 @@ export interface UserCommandRepositoryPort {
   deleteOne(filter: DatabaseFilter<User>): Promise<boolean>;
 
   deleteMany(filter: DatabaseFilter<User>): Promise<number>;
-
-  markAsOnboarded(id: string): Promise<UserAggregate>;
 }
 
 export const USER_COMMAND_REROSITORY_PORT = Symbol(

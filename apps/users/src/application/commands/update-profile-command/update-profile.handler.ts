@@ -21,7 +21,7 @@ export class UpdateProfileCommandHandler implements ICommandHandler<UpdateProfil
   async execute({
     userUpdateProfileDto,
   }: UpdateProfileCommand): Promise<UserProfileUpdatedResponse> {
-    const { id, dob, phoneNumber } = userUpdateProfileDto;
+    const { id, dob, phoneNumber, avatar } = userUpdateProfileDto;
 
     const foundUserAggregate = await this.userRepository.findOneById(id);
 
@@ -33,7 +33,7 @@ export class UpdateProfileCommandHandler implements ICommandHandler<UpdateProfil
 
     const birthday = dob ? new Date(dob) : undefined;
 
-    foundUserAggregate.updateUserProfile(birthday, phoneNumber);
+    foundUserAggregate.updateUserProfile(birthday, phoneNumber, avatar);
 
     await this.userRepository.updateOneById(id, foundUserAggregate);
 

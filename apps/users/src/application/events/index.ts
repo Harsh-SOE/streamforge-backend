@@ -3,7 +3,6 @@ import { ChangeNotificationStatusEventHandler } from './change-notification-stat
 import { ChangeThemeEventHandler } from './change-theme-event/change-theme.handler';
 import { UpdateProfileEventHandler } from './update-profile-event/update-profile.handler';
 import { PhoneNumberVerfiedEventHandler } from './phone-number-verified-event/phone-number-verified.handler';
-import { OnBoardingCompletedEventHandler } from './onboarding-completed-event/onboarding-completed.handler';
 import { CompleteProfileEventHandler } from './create-profile-event/create-profile.handler';
 
 export const UserEventHandlers = [
@@ -13,7 +12,6 @@ export const UserEventHandlers = [
   ChangeThemeEventHandler,
   UpdateProfileEventHandler,
   PhoneNumberVerfiedEventHandler,
-  OnBoardingCompletedEventHandler,
 ];
 
 export * from './create-profile-event/create-profile.event';
@@ -28,5 +26,3 @@ export * from './phone-number-verified-event/phone-number-verified.event';
 export * from './phone-number-verified-event/phone-number-verified.handler';
 export * from './update-profile-event/update-profile.event';
 export * from './update-profile-event/update-profile.handler';
-export * from './onboarding-completed-event/onboarding-completed.event';
-export * from './onboarding-completed-event/onboarding-completed.handler';

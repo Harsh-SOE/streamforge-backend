@@ -10,6 +10,7 @@ import {
   UserThemePreference,
   UserLanguagePreference,
   UserRegion,
+  UserAvatar,
 } from '@users/domain/value-objects';
 import { UserAggregate } from '@users/domain/aggregates';
 import { UserEntity } from '@users/domain/entities';
@@ -29,13 +30,13 @@ export class UserAggregatePersistanceACL implements IAggregatePersistanceACL<
       persistance.authUserId,
       UserHandle.create(persistance.handle),
       UserEmail.create(persistance.email),
+      UserAvatar.create(persistance.avatar),
       UserDOB.create(persistance.dob ?? undefined),
       UserPhoneNumber.create(persistance.phoneNumber ?? undefined),
       persistance.isPhoneNumberVerified,
       persistance.notification,
       UserThemePreference.create(persistance.themePreference),
       UserLanguagePreference.create(persistance.languagePreference),
-      persistance.onBoardingComplete,
       UserRegion.create(persistance.region),
     );
     return new UserAggregate(user);
@@ -48,12 +49,12 @@ export class UserAggregatePersistanceACL implements IAggregatePersistanceACL<
       authUserId: entity.getUserSnapshot().userAuthId,
       handle: entity.getUserSnapshot().handle,
       email: entity.getUserSnapshot().email,
+      avatar: entity.getUserSnapshot().avatar,
       dob: entity.getUserSnapshot().dob ?? null,
       phoneNumber: entity.getUserSnapshot().phoneNumber ?? null,
       isPhoneNumberVerified: entity.getUserSnapshot().isPhoneNumbetVerified,
       notification: entity.getUserSnapshot().notification,
       languagePreference: entity.getUserSnapshot().languagePreference,
-      onBoardingComplete: entity.getUserSnapshot().isOnBoardingComplete,
       themePreference: entity.getUserSnapshot().themePreference,
       region: entity.getUserSnapshot().region,
     };

@@ -6,6 +6,7 @@ import {
   UserThemePreference,
   UserLanguagePreference,
   UserRegion,
+  UserAvatar,
 } from '@users/domain/value-objects';
 
 export class UserEntity {
@@ -14,13 +15,13 @@ export class UserEntity {
     private readonly userAuthId: string,
     private readonly handle: UserHandle,
     private email: UserEmail,
+    private avatar: UserAvatar,
     private dob: UserDOB,
     private phoneNumber: UserPhoneNumber,
     private isPhoneNumberVerified: boolean,
     private notification: boolean,
     private themePreference: UserThemePreference,
     private languagePreference: UserLanguagePreference,
-    private isOnBoardingComplete: boolean,
     private region: UserRegion,
   ) {}
 
@@ -29,13 +30,13 @@ export class UserEntity {
     userAuthId: string,
     handle: string,
     email: string,
+    avatar: string,
     dob?: Date,
     phoneNumber?: string,
     isPhoneNumberVerified?: boolean,
     notification?: boolean,
     preferredTheme?: string,
     preferredLanguage?: string,
-    isOnBoardingComplete?: boolean,
     region?: string,
   ): UserEntity {
     return new UserEntity(
@@ -43,13 +44,13 @@ export class UserEntity {
       userAuthId,
       UserHandle.create(handle),
       UserEmail.create(email),
+      UserAvatar.create(avatar),
       UserDOB.create(dob),
       UserPhoneNumber.create(phoneNumber),
       isPhoneNumberVerified ?? false,
       notification ?? true,
       UserThemePreference.create(preferredTheme),
       UserLanguagePreference.create(preferredLanguage),
-      isOnBoardingComplete ?? false,
       UserRegion.create(region),
     );
   }
@@ -68,6 +69,10 @@ export class UserEntity {
 
   public getEmail(): string {
     return this.email.getValue();
+  }
+
+  public getAvatar(): string {
+    return this.avatar.getValue();
   }
 
   public getDob(): Date | undefined {
@@ -94,10 +99,6 @@ export class UserEntity {
     return this.languagePreference.getValue();
   }
 
-  public getIsOnBoardingComplete(): boolean {
-    return this.isOnBoardingComplete;
-  }
-
   public getRegion(): string {
     return this.region.getValue();
   }
@@ -108,19 +109,24 @@ export class UserEntity {
       userAuthId: this.userAuthId,
       handle: this.handle.getValue(),
       email: this.email.getValue(),
+      avatar: this.avatar.getValue(),
       dob: this.dob.getValue(),
       phoneNumber: this.phoneNumber.getValue(),
       isPhoneNumbetVerified: this.isPhoneNumberVerified,
       notification: this.notification,
       themePreference: this.themePreference.getValue(),
       languagePreference: this.languagePreference.getValue(),
-      isOnBoardingComplete: this.isOnBoardingComplete,
       region: this.region.getValue(),
     };
   }
 
   public updateEmail(newEmail: string): void {
     this.email = UserEmail.create(newEmail);
+    return;
+  }
+
+  public updateAvatar(newAvatar: string): void {
+    this.avatar = UserAvatar.create(newAvatar);
     return;
   }
 
@@ -157,11 +163,6 @@ export class UserEntity {
     this.languagePreference = UserLanguagePreference.create(
       newLanguagePreference,
     );
-    return;
-  }
-
-  public updateOnBoardingStatus(newOnBoardingStatus: boolean): void {
-    this.isOnBoardingComplete = newOnBoardingStatus;
     return;
   }
 

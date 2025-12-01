@@ -8,7 +8,6 @@ import {
   CreateProfileEvent,
   PhoneNumberVerfiedEvent,
   UpdateProfileEvent,
-  OnBoardingCompletedEvent,
 } from '@users/application/events';
 
 export class UserAggregate extends AggregateRoot {
@@ -29,6 +28,7 @@ export class UserAggregate extends AggregateRoot {
     userAuthId: string,
     handle: string,
     email: string,
+    avatar: string,
     dob?: Date,
     phoneNumber?: string,
     isPhoneNumberVerified?: boolean,
@@ -43,13 +43,13 @@ export class UserAggregate extends AggregateRoot {
       userAuthId,
       handle,
       email,
+      avatar,
       dob,
       phoneNumber,
       isPhoneNumberVerified,
       notification,
       preferredTheme,
       preferredLanguage,
-      isOnBoardingComplete,
       region,
     );
     const userAggregate = new UserAggregate(userEntity);
@@ -60,20 +60,17 @@ export class UserAggregate extends AggregateRoot {
     return userAggregate;
   }
 
-  public updateUserProfile(dob?: Date, phoneNumber?: string) {
+  public updateUserProfile(dob?: Date, phoneNumber?: string, avatar?: string) {
     if (dob) this.getUserEntity().updateDOB(new Date(dob));
     if (phoneNumber) this.getUserEntity().updatePhoneNumber(phoneNumber);
+    if (avatar) this.getUserEntity().updateAvatar(avatar);
 
-    if (dob && phoneNumber) {
-      this.markProfileAsComplete();
-    }
-
-    // event for profile updated here...
     this.apply(
       new UpdateProfileEvent({
         updatedProfile: {
           id: this.getUserSnapshot().id,
           dob: dob?.toISOString(),
+          // avatar: this.getUserSnapshot(),
           phoneNumber,
         },
       }),
@@ -129,15 +126,5 @@ export class UserAggregate extends AggregateRoot {
         status: this.getUserSnapshot().notification,
       }),
     );
-  }
-
-  private markProfileAsComplete() {
-    if (this.getUserEntity().getIsOnBoardingComplete() === true) {
-      throw new Error(`Profile was already completed`);
-    }
-    this.getUserEntity().updateOnBoardingStatus(true);
-
-    // event for profile completion here...
-    this.apply(new OnBoardingCompletedEvent({ id: this.getUserSnapshot().id }));
   }
 }
