@@ -1,9 +1,11 @@
 import { VideoUploadedEventDto } from '@app/contracts/videos';
 
-export interface ProjectionBufferPort {
+export interface VideoProjectionBufferPort {
   bufferVideoCards(event: VideoUploadedEventDto): Promise<void>;
 
   processVideoCards(): Promise<number | void>;
 }
 
-export const PROJECTION_BUFFER_PORT = Symbol('PROJECTION_BUFFER_PORT');
+export const VIDEO_PROJECTION_BUFFER_PORT = Symbol(
+  'VIDEO_PROJECTION_BUFFER_PORT',
+);

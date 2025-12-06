@@ -1005,6 +1005,29 @@ services:
       - cache
       - observer
       - message-broker
+    healthcheck: *message-broker-healthcheck
+    deploy: *service_resources
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+
+  query:
+    image: mytube/query/production:latest
+    container_name: query
+    build:
+      context: .
+      dockerfile: apps/query/Dockerfile
+    env_file:
+      - apps/query/.env
+    environment:
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
+    networks:
+      - services
+      - cache
+      - observer
+      - message-broker
     healthcheck: *grpc-healthcheck
     deploy: *service_resources
     depends_on:

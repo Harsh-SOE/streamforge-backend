@@ -10,5 +10,4 @@ export class FindUserRequestResponse {
   public readonly languagePreference: string;
   public readonly themePreference: string;
   public readonly region: string;
-  public readonly onBoardingComplete: boolean;
 }

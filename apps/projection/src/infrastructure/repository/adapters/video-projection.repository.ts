@@ -4,13 +4,13 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { VideoUploadedEventDto } from '@app/contracts/videos';
 
-import { ProjectionRepositoryPort } from '@projection/application/ports';
+import { VideoProjectionRepositoryPort } from '@projection/application/ports';
 import { VideoCardACL } from '@projection/infrastructure/anti-corruption';
 
 import { ProjectedVideoCardModel } from '../models';
 
 @Injectable()
-export class VideoCardRepository implements ProjectionRepositoryPort {
+export class VideoCardRepository implements VideoProjectionRepositoryPort {
   constructor(
     @InjectModel(ProjectedVideoCardModel.name)
     private readonly projectedVideoCard: Model<ProjectedVideoCardModel>,

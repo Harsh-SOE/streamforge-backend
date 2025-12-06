@@ -20,6 +20,10 @@ export class CompleteUserProfileDto {
   @IsNotEmpty()
   handle: string;
 
+  @IsString()
+  @IsNotEmpty()
+  avatar: string;
+
   @IsPhoneNumber()
   @IsOptional()
   phoneNumber?: string;

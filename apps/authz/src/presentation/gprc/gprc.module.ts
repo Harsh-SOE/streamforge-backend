@@ -10,7 +10,7 @@ import {
 
 import { GrpcService } from './gprc.service';
 import { GrpcController } from './gprc.controller';
-import { LOGGER_PORT } from '@app/ports';
+import { LOGGER_PORT } from '@app/ports/logger';
 
 @Module({
   imports: [AppConfigModule],

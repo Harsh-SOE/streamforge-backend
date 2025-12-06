@@ -2,9 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class ProjectedUserCardModel extends Document {
+export class ProjectedUserQueryModel extends Document {
   @Prop({ required: true, index: true })
   userId: string;
+
+  @Prop({ required: true, unique: true })
+  email: string;
 
   @Prop({ required: true, index: true })
   userAuthId: string;
@@ -22,12 +25,15 @@ export class ProjectedUserCardModel extends Document {
   phoneNumber?: string;
 
   @Prop({ type: Boolean, default: false })
+  isPhoneNumberVerified: boolean;
+
+  @Prop({ type: Boolean, default: false })
   hasChannel: boolean;
 
   @Prop()
   dob?: string;
 }
 
-export const ProjectUserCardSchema = SchemaFactory.createForClass(
-  ProjectedUserCardModel,
+export const ProjectUserQuerySchema = SchemaFactory.createForClass(
+  ProjectedUserQueryModel,
 );

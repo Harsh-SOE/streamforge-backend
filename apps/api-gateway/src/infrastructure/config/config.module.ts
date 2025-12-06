@@ -42,9 +42,6 @@ import { AppConfigService } from './config.service';
         WATCH_SERVICE_HOST: joi.string().required(),
         WATCH_SERVICE_PORT: joi.number().required(),
 
-        SAGA_SERVICE_HOST: joi.string().required(),
-        SAGA_SERVICE_PORT: joi.number().required(),
-
         COMMENT_SERVICE_HOST: joi.string().required(),
         COMMENT_SERVICE_PORT: joi.number().required(),
 

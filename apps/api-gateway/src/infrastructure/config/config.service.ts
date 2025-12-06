@@ -6,7 +6,6 @@ import { join } from 'path';
 
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
 import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
-import { SAGA_PACKAGE_NAME } from '@app/contracts/saga';
 import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
 import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
 import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
@@ -66,14 +65,6 @@ export class AppConfigService {
 
   get VIDEO_SERVICE_HOST() {
     return this.configService.getOrThrow<string>('VIDEO_SERVICE_HOST');
-  }
-
-  get SAGA_SERVICE_PORT() {
-    return this.configService.getOrThrow<number>('SAGA_SERVICE_PORT');
-  }
-
-  get SAGA_SERVICE_HOST() {
-    return this.configService.getOrThrow<string>('SAGA_SERVICE_HOST');
   }
 
   get COMMENT_SERVICE_PORT() {
@@ -175,17 +166,6 @@ export class AppConfigService {
         protoPath: join(__dirname, 'proto/channel.proto'),
         package: CHANNEL_PACKAGE_NAME,
         url: `${this.CHANNEL_SERVICE_HOST}:${this.CHANNEL_SERVICE_PORT}`,
-      },
-    };
-  }
-
-  get SAGA_SERVICE_OPTIONS(): GrpcOptions {
-    return {
-      transport: Transport.GRPC,
-      options: {
-        protoPath: join(__dirname, 'proto/saga.proto'),
-        package: SAGA_PACKAGE_NAME,
-        url: `${this.SAGA_SERVICE_HOST}:${this.SAGA_SERVICE_PORT}`,
       },
     };
   }

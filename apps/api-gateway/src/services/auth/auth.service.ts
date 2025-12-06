@@ -54,6 +54,7 @@ export class AuthService implements OnModuleInit {
           'Please complete your profile inorder to login to application [STATUS: Signup-SUCCESS]',
         token: undefined,
         userInfo: {
+          authId: userAuthCredentials.providerId,
           email: userAuthCredentials.email,
           avatar:
             userAuthCredentials.avatar ||
@@ -69,7 +70,7 @@ export class AuthService implements OnModuleInit {
         maxAge: 1000 * 60 * 5,
       });
 
-      return response.redirect('http://localhost:4545/onboard');
+      return response.redirect('http://localhost:4545/auth');
     }
 
     // user exists...

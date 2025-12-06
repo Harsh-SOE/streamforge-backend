@@ -9,7 +9,7 @@ import winston, {
   transports,
 } from 'winston';
 
-import { LoggerPort } from '@app/ports';
+import { LoggerPort } from '@app/ports/logger';
 
 import { AppConfigService } from '@authz/infrastructure/config';
 

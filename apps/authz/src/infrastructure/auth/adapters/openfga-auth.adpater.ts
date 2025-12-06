@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { OpenFgaClient } from '@openfga/sdk';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { AppConfigService } from '@authz/infrastructure/config';
 import {

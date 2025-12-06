@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { KafkaOptions } from '@nestjs/microservices';
+
 import { AppModule } from './app.module';
 import { AppConfigService } from './infrastructure/config';
 

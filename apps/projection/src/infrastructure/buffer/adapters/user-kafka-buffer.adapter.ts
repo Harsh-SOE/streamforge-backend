@@ -6,21 +6,22 @@ import {
 } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
+import { UserProfileCreatedEventDto } from '@app/contracts/users';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { VideoUploadedEventDto } from '@app/contracts/videos';
 
 import {
-  PROJECTION_REPOSITORY_PORT,
-  ProjectionBufferPort,
-  ProjectionRepositoryPort,
+  USER_PROJECTION_REPOSITORY_PORT,
+  UserProjectionBufferPort,
+  UserProjectionRepositoryPort,
 } from '@projection/application/ports';
 import { AppConfigService } from '@projection/infrastructure/config';
 
-export const PROJECTION_BUFFER_TOPIC = 'projection';
+export const USER_PROFILE_PROJECTION_BUFFER_TOPIC =
+  'user_profile_created_projection_topic';
 
 @Injectable()
-export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, ProjectionBufferPort
+export class UserKafkaBufferAdapter
+  implements OnModuleInit, OnModuleDestroy, UserProjectionBufferPort
 {
   private readonly kafkaClient: Kafka;
   private readonly producer: Producer;
@@ -28,8 +29,8 @@ export class KafkaBufferAdapter
 
   public constructor(
     private readonly configService: AppConfigService,
-    @Inject(PROJECTION_REPOSITORY_PORT)
-    private readonly projectionRepo: ProjectionRepositoryPort,
+    @Inject(USER_PROJECTION_REPOSITORY_PORT)
+    private readonly projectionRepo: UserProjectionRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
@@ -59,7 +60,7 @@ export class KafkaBufferAdapter
     await this.consumer.connect();
 
     await this.consumer.subscribe({
-      topic: PROJECTION_BUFFER_TOPIC,
+      topic: USER_PROFILE_PROJECTION_BUFFER_TOPIC,
       fromBeginning: false,
     });
   }
@@ -69,14 +70,14 @@ export class KafkaBufferAdapter
     await this.consumer.disconnect();
   }
 
-  async bufferVideoCards(event: VideoUploadedEventDto): Promise<void> {
+  async bufferUserCards(event: UserProfileCreatedEventDto): Promise<void> {
     await this.producer.send({
-      topic: PROJECTION_BUFFER_TOPIC,
+      topic: USER_PROFILE_PROJECTION_BUFFER_TOPIC,
       messages: [{ value: JSON.stringify(event) }],
     });
   }
 
-  async processVideoCards(): Promise<number | void> {
+  async processUserCards(): Promise<number | void> {
     await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
@@ -84,14 +85,16 @@ export class KafkaBufferAdapter
           .filter((message) => message.value)
           .map(
             (message) =>
-              JSON.parse(message.value!.toString()) as VideoUploadedEventDto,
+              JSON.parse(
+                message.value!.toString(),
+              ) as UserProfileCreatedEventDto,
           );
 
         this.logger.info(
           `Saving ${messages.length} profiles in projection database`,
         );
 
-        await this.projectionRepo.saveManyVideos(messages);
+        await this.projectionRepo.saveManyUser(messages);
 
         this.logger.info(`${messages.length} profiles in projection database`);
       },

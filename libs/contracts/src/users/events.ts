@@ -4,14 +4,15 @@ export interface UserProfileCreatedEventDto {
   handle: string;
   email: string;
   avatar: string;
+  dob?: string;
+  phoneNumber?: string;
+  isPhoneNumberVerified?: boolean;
 }
 
 export interface UserProfileUpdatedEventDto {
   id: string;
-  userAuthId: string;
-  handle: string;
-  email: string;
-  avatar: string;
+  avatar?: string;
+  dob?: string;
 }
 
 export interface UserProfileDeletedEventDto {

@@ -1,6 +1,6 @@
 import { VideoUploadedEventDto } from '@app/contracts/videos';
 
-export interface ProjectionRepositoryPort {
+export interface VideoProjectionRepositoryPort {
   saveVideo(data: VideoUploadedEventDto): Promise<boolean>;
 
   saveManyVideos(data: VideoUploadedEventDto[]): Promise<number>;
@@ -13,4 +13,6 @@ export interface ProjectionRepositoryPort {
   deleteVideo(videoId: string): Promise<boolean>;
 }
 
-export const PROJECTION_REPOSITORY_PORT = Symbol('PROJECTION_REPOSITORY_PORT');
+export const VIDEO_PROJECTION_REPOSITORY_PORT = Symbol(
+  'VIDEO_PROJECTION_REPOSITORY_PORT',
+);

@@ -64,6 +64,7 @@ export class UsersService implements OnModuleInit {
       authId: saveUserProfileDto.authId,
       email: saveUserProfileDto.email,
       handle: saveUserProfileDto.handle,
+      avatar: saveUserProfileDto.avatar,
     });
     const createdUserProfile = await firstValueFrom(response$);
     const userPayload: UserAuthPayload = {

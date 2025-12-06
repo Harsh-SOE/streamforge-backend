@@ -215,6 +215,18 @@
         "tsConfigPath": "libs/proto/tsconfig.lib.json"
       }
     },
+    "query": {
+      "type": "application",
+      "root": "apps/query",
+      "entryFile": "main",
+      "sourceRoot": "apps/query/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/query/tsconfig.app.json",
+        "webpack": true,
+        "watchAssets": true,
+        "webpackConfigPath": "apps/query/webpack.config.js"
+      }
+    },
     "reaction": {
       "type": "application",
       "root": "apps/reaction",

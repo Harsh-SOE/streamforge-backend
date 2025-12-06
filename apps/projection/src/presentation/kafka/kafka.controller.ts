@@ -1,10 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
-import { VIDEO_EVENTS } from '@app/clients';
+import { VideoUploadedEventDto } from '@app/contracts/videos';
+import { UserProfileCreatedEventDto } from '@app/contracts/users';
+import { USERS_EVENTS, VIDEO_EVENTS } from '@app/clients';
 
 import { KafkaService } from './kafka.service';
-import { VideoUploadedEventDto } from '@app/contracts/videos';
 
 @Controller('projection')
 export class KafkaController {
@@ -15,5 +16,12 @@ export class KafkaController {
     @Payload() message: VideoUploadedEventDto,
   ) {
     this.kafkaService.onVideoUploadedProjectionEvent(message);
+  }
+
+  @EventPattern(USERS_EVENTS.USER_ONBOARDED_EVENT)
+  public onUserProfileCreatedProjectionEvent(
+    @Payload() message: UserProfileCreatedEventDto,
+  ) {
+    this.kafkaService.onUserProfileCreatedProjectionEvent(message);
   }
 }

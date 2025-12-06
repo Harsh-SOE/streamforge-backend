@@ -5,7 +5,6 @@ WORKDIR /@streamforge
 RUN apk add --no-cache curl bash
 RUN curl -fL https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.21/grpc_health_probe-linux-amd64 -o /usr/local/bin/grpc_health_probe
 RUN chmod +x /usr/local/bin/grpc_health_probe
-RUN apk del curl
 
 COPY package.json yarn.lock ./
 
