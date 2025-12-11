@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
 
+import { AppConfigService } from './config.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -13,5 +15,7 @@ import * as joi from 'joi';
       }),
     }),
   ],
+  providers: [AppConfigService],
+  exports: [AppConfigService],
 })
 export class AppConfigModule {}

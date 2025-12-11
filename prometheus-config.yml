@@ -11,4 +11,13 @@ scrape_configs:
             'email:3000',
             'videos:3000',
             'reaction:3000',
+            'comments:3000',
+            'views:3000',
+            'subscribe:3000',
+            'video-transcoder:3000',
+            'projection:3000',
+            'query:3000',
+            'playlist:3000',
+            'history:3000',
+            'authz:3000',
           ]

@@ -16,6 +16,7 @@ import { QueryHandlers } from '@query/queries';
 import { USER_QUERY_REPOSITORY_PORT } from '@query/application/ports';
 import { UserQueryRepository } from '@query/infrastructure/repository/adapters';
 import { WinstonLoggerAdapter } from '@query/infrastructure/logger';
+import { UserQueryACL } from '@query/infrastructure/anti-corruption';
 
 import { GrpcService } from './grpc.service';
 import { GrpcController } from './grpc.controller';
@@ -40,6 +41,7 @@ import { GrpcController } from './grpc.controller';
   providers: [
     GrpcService,
     AppConfigService,
+    UserQueryACL,
     ...QueryHandlers,
     {
       provide: USER_QUERY_REPOSITORY_PORT,

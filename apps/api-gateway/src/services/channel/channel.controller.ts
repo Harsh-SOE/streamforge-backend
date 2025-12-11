@@ -7,11 +7,14 @@ import {
   UseGuards,
   Version,
 } from '@nestjs/common';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Counter } from 'prom-client';
 
 import { UserAuthPayload } from '@app/contracts/auth';
 
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 import { User } from '@gateway/services/auth/decorators';
+import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 
 import {
   CreateChannelRequestDto,
@@ -29,7 +32,10 @@ import { CHANNEL_API_VERSION, CHANNEL_API } from './api';
 @Controller('channel')
 @UseGuards(GatewayJwtGuard)
 export class ChannelController {
-  constructor(private channelService: ChannelService) {}
+  constructor(
+    private channelService: ChannelService,
+    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
+  ) {}
 
   @Post(CHANNEL_API.UPLOAD_CHANNEL_COVER_IMAGE)
   @Version(CHANNEL_API_VERSION.V1)
@@ -37,6 +43,7 @@ export class ChannelController {
     @Body() FileMetaDataDto: PreSignedUrlRequestDto,
     @User('id') userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
+    this.counter.inc();
     return this.channelService.getPresignedUploadUrl(FileMetaDataDto, userId);
   }
 
@@ -46,6 +53,7 @@ export class ChannelController {
     @Body() createChannelDto: CreateChannelRequestDto,
     @User() user: UserAuthPayload,
   ): Promise<ChannelCreatedRequestResponse> {
+    this.counter.inc();
     return this.channelService.createChannel(createChannelDto, user);
   }
 
@@ -55,6 +63,7 @@ export class ChannelController {
     @Body() channelUpdateDto: UpdateChannelRequestDto,
     @Param('id') channelId: string,
   ): Promise<UpdatedChannelRequestResponse> {
+    this.counter.inc();
     return this.channelService.updateChannel(channelUpdateDto, channelId);
   }
 }

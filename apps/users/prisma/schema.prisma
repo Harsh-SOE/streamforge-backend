@@ -20,7 +20,7 @@ model User {
   authUserId            String           @unique
   email                 String           @unique
   handle                String           @unique
-  avatar                String
+  avatar                String           @default("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFEG18PvoiXjWsEEMEkb_QfJJSNP29O-Ef0gog_eimS8vFG1NR_DXq28BTSmT2KLUd0C4&usqp=CAU")
   dob                   DateTime?
   phoneNumber           String?
   isPhoneNumberVerified Boolean          @default(false)

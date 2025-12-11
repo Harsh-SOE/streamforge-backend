@@ -7,10 +7,13 @@ import {
   UseGuards,
   Version,
 } from '@nestjs/common';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Counter } from 'prom-client';
 
 import { UserAuthPayload } from '@app/contracts/auth';
 
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
+import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { User } from '@gateway/services/auth/decorators';
 
 import { VideoReactedResponse, GetLikesCountForVideo } from './response';
@@ -22,7 +25,10 @@ import { ReactionService } from './reaction.service';
 @Controller('reaction')
 @UseGuards(GatewayJwtGuard)
 export class ReactionController {
-  constructor(private likeService: ReactionService) {}
+  constructor(
+    private likeService: ReactionService,
+    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
+  ) {}
 
   @Post(REACTION_API.REACT_VIDEO)
   @Version(REACTION_API_VERSION.V1)
@@ -31,6 +37,7 @@ export class ReactionController {
     @Query('videoId') videoId: string,
     @Body() likeStatus: VideoReactionDto,
   ): Promise<VideoReactedResponse> {
+    this.counter.inc();
     return this.likeService.reactToVideo(loggedInUser.id, videoId, likeStatus);
   }
 
@@ -39,6 +46,7 @@ export class ReactionController {
   getLikesCountForVideo(
     @Param('videoId') videoId: string,
   ): Promise<GetLikesCountForVideo> {
+    this.counter.inc();
     return this.likeService.getLikesCountForVideo(videoId);
   }
 
@@ -47,6 +55,7 @@ export class ReactionController {
   getDisLikesCountForVideo(
     @Param('videoId') videoId: string,
   ): Promise<GetLikesCountForVideo> {
+    this.counter.inc();
     return this.likeService.getLikesCountForVideo(videoId);
   }
 }

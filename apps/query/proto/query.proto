@@ -6,6 +6,10 @@ message GetUserProfileFromIdDto {
   string userId = 1;
 }
 
+message GetUserProfileFromAuthIdDto {
+  string userAuthId = 1;
+}
+
 message UserProfileMessage {
   string userId = 1;
   string email = 2;
@@ -25,5 +29,6 @@ message GetUserProfileResponse {
 }
 
 service QueryService {
-  rpc GetUserProfile(GetUserProfileFromIdDto) returns (GetUserProfileResponse) {}
+  rpc GetUserProfileFromId(GetUserProfileFromIdDto) returns (GetUserProfileResponse) {}
+  rpc GetUserProfileFromAuthId(GetUserProfileFromAuthIdDto) returns (GetUserProfileResponse) {}
 }

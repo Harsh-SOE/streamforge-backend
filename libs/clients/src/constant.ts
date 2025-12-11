@@ -14,4 +14,5 @@ export enum SERVICES {
   WATCH = 'WATCH',
   COMMENTS = 'COMMENT',
   CHANNEL = 'CHANNEL',
+  QUERY = 'QUERY',
 }

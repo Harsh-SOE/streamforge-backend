@@ -1,4 +1,5 @@
 export enum VIEWS_API {
+  ROUTE = 'views',
   VIEW_VIDEO = 'video/:videoId',
 }
 

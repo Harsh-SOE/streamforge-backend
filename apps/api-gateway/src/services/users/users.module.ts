@@ -2,13 +2,13 @@ import { ClientsModule } from '@nestjs/microservices';
 import { Module } from '@nestjs/common';
 
 import { SERVICES } from '@app/clients/constant';
+import { LOGGER_PORT } from '@app/ports/logger';
 
 import {
   AppConfigModule,
   AppConfigService,
 } from '@gateway/infrastructure/config';
 import { MeasureModule } from '@gateway/infrastructure/measure';
-import { LOGGER_PORT } from '@gateway/application/ports';
 import { WinstonLoggerAdapter } from '@gateway/infrastructure/logger';
 
 import { UsersController } from './users.controller';

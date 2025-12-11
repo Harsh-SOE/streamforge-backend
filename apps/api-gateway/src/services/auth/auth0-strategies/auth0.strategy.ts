@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtraVerificationParams, Profile, Strategy } from 'passport-auth0';
 
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+
 import { AppConfigService } from '@gateway/infrastructure/config';
-import { LOGGER_PORT, LoggerPort } from '@gateway/application/ports';
 
 import { GATEWAY_AUTH0_GAURD_STRATEGY, Auth0ProfileUser } from '../types';
 
@@ -31,11 +32,6 @@ export class Auth0Strategy extends PassportStrategy(
     extraParams: ExtraVerificationParams,
     profile: Profile & { picture?: string },
   ): Auth0ProfileUser {
-    this.logger.info(`Access Token is: ${accessToken}`);
-    this.logger.info(`Refresh Token is: ${refreshToken}`);
-    this.logger.info(`Profile is: ${JSON.stringify(profile)}`);
-    this.logger.info(`Extra params are ${JSON.stringify(extraParams)}`);
-
     const { id, provider, name, username, photos, emails, birthday } = profile;
 
     const email = emails?.[0].value;
@@ -53,8 +49,6 @@ export class Auth0Strategy extends PassportStrategy(
       accessToken: accessToken,
       refreshToken: refreshToken,
     };
-
-    console.log(userAuth0ProfilePayload);
 
     return userAuth0ProfilePayload;
   }

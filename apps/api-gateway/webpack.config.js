@@ -53,6 +53,10 @@ module.exports = (options, webpack) => {
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
+            from: path.join(__dirname, 'proto/query.proto'),
+            to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
+          },
+          {
             from: path.join(__dirname, 'scripts/entrypoint.dev.bash'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/scripts'),
           },

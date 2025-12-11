@@ -16,6 +16,14 @@ module.exports = (options, webpack) => {
             from: path.join(__dirname, 'scripts/entrypoint.prod.bash'),
             to: path.join(__dirname, '../../dist/apps/query/scripts'),
           },
+          {
+            from: path.join(__dirname, 'proto/query.proto'),
+            to: path.join(__dirname, '../../dist/apps/query/proto'),
+          },
+          {
+            from: path.join(__dirname, 'proto/health.proto'),
+            to: path.join(__dirname, '../../dist/apps/query/proto'),
+          },
         ],
       }),
     ],

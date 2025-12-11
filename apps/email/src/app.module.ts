@@ -4,7 +4,7 @@ import { KafkaService } from './presentation/kafka/kafka.service';
 import { KafkaController } from './presentation/kafka/kafka.controller';
 import { KakfaModule } from './presentation/kafka/kafka.module';
 import { AppConfigModule } from './infrastructure/config/config.module';
-import { MeasureModule } from './infrastructure/measure/measure.module';
+import { MeasureModule } from './infrastructure/measure';
 import { AppHealthModule } from './infrastructure/health';
 
 @Module({

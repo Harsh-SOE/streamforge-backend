@@ -1,4 +1,5 @@
 export enum COMMENT_API {
+  ROUTE = 'comment',
   COMMENT_ON_VIDEO = 'comment-video/:videoId',
 }
 

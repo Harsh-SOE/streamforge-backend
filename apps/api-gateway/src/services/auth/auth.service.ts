@@ -2,97 +2,81 @@ import { Response } from 'express';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { firstValueFrom } from 'rxjs';
-import { Counter } from 'prom-client';
 
 import { SERVICES } from '@app/clients/constant';
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
+import {
+  QUERY_SERVICE_NAME,
+  QueryServiceClient,
+  UserProfileMessage,
+} from '@app/contracts/query';
 import { UserAuthPayload } from '@app/contracts/auth';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import { LOGGER_PORT, LoggerPort } from '@gateway/application/ports';
-import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { Auth0ProfileUser } from '@gateway/services/auth/types';
 import { AppConfigService } from '@gateway/infrastructure/config';
+
+const ONBOARDING_INFO_COOKIE_NAME = 'onboarding_info';
+const ACCESS_TOKEN_COOKIE_NAME = 'access_info';
+const USER_METADATA_COOKIE_NAME = 'user_metadata';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
   private userService: UserServiceClient;
+  private queryService: QueryServiceClient;
 
   constructor(
     @Inject(SERVICES.USER) private readonly userClient: ClientGrpc,
+    @Inject(SERVICES.QUERY) private readonly queryClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
     private readonly jwtService: JwtService,
     private readonly configService: AppConfigService,
   ) {}
 
   onModuleInit() {
     this.userService = this.userClient.getService(USER_SERVICE_NAME);
+    this.queryService = this.queryClient.getService(QUERY_SERVICE_NAME);
   }
 
-  async onAuthRedirect(
-    userAuthCredentials: Auth0ProfileUser,
+  private prepareAndSendOnboardingCookie(
     response: Response,
-  ): Promise<void> {
-    this.logger.info(
-      `User Auth Credentials are: ${JSON.stringify(userAuthCredentials)}`,
-    );
-
-    const response$ = this.userService.findUserByAuthId({
+    userAuthCredentials: Auth0ProfileUser,
+  ) {
+    const onBoardingCookie = {
       authId: userAuthCredentials.providerId,
-    });
-    const userFoundResponse = await firstValueFrom(response$);
+      email: userAuthCredentials.email,
+      avatar: userAuthCredentials.avatar,
+    };
 
-    const foundUser = userFoundResponse.user;
-
-    if (!foundUser) {
-      this.logger.info(`No User found in user's database...`);
-
-      const cookiePayload = {
-        response:
-          'Please complete your profile inorder to login to application [STATUS: Signup-SUCCESS]',
-        token: undefined,
-        userInfo: {
-          authId: userAuthCredentials.providerId,
-          email: userAuthCredentials.email,
-          avatar:
-            userAuthCredentials.avatar ||
-            'https://www.google.com/imgres?q=user%20avatar&imgurl=https%3A%2F%2Fpng.pngtree.com%2Fpng-vector%2F20190710%2Fourmid%2Fpngtree-user-vector-avatar-png-image_1541962.jpg&imgrefurl=https%3A%2F%2Fpngtree.com%2Fso%2Fuser-avatar&docid=4N-ldCWOe1oafM&tbnid=nnEzJXp8VNSC_M&vet=12ahUKEwj_zNytyZuRAxWlT2wGHYiYHPgQM3oECBYQAA..i&w=360&h=360&hcb=2&ved=2ahUKEwj_zNytyZuRAxWlT2wGHYiYHPgQM3oECBYQAA',
-        },
-      };
-      response.cookie('onboarding_info', JSON.stringify(cookiePayload), {
+    response.cookie(
+      ONBOARDING_INFO_COOKIE_NAME,
+      JSON.stringify(onBoardingCookie),
+      {
         httpOnly: false,
         secure:
           this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
         sameSite: 'lax',
         path: '/',
         maxAge: 1000 * 60 * 5,
-      });
+      },
+    );
+  }
 
-      return response.redirect('http://localhost:4545/auth');
-    }
-
-    // user exists...
-
+  private prepareAndSendAccessTokenCookie(
+    response: Response,
+    foundUser: UserProfileMessage,
+  ) {
     const loggedInUserPayload: UserAuthPayload = {
-      id: foundUser.id,
-      authId: userAuthCredentials.providerId,
+      id: foundUser.userId,
+      authId: foundUser.userAuthId,
       email: foundUser.email,
       handle: foundUser.handle,
     };
 
-    const userMetaData = {
-      id: foundUser.id,
-      email: foundUser.email,
-      avatar:
-        userAuthCredentials.avatar ||
-        'https://www.google.com/imgres?q=user%20avatar&imgurl=https%3A%2F%2Fpng.pngtree.com%2Fpng-vector%2F20190710%2Fourmid%2Fpngtree-user-vector-avatar-png-image_1541962.jpg&imgrefurl=https%3A%2F%2Fpngtree.com%2Fso%2Fuser-avatar&docid=4N-ldCWOe1oafM&tbnid=nnEzJXp8VNSC_M&vet=12ahUKEwj_zNytyZuRAxWlT2wGHYiYHPgQM3oECBYQAA..i&w=360&h=360&hcb=2&ved=2ahUKEwj_zNytyZuRAxWlT2wGHYiYHPgQM3oECBYQAA',
-    };
-
     const token = this.jwtService.sign(loggedInUserPayload);
 
-    response.cookie('access_token', token, {
+    response.cookie(ACCESS_TOKEN_COOKIE_NAME, token, {
       httpOnly: true,
       secure:
         this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
@@ -100,8 +84,21 @@ export class AuthService implements OnModuleInit {
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
     });
+  }
 
-    response.cookie('user_meta', JSON.stringify(userMetaData), {
+  private prepareAndSendUserMetadata(
+    response: Response,
+    foundUser: UserProfileMessage,
+  ) {
+    const userMetaData = {
+      id: foundUser.userId,
+      email: foundUser.email,
+      avatar: foundUser.avatar,
+      handle: foundUser.handle,
+      hasChannel: foundUser.hasChannel,
+    };
+
+    response.cookie(USER_METADATA_COOKIE_NAME, JSON.stringify(userMetaData), {
       httpOnly: false,
       secure:
         this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
@@ -109,7 +106,38 @@ export class AuthService implements OnModuleInit {
       path: '/',
       maxAge: 1000 * 60 * 5,
     });
+  }
 
-    return response.redirect('http://localhost:4545/homepage');
+  async onAuthRedirect(
+    userAuthCredentials: Auth0ProfileUser,
+    response: Response,
+  ): Promise<void> {
+    this.logger.info('User from auth0', userAuthCredentials);
+
+    const responseUserProjection$ = this.queryService.getUserProfileFromAuthId({
+      userAuthId: userAuthCredentials.providerId,
+    });
+
+    // TODO
+    /* Check in the user service database to confirm that there is no inconsistency in the system */
+
+    const projectedUserResponse = await firstValueFrom(responseUserProjection$);
+
+    this.logger.info(`User is`, projectedUserResponse);
+
+    const foundUser = projectedUserResponse.user;
+
+    if (!foundUser) {
+      this.logger.info(`No User found in user's database...`);
+      this.prepareAndSendOnboardingCookie(response, userAuthCredentials);
+      const ONBOARDING_PAGE = this.configService.FRONTEND_URL + '/auth';
+      return response.redirect(ONBOARDING_PAGE);
+    }
+
+    this.prepareAndSendAccessTokenCookie(response, foundUser);
+    this.prepareAndSendUserMetadata(response, foundUser);
+
+    const HOME_PAGE = this.configService.FRONTEND_URL + '/homepage';
+    return response.redirect(HOME_PAGE);
   }
 }

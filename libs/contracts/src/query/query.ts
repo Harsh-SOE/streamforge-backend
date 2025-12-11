@@ -14,6 +14,10 @@ export interface GetUserProfileFromIdDto {
   userId: string;
 }
 
+export interface GetUserProfileFromAuthIdDto {
+  userAuthId: string;
+}
+
 export interface UserProfileMessage {
   userId: string;
   email: string;
@@ -35,18 +39,24 @@ export interface GetUserProfileResponse {
 export const QUERY_PACKAGE_NAME = "Query";
 
 export interface QueryServiceClient {
-  getUserProfile(request: GetUserProfileFromIdDto): Observable<GetUserProfileResponse>;
+  getUserProfileFromId(request: GetUserProfileFromIdDto): Observable<GetUserProfileResponse>;
+
+  getUserProfileFromAuthId(request: GetUserProfileFromAuthIdDto): Observable<GetUserProfileResponse>;
 }
 
 export interface QueryServiceController {
-  getUserProfile(
+  getUserProfileFromId(
     request: GetUserProfileFromIdDto,
+  ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse;
+
+  getUserProfileFromAuthId(
+    request: GetUserProfileFromAuthIdDto,
   ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse;
 }
 
 export function QueryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getUserProfile"];
+    const grpcMethods: string[] = ["getUserProfileFromId", "getUserProfileFromAuthId"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("QueryService", method)(constructor.prototype[method], method, descriptor);

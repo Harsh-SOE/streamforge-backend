@@ -1,15 +1,15 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { firstValueFrom } from 'rxjs';
-import { Counter } from 'prom-client';
 
 import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/videos';
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
-
-import { LOGGER_PORT, LoggerPort } from '@gateway/application/ports';
-import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
+import {
+  CHANNEL_SERVICE_NAME,
+  ChannelServiceClient,
+} from '@app/contracts/channel';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
   CreateVideoRequestDto,
@@ -29,10 +29,6 @@ import {
   TransportClientVideoPublishEnumMapper,
   TransportClientVideoVisibilityEnumMapper,
 } from './mappers';
-import {
-  CHANNEL_SERVICE_NAME,
-  ChannelServiceClient,
-} from '@app/contracts/channel';
 
 @Injectable()
 export class VideoService implements OnModuleInit {
@@ -43,7 +39,6 @@ export class VideoService implements OnModuleInit {
     @Inject(SERVICES.VIDEO) private readonly videoClient: ClientGrpc,
     @Inject(SERVICES.CHANNEL) private readonly channelClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
   ) {}
 
   onModuleInit() {
@@ -55,8 +50,6 @@ export class VideoService implements OnModuleInit {
     preSignedUrlRequestDto: PreSignedUrlRequestDto,
     userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
-    this.counter.inc();
-
     const result$ = this.videoService.getPresignedUrlForVideoFileUpload({
       ...preSignedUrlRequestDto,
       userId,
@@ -71,8 +64,6 @@ export class VideoService implements OnModuleInit {
     preSignedUrlRequestDto: PreSignedUrlRequestDto,
     userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
-    this.counter.inc();
-
     const result$ = this.videoService.getPresignedUrlForThumbnailFileUpload({
       ...preSignedUrlRequestDto,
       userId,
@@ -117,7 +108,6 @@ export class VideoService implements OnModuleInit {
     ) {
       throw new Error(`Invalid Video visibility or publish status`);
     }
-    // this.counter.inc();
     const response$ = this.videoService.save({
       ownerId: user.id,
       channelId: channel.channel.id,
@@ -132,7 +122,6 @@ export class VideoService implements OnModuleInit {
   async findOneVideo(id: string): Promise<FoundVideoRequestResponse> {
     this.logger.info(`Request recieved:${id}`);
 
-    this.counter.inc();
     const response$ = this.videoService.findOne({ id });
     const response = await firstValueFrom(response$);
     const videoPublishStatusResponse =

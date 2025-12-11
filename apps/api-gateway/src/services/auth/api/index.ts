@@ -1,4 +1,5 @@
 export enum AUTH_API {
+  ROUTE = 'auth',
   AUTHENTICATE = 'authenticate',
   AUTH0_REDIRECT = 'callback',
 }

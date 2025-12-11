@@ -1,1 +1,2 @@
-export * from './measure.module';
+export * from './metrics/requests-counter';
+export * from './metrics.module';

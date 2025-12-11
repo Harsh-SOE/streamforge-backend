@@ -33,7 +33,7 @@ export class AppConfigService {
       transport: Transport.GRPC,
       options: {
         protoPath: [
-          join(__dirname, 'proto/users.proto'),
+          join(__dirname, 'proto/query.proto'),
           join(__dirname, 'proto/health.proto'),
         ],
         package: [QUERY_PACKAGE_NAME, GRPC_HEALTH_V1_PACKAGE_NAME],

@@ -10,6 +10,7 @@ import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
 import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
 import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
 import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
+import { QUERY_PACKAGE_NAME } from '@app/contracts/query';
 
 @Injectable()
 export class AppConfigService {
@@ -25,6 +26,10 @@ export class AppConfigService {
 
   get GRAFANA_LOKI_URL() {
     return this.configService.getOrThrow<string>('GRAFANA_LOKI_URL');
+  }
+
+  get FRONTEND_URL() {
+    return this.configService.getOrThrow<string>('FRONTEND_URL');
   }
 
   get JWT_ACCESS_TOKEN_SECRET() {
@@ -91,6 +96,14 @@ export class AppConfigService {
     return this.configService.getOrThrow<number>('WATCH_SERVICE_PORT');
   }
 
+  get QUERY_SERVICE_PORT() {
+    return this.configService.getOrThrow<number>('QUERY_SERVICE_PORT');
+  }
+
+  get QUERY_SERVICE_HOST() {
+    return this.configService.getOrThrow<string>('QUERY_SERVICE_HOST');
+  }
+
   get AUTH0_CLIENT_ID() {
     return this.configService.getOrThrow<string>('AUTH0_CLIENT_ID');
   }
@@ -155,6 +168,17 @@ export class AppConfigService {
         protoPath: join(__dirname, 'proto/users.proto'),
         package: USER_PACKAGE_NAME,
         url: `${this.USER_SERVICE_HOST}:${this.USER_SERVICE_PORT}`,
+      },
+    };
+  }
+
+  get QUERY_SERVICE_OPTIONS(): GrpcOptions {
+    return {
+      transport: Transport.GRPC,
+      options: {
+        protoPath: join(__dirname, 'proto/query.proto'),
+        package: QUERY_PACKAGE_NAME,
+        url: `${this.QUERY_SERVICE_HOST}:${this.QUERY_SERVICE_PORT}`,
       },
     };
   }

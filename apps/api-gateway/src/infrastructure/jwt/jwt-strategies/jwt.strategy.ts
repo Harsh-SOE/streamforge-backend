@@ -10,23 +10,26 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 
-import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 import { SERVICES } from '@app/clients/constant';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { QUERY_SERVICE_NAME, QueryServiceClient } from '@app/contracts/query';
 
 import { AppConfigService } from '@gateway/infrastructure/config';
 
-import { GATEWAY_GAURD_STRATEGY, UserAuthPayload } from '../types';
+import { GATEWAY_GAURD_STRATEGY, UserJwtAuthPayload } from '../types';
 
 @Injectable()
 export class JwtStrategy
   extends PassportStrategy(Strategy, GATEWAY_GAURD_STRATEGY)
   implements OnModuleInit
 {
-  private userService: UserServiceClient;
+  private queryService: QueryServiceClient;
 
   constructor(
     readonly configService: AppConfigService,
     @Inject(SERVICES.USER) private readonly userClient: ClientGrpc,
+    @Inject(SERVICES.QUERY) private readonly queryClient: ClientGrpc,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -42,26 +45,30 @@ export class JwtStrategy
   }
 
   onModuleInit() {
-    this.userService = this.userClient.getService(USER_SERVICE_NAME);
+    this.queryService = this.queryClient.getService(QUERY_SERVICE_NAME);
   }
 
-  async validate(payload: UserAuthPayload): Promise<UserAuthPayload> {
+  async validate(payload: UserJwtAuthPayload): Promise<UserJwtAuthPayload> {
     const { id, email, authId, handle } = payload;
-    console.log(`---> GUARDED ROUTE <---`);
-    const response$ = this.userService.findOneUserById({ id });
+
+    const response$ = this.queryService.getUserProfileFromId({ userId: id });
     const user = await firstValueFrom(response$);
-    console.log(user);
+
+    this.logger.info(`Guarded Route`);
 
     if (!user) {
-      throw new UnauthorizedException(`Complete Profile inorder to continue!`);
+      throw new UnauthorizedException(`Invalid token!`);
     }
 
-    const finalUser: UserAuthPayload = {
+    this.logger.info(`Guarded Route`);
+
+    const finalUser: UserJwtAuthPayload = {
       id,
       authId,
       email,
       handle,
     };
+
     return finalUser;
   }
 }

@@ -1,8 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { firstValueFrom } from 'rxjs';
-import { Counter } from 'prom-client';
 
 import {
   CHANNEL_SERVICE_NAME,
@@ -11,8 +9,7 @@ import {
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
 
-import { LOGGER_PORT, LoggerPort } from '@gateway/application/ports';
-import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
   CreateChannelRequestDto,
@@ -32,7 +29,6 @@ export class ChannelService implements OnModuleInit {
   constructor(
     @Inject(SERVICES.CHANNEL) private readonly channelClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
   ) {}
 
   onModuleInit() {
@@ -43,8 +39,6 @@ export class ChannelService implements OnModuleInit {
     preSignedUrlRequestDto: PreSignedUrlRequestDto,
     userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
-    this.counter.inc();
-
     const result$ = this.channelService.getPresignedUrlForFileUpload({
       ...preSignedUrlRequestDto,
       userId,
@@ -57,7 +51,6 @@ export class ChannelService implements OnModuleInit {
     user: UserAuthPayload,
   ): Promise<ChannelCreatedRequestResponse> {
     this.logger.info(`Request recieved:${JSON.stringify(channel)}`);
-    this.counter.inc();
     const response$ = this.channelService.createChannel({
       userId: user.id,
       ...channel,

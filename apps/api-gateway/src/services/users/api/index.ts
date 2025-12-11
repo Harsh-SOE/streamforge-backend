@@ -1,4 +1,5 @@
 export enum USER_API {
+  ROUTE = 'user',
   PRESIGNED_URL_AVATAR = 'avatar/presign',
   COMPLETE_PROFILE = 'profile/complete',
   UPDATE_DETAILS = 'profile/details',

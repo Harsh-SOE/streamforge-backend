@@ -5,13 +5,12 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { AppConfigService } from './infrastructure/config/config.service';
+import { AppConfigService } from './infrastructure/config';
 import { GatewayExceptionFilter } from './persentation/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(AppConfigService);
-
+  const configService = app.get<AppConfigService>(AppConfigService);
   app.use(cookieParser());
 
   app.useGlobalFilters(new GatewayExceptionFilter());
@@ -29,7 +28,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: 'http://localhost:4545',
+    origin: configService.FRONTEND_URL,
     credentials: true,
   });
 
@@ -39,7 +38,7 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60, // 1 hour,
+        maxAge: 1000 * 60 * 60,
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
@@ -52,8 +51,11 @@ async function bootstrap() {
 
   await app.listen(configService.PORT, '0.0.0.0');
 }
+
 bootstrap()
-  .then(() => console.log(`Api gateway started successfully`))
+  .then(() => {
+    console.log(`Gateway started successfully`);
+  })
   .catch((error) => {
     console.log(`An error occured while starting gateway`);
     console.error(error);

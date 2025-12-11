@@ -8,10 +8,13 @@ import {
   UseGuards,
   Version,
 } from '@nestjs/common';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Counter } from 'prom-client';
 
 import { UserAuthPayload } from '@app/contracts/auth';
 
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
+import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { User } from '@gateway/services/auth/decorators';
 
 import {
@@ -30,7 +33,10 @@ import { USER_API, USER_API_VERSION } from './api';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
+  ) {}
 
   @UseGuards(GatewayJwtGuard)
   @Post(USER_API.PRESIGNED_URL_AVATAR)
@@ -39,6 +45,7 @@ export class UsersController {
     @Body() FileMetaDataDto: PreSignedUrlRequestDto,
     @User('id') userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
+    this.counter.inc();
     return this.userService.getPresignedUploadUrl(FileMetaDataDto, userId);
   }
 
@@ -49,6 +56,7 @@ export class UsersController {
   ): Promise<{
     token: string;
   }> {
+    this.counter.inc();
     return await this.userService.saveUserInDatabase(saveUserProfileDto);
   }
 
@@ -59,6 +67,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserRequestDto,
     @User() loggedInUser: UserAuthPayload,
   ): Promise<UpdatedUserRequestResponse> {
+    this.counter.inc();
     return this.userService.updateUserDetails(loggedInUser.id, updateUserDto);
   }
 
@@ -68,6 +77,7 @@ export class UsersController {
   deleteUser(
     @User() loggedInUser: UserAuthPayload,
   ): Promise<DeleteUserRequestResponse> {
+    this.counter.inc();
     return this.userService.deleteUser(loggedInUser);
   }
 
@@ -77,6 +87,7 @@ export class UsersController {
   GetCurrentlySignedInUser(
     @User() loggedInUser: UserAuthPayload,
   ): Promise<FindUserRequestResponse> {
+    this.counter.inc();
     return this.userService.getCurrentlyLoggedInUser(loggedInUser.id);
   }
 
@@ -84,6 +95,7 @@ export class UsersController {
   @Get(USER_API.GET_ALL_USERS)
   @Version(USER_API_VERSION.V1)
   getAllRegisteredUser(): Promise<FindUserRequestResponse[]> {
+    this.counter.inc();
     return this.userService.getAllRegisteredUser();
   }
 }

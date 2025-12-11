@@ -4,8 +4,14 @@ import { VideoTranscoderModule } from '@transcoder/presentation';
 import { AppConfigModule } from '@transcoder/infrastructure/config';
 
 import { AppHealthModule } from './infrastructure/health';
+import { MeasureModule } from './infrastructure/measure';
 
 @Module({
-  imports: [AppConfigModule, VideoTranscoderModule, AppHealthModule],
+  imports: [
+    AppConfigModule,
+    VideoTranscoderModule,
+    AppHealthModule,
+    MeasureModule,
+  ],
 })
 export class AppModule {}

@@ -16,11 +16,5 @@ export class Auth0OAuthGaurd extends AuthGuard(GATEWAY_AUTH0_GAURD_STRATEGY) {
 
   constructor() {
     super();
-    /*
-    {
-      scope: 'openid profile email',
-      accessType: 'offline', // if you want refresh tokens
-      prompt: 'consent', // if you want refresh tokens
-    }*/
   }
 }

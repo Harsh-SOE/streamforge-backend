@@ -7,17 +7,12 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientGrpc } from '@nestjs/microservices';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
-import winston from 'winston';
-import { Counter } from 'prom-client';
 import { firstValueFrom } from 'rxjs';
 
-import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
-
-import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
-import { LOGGER_PORT, LoggerPort } from '@gateway/application/ports';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 
 import {
   PreSignedUrlRequestDto,
@@ -38,7 +33,6 @@ export class UsersService implements OnModuleInit {
   constructor(
     @Inject(SERVICES.USER) private readonly userClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
     private jwtService: JwtService,
   ) {}
 
@@ -50,8 +44,6 @@ export class UsersService implements OnModuleInit {
     preSignedUrlRequestDto: PreSignedUrlRequestDto,
     userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
-    this.counter.inc();
-
     const result$ = this.userService.getPresignedUrlForFileUpload({
       ...preSignedUrlRequestDto,
       userId,
@@ -81,8 +73,6 @@ export class UsersService implements OnModuleInit {
     userId: string,
     userUpdateDto: UpdateUserRequestDto,
   ): Promise<UpdatedUserRequestResponse> {
-    this.counter.inc();
-
     this.logger.info(
       `Update Request has been made:${JSON.stringify(userUpdateDto)}`,
     );
@@ -101,8 +91,6 @@ export class UsersService implements OnModuleInit {
 
   // TODO: fix this by creating a dedicated command in the user service, which will either return the response or return an error...
   async getCurrentlyLoggedInUser(id: string): Promise<FindUserRequestResponse> {
-    this.counter.inc();
-
     this.logger.info(`GET_LOGGED_IN_USER, UserId:${id}`);
 
     const response$ = this.userService.findOneUserById({ id });
