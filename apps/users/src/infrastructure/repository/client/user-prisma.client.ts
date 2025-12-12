@@ -3,7 +3,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
 import { LoggerPort } from '@app/ports/logger';
 
-import { PrismaClient } from '@peristance/user';
+import { PrismaClient } from '@persistance/users';
 
 @Injectable()
 export class UserPrismaClient

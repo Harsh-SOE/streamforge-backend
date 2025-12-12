@@ -6,6 +6,7 @@ import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
 import { UserAggregate } from '@users/domain/aggregates';
 import { UserRepositoryPort } from '@users/application/ports';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption';
+
 import { UserPrismaClient } from '../client/user-prisma.client';
 
 @Injectable()

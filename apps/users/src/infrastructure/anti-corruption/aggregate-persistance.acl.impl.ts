@@ -16,7 +16,7 @@ import {
 import { UserAggregate } from '@users/domain/aggregates';
 import { UserEntity } from '@users/domain/entities';
 
-import { User } from '@peristance/user';
+import { User } from '@persistance/users';
 
 @Injectable()
 export class UserAggregatePersistanceACL implements IAggregatePersistanceACL<
