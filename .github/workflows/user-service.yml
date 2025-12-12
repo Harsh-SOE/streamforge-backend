@@ -71,4 +71,4 @@ jobs:
           context: .
           file: ./apps/users/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/user-service:latest
+          tags: ghcr.io/harsh-soe/user-service:latest
