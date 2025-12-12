@@ -21,6 +21,6 @@
     "^@app/utils(|/.*)$": "<rootDir>/libs/utils/src/$1",
     "^@users(|/.*)$": "<rootDir>/apps/users/src/$1",
     "^@test/users(|/.*)$": "<rootDir>/apps/users/test/$1",
-    "^@peristance/user": "<rootDir>/apps/users/generated/prisma"
+    "^@persistance/users": "<rootDir>/apps/users/generated/prisma"
   }
 }
