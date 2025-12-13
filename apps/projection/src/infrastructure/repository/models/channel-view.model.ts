@@ -25,5 +25,4 @@ export class ProjectedChannelCard extends Document {
   videoCount: number;
 }
 
-export const ProjectedChannelCardSchema =
-  SchemaFactory.createForClass(ProjectedChannelCard);
+export const ProjectedChannelCardSchema = SchemaFactory.createForClass(ProjectedChannelCard);

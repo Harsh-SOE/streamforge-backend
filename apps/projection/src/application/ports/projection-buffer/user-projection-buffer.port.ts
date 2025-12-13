@@ -6,6 +6,4 @@ export interface UserProjectionBufferPort {
   processUserCards(): Promise<number | void>;
 }
 
-export const USER_PROJECTION_BUFFER_PORT = Symbol(
-  'USER_PROJECTION_BUFFER_PORT',
-);
+export const USER_PROJECTION_BUFFER_PORT = Symbol('USER_PROJECTION_BUFFER_PORT');

@@ -9,8 +9,7 @@ export class ChannelUserId {
   public constructor(private value: string) {}
 
   public static create(value: string) {
-    const parsedChannelUserId =
-      ChannelUserId.channelUserIdValidationSchema.safeParse(value);
+    const parsedChannelUserId = ChannelUserId.channelUserIdValidationSchema.safeParse(value);
     if (!parsedChannelUserId.success) {
       const errorMessage = parsedChannelUserId.error.message;
       throw new InvalidUserIdException({

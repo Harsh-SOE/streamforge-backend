@@ -6,10 +6,7 @@ import { SERVICES } from '@app/clients/constant';
 import { LOGGER_PORT } from '@app/ports/logger';
 
 import { MeasureModule } from '@gateway/infrastructure/measure';
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@gateway/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@gateway/infrastructure/config';
 import { WinstonLoggerAdapter } from '@gateway/infrastructure/logger';
 
 import { Auth0Strategy } from './auth0-strategies';
@@ -27,8 +24,7 @@ import { AuthService } from './auth.service';
         imports: [AppConfigModule],
         inject: [AppConfigService],
         name: SERVICES.USER,
-        useFactory: (configService: AppConfigService) =>
-          configService.USER_SERVICE_OPTIONS,
+        useFactory: (configService: AppConfigService) => configService.USER_SERVICE_OPTIONS,
       },
     ]),
     ClientsModule.registerAsync([
@@ -36,16 +32,11 @@ import { AuthService } from './auth.service';
         name: SERVICES.QUERY,
         imports: [AppConfigModule],
         inject: [AppConfigService],
-        useFactory: (configService: AppConfigService) =>
-          configService.QUERY_SERVICE_OPTIONS,
+        useFactory: (configService: AppConfigService) => configService.QUERY_SERVICE_OPTIONS,
       },
     ]),
   ],
-  providers: [
-    AuthService,
-    Auth0Strategy,
-    { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
-  ],
+  providers: [AuthService, Auth0Strategy, { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter }],
   exports: [Auth0Strategy],
 })
 export class AuthModule {}

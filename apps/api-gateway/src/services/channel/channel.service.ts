@@ -2,10 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import {
-  CHANNEL_SERVICE_NAME,
-  ChannelServiceClient,
-} from '@app/contracts/channel';
+import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
 

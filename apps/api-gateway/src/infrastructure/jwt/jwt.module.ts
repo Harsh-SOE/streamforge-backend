@@ -5,10 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { LOGGER_PORT } from '@app/ports/logger';
 import { SERVICES } from '@app/clients';
 
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@gateway/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@gateway/infrastructure/config';
 
 import { JwtStrategy } from './jwt-strategies';
 import { WinstonLoggerAdapter } from '../logger';
@@ -20,16 +17,14 @@ import { WinstonLoggerAdapter } from '../logger';
     JwtModule.registerAsync({
       inject: [AppConfigService],
       imports: [AppConfigModule],
-      useFactory: (configService: AppConfigService) =>
-        configService.JWT_TOKEN_OPTIONS,
+      useFactory: (configService: AppConfigService) => configService.JWT_TOKEN_OPTIONS,
     }),
     ClientsModule.registerAsync([
       {
         imports: [AppConfigModule],
         inject: [AppConfigService],
         name: SERVICES.USER,
-        useFactory: (configService: AppConfigService) =>
-          configService.USER_SERVICE_OPTIONS,
+        useFactory: (configService: AppConfigService) => configService.USER_SERVICE_OPTIONS,
       },
     ]),
     ClientsModule.registerAsync([
@@ -37,8 +32,7 @@ import { WinstonLoggerAdapter } from '../logger';
         imports: [AppConfigModule],
         inject: [AppConfigService],
         name: SERVICES.QUERY,
-        useFactory: (configService: AppConfigService) =>
-          configService.QUERY_SERVICE_OPTIONS,
+        useFactory: (configService: AppConfigService) => configService.QUERY_SERVICE_OPTIONS,
       },
     ]),
   ],

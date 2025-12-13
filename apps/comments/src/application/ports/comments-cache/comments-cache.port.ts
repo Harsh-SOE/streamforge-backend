@@ -1,8 +1,5 @@
 export interface CommentCachePort {
-  incrementCommentsCounter(
-    userId: string,
-    videoId: string,
-  ): Promise<number | null>;
+  incrementCommentsCounter(userId: string, videoId: string): Promise<number | null>;
 
   getTotalCommentsCounter(videoId: string): Promise<number>;
 }

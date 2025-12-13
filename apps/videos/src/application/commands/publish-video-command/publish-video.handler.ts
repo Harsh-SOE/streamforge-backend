@@ -24,9 +24,7 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
     private readonly eventPublisher: EventPublisher,
   ) {}
 
-  async execute({
-    videoCreateDto,
-  }: PublishVideoCommand): Promise<VideoPublishedResponse> {
+  async execute({ videoCreateDto }: PublishVideoCommand): Promise<VideoPublishedResponse> {
     const {
       ownerId,
       channelId,
@@ -44,8 +42,9 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
       videoTransportPublishStatus,
     );
 
-    const videoDomainVisibilityStatus =
-      TransportToDomainVisibilityEnumMapper.get(videoTransportVisibilityStatus);
+    const videoDomainVisibilityStatus = TransportToDomainVisibilityEnumMapper.get(
+      videoTransportVisibilityStatus,
+    );
 
     if (!videoDomainPublishStatus || !videoDomainVisibilityStatus) {
       throw Error();

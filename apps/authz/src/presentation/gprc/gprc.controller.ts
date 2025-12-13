@@ -18,10 +18,7 @@ export class GrpcController implements AuthZServiceController {
   constructor(private readonly grpcService: GrpcService) {}
   checkRelation(
     checkRelationDto: CheckRelationDto,
-  ):
-    | Promise<IsRelatedResponse>
-    | Observable<IsRelatedResponse>
-    | IsRelatedResponse {
+  ): Promise<IsRelatedResponse> | Observable<IsRelatedResponse> | IsRelatedResponse {
     return this.grpcService.checkRelation(checkRelationDto);
   }
 

@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -22,9 +17,7 @@ import { ReactionMessage } from '../types';
 export const REACTION_BUFFER_TOPIC = 'reaction';
 
 @Injectable()
-export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, ReactionBufferPort
-{
+export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, ReactionBufferPort {
   private readonly kafkaClient: Kafka;
   private readonly producer: Producer;
   private readonly consumer: Consumer;
@@ -36,9 +29,7 @@ export class KafkaBufferAdapter
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
-      brokers: [
-        `${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`,
-      ],
+      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
       clientId: this.configService.BUFFER_CLIENT_ID,
     });
 
@@ -85,21 +76,12 @@ export class KafkaBufferAdapter
         const { batch } = payload;
         const messages = batch.messages
           .filter((message) => message.value)
-          .map(
-            (message) =>
-              JSON.parse(message.value!.toString()) as ReactionMessage,
-          );
+          .map((message) => JSON.parse(message.value!.toString()) as ReactionMessage);
 
         const models = messages.map((message) => {
-          const reactionStatus = GrpcDomainReactionStatusEnumMapper.get(
-            message.reactionStatus,
-          );
+          const reactionStatus = GrpcDomainReactionStatusEnumMapper.get(message.reactionStatus);
           if (!reactionStatus) throw new Error();
-          return ReactionAggregate.create(
-            message.userId,
-            message.videoId,
-            reactionStatus,
-          );
+          return ReactionAggregate.create(message.userId, message.videoId, reactionStatus);
         });
 
         this.logger.info(`Saving ${models.length} reactions in database`);

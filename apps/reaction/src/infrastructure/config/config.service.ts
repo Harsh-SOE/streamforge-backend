@@ -57,9 +57,7 @@ export class AppConfigService {
   }
 
   get BUFFER_FLUSH_MAX_WAIT_TIME_MS() {
-    return this.configService.getOrThrow<number>(
-      'BUFFER_FLUSH_MAX_WAIT_TIME_MS',
-    );
+    return this.configService.getOrThrow<number>('BUFFER_FLUSH_MAX_WAIT_TIME_MS');
   }
 
   get BUFFER_KEY() {
@@ -82,10 +80,7 @@ export class AppConfigService {
     const options: GrpcOptions = {
       transport: Transport.GRPC,
       options: {
-        protoPath: [
-          join(__dirname, 'proto/reaction.proto'),
-          join(__dirname, 'proto/health.proto'),
-        ],
+        protoPath: [join(__dirname, 'proto/reaction.proto'), join(__dirname, 'proto/health.proto')],
         package: [REACTION_PACKAGE_NAME, GRPC_HEALTH_V1_PACKAGE_NAME],
         url: `0.0.0.0:${this.GRPC_PORT}`,
         onLoadPackageDefinition(pkg, server) {

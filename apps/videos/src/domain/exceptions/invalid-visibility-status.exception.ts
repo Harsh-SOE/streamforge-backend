@@ -7,8 +7,7 @@ export interface InvalidVisibilityStatusExceptionOptions {
 
 export class InvalidVisibilityStatusException extends DomainException {
   public constructor(options: InvalidVisibilityStatusExceptionOptions) {
-    const { message = `Invalid visibility status was received`, meta } =
-      options || {};
+    const { message = `Invalid visibility status was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

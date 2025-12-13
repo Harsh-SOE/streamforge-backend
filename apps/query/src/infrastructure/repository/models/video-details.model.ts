@@ -58,6 +58,4 @@ export class ProjectVideoDetailsModel extends Document {
   commentsCount: number;
 }
 
-export const ProjectedVideoDetailsSchema = SchemaFactory.createForClass(
-  ProjectVideoDetailsModel,
-);
+export const ProjectedVideoDetailsSchema = SchemaFactory.createForClass(ProjectVideoDetailsModel);

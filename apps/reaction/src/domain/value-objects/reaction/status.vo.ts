@@ -10,8 +10,7 @@ export class ReactionStatus {
   public constructor(private readonly value: ReactionDomainStatus) {}
 
   public static create(value: string): ReactionStatus {
-    const parsedReactionStatus =
-      this.ReactionStatusValidationSchema.safeParse(value);
+    const parsedReactionStatus = this.ReactionStatusValidationSchema.safeParse(value);
     if (!parsedReactionStatus.success) {
       throw new InvalidReactionStatusException({
         message: `An error occured while validating the ReactionStatus: ${value}`,

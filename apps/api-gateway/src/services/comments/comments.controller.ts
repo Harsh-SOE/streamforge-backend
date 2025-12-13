@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Param,
-  Post,
-  UseGuards,
-  Version,
-} from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards, Version } from '@nestjs/common';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
@@ -35,10 +28,6 @@ export class CommentsController {
     @Param('videoId') videoId: string,
   ) {
     this.counter.inc();
-    return this.commentService.commentVideo(
-      commentVideoDto.comment,
-      user.id,
-      videoId,
-    );
+    return this.commentService.commentVideo(commentVideoDto.comment, user.id, videoId);
   }
 }

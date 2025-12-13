@@ -17,14 +17,13 @@ export class VideoQueryPeristanceACL implements IQueryPersistanceACL<
   VideoQueryModel,
   Omit<Video, 'publishedAt' | 'updatedAt'>
 > {
-  public toQueryModel(
-    schema: Omit<Video, 'publishedAt' | 'updatedAt'>,
-  ): VideoQueryModel {
+  public toQueryModel(schema: Omit<Video, 'publishedAt' | 'updatedAt'>): VideoQueryModel {
     const videoPublishStatusForQuery = PersistanceToQueryPublishEnumMapper.get(
       schema.videoPublishStatus,
     );
-    const videoVisibilityStatusForQuery =
-      PersistanceToQueryVisibilityEnumMapper.get(schema.videoVisibiltyStatus);
+    const videoVisibilityStatusForQuery = PersistanceToQueryVisibilityEnumMapper.get(
+      schema.videoVisibiltyStatus,
+    );
 
     if (!videoPublishStatusForQuery || !videoVisibilityStatusForQuery) {
       throw new Error();
@@ -45,9 +44,7 @@ export class VideoQueryPeristanceACL implements IQueryPersistanceACL<
       },
     };
   }
-  toPersistance(
-    model: VideoQueryModel,
-  ): Omit<Video, 'publishedAt' | 'updatedAt'> {
+  toPersistance(model: VideoQueryModel): Omit<Video, 'publishedAt' | 'updatedAt'> {
     const {
       id,
       ownerId,
@@ -65,10 +62,7 @@ export class VideoQueryPeristanceACL implements IQueryPersistanceACL<
     const videoVisibilityStatusForPersistance =
       PersistanceToQueryVisibilityEnumMapper.get(videoVisibilityStatus);
 
-    if (
-      !videoPublishStatusForPersistance ||
-      !videoVisibilityStatusForPersistance
-    ) {
+    if (!videoPublishStatusForPersistance || !videoVisibilityStatusForPersistance) {
       throw new Error();
     }
 

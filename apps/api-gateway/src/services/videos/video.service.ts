@@ -5,10 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/videos';
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
-import {
-  CHANNEL_SERVICE_NAME,
-  ChannelServiceClient,
-} from '@app/contracts/channel';
+import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
@@ -92,20 +89,16 @@ export class VideoService implements OnModuleInit {
       throw new Error(`Channel not found`);
     }
 
-    const videoServiceVisibilityStatus =
-      ClientTransportVideoVisibilityEnumMapper.get(video.visibility);
-
-    const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper.get(
-      video.status,
+    const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper.get(
+      video.visibility,
     );
+
+    const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper.get(video.status);
 
     console.log(videoServicePublishStatus);
     console.log(videoServiceVisibilityStatus);
 
-    if (
-      videoServiceVisibilityStatus === undefined ||
-      videoServicePublishStatus === undefined
-    ) {
+    if (videoServiceVisibilityStatus === undefined || videoServicePublishStatus === undefined) {
       throw new Error(`Invalid Video visibility or publish status`);
     }
     const response$ = this.videoService.save({
@@ -124,19 +117,15 @@ export class VideoService implements OnModuleInit {
 
     const response$ = this.videoService.findOne({ id });
     const response = await firstValueFrom(response$);
-    const videoPublishStatusResponse =
-      TransportClientVideoPublishEnumMapper.get(
-        response.videoTransportPublishStatus,
-      );
-    const videoVisibilityStatusResponse =
-      TransportClientVideoVisibilityEnumMapper.get(
-        response.videoTransportVisibilityStatus,
-      );
+    const videoPublishStatusResponse = TransportClientVideoPublishEnumMapper.get(
+      response.videoTransportPublishStatus,
+    );
+    const videoVisibilityStatusResponse = TransportClientVideoVisibilityEnumMapper.get(
+      response.videoTransportVisibilityStatus,
+    );
 
     if (!videoPublishStatusResponse || !videoVisibilityStatusResponse) {
-      throw new Error(
-        `Invalid Response from service: ${JSON.stringify(response)}`,
-      );
+      throw new Error(`Invalid Response from service: ${JSON.stringify(response)}`);
     }
     return {
       id: response.id,

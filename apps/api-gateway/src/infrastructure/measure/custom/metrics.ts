@@ -1,7 +1,4 @@
-import {
-  makeHistogramProvider,
-  makeCounterProvider,
-} from '@willsoto/nestjs-prometheus';
+import { makeHistogramProvider, makeCounterProvider } from '@willsoto/nestjs-prometheus';
 
 import { REQUEST_PROCESSING_TIME, REQUESTS_COUNTER } from './constants';
 

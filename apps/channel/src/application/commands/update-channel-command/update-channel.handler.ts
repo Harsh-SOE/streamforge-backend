@@ -22,16 +22,13 @@ export class UpdateChannelCommandHandler implements ICommandHandler<UpdateChanne
     channelUpdateByIdDto,
   }: UpdateChannelCommand): Promise<ChannelUpdateByIdResponse> {
     const { id, channelBio, channelCoverImage } = channelUpdateByIdDto;
-    const foundChannelAggregate =
-      await this.channelCommandRepository.findOneById(id);
+    const foundChannelAggregate = await this.channelCommandRepository.findOneById(id);
 
     if (!foundChannelAggregate) {
       throw new Error();
     }
 
-    const channelAggregate = this.eventPublisher.mergeObjectContext(
-      foundChannelAggregate,
-    );
+    const channelAggregate = this.eventPublisher.mergeObjectContext(foundChannelAggregate);
 
     channelAggregate.updateChannelDetails(channelBio, channelCoverImage);
 

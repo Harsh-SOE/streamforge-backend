@@ -7,28 +7,21 @@ import {
   GetUserProfileResponse,
 } from '@app/contracts/query';
 
-import {
-  GetUserProfileFromAuthIdQuery,
-  GetUserProfileFromIdQuery,
-} from '@query/queries';
+import { GetUserProfileFromAuthIdQuery, GetUserProfileFromIdQuery } from '@query/queries';
 
 @Injectable()
 export class GrpcService {
   constructor(private readonly queryBus: QueryBus) {}
 
   getUserProfileFromIdQuery(getUserProfileFromIdDto: GetUserProfileFromIdDto) {
-    return this.queryBus.execute<
-      GetUserProfileFromIdQuery,
-      GetUserProfileResponse
-    >(new GetUserProfileFromIdQuery(getUserProfileFromIdDto));
+    return this.queryBus.execute<GetUserProfileFromIdQuery, GetUserProfileResponse>(
+      new GetUserProfileFromIdQuery(getUserProfileFromIdDto),
+    );
   }
 
-  getUserProfileFromAuthIdQuery(
-    getUserProfileFromAuthIdDto: GetUserProfileFromAuthIdDto,
-  ) {
-    return this.queryBus.execute<
-      GetUserProfileFromAuthIdQuery,
-      GetUserProfileResponse
-    >(new GetUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto));
+  getUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto: GetUserProfileFromAuthIdDto) {
+    return this.queryBus.execute<GetUserProfileFromAuthIdQuery, GetUserProfileResponse>(
+      new GetUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto),
+    );
   }
 }

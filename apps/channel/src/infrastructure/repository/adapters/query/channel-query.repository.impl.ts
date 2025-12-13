@@ -23,9 +23,7 @@ export class ChannelQueryRepositoryAdapter implements ChannelQueryRepositoryPort
     filter: DatabaseFilter<Channel>,
     mode: 'many' | 'unique',
   ): Prisma.ChannelWhereInput | Prisma.ChannelWhereUniqueInput {
-    const prismaFilter:
-      | Prisma.ChannelWhereInput
-      | Prisma.ChannelWhereUniqueInput = {};
+    const prismaFilter: Prisma.ChannelWhereInput | Prisma.ChannelWhereUniqueInput = {};
 
     (Object.keys(filter) as Array<keyof Channel>).forEach((key) => {
       const value = filter[key];
@@ -64,52 +62,34 @@ export class ChannelQueryRepositoryAdapter implements ChannelQueryRepositoryPort
   }
 
   @LogExecutionTime()
-  async findOne(
-    filter: DatabaseFilter<Channel>,
-  ): Promise<ChannelQueryModel | null> {
+  async findOne(filter: DatabaseFilter<Channel>): Promise<ChannelQueryModel | null> {
     const findUserOperation = async () => {
       return await this.persistanceService.channel.findUnique({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.ChannelWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.ChannelWhereUniqueInput,
       });
     };
 
-    const foundUser = await this.prismaDatabaseHandler.execute(
-      findUserOperation,
-      {
-        operationType: 'CREATE',
-        entry: {},
-      },
-    );
+    const foundUser = await this.prismaDatabaseHandler.execute(findUserOperation, {
+      operationType: 'CREATE',
+      entry: {},
+    });
 
     return foundUser ? this.queryPersistanceACL.toQueryModel(foundUser) : null;
   }
 
-  async findMany(
-    filter: DatabaseFilter<Channel>,
-  ): Promise<ChannelQueryModel[]> {
+  async findMany(filter: DatabaseFilter<Channel>): Promise<ChannelQueryModel[]> {
     const findManyUsersOperation = async () => {
       return await this.persistanceService.channel.findMany({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.ChannelWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.ChannelWhereUniqueInput,
       });
     };
 
-    const foundUsers = await this.prismaDatabaseHandler.execute(
-      findManyUsersOperation,
-      {
-        operationType: 'CREATE',
-        entry: {},
-      },
-    );
+    const foundUsers = await this.prismaDatabaseHandler.execute(findManyUsersOperation, {
+      operationType: 'CREATE',
+      entry: {},
+    });
 
-    return foundUsers.map((user) =>
-      this.queryPersistanceACL.toQueryModel(user),
-    );
+    return foundUsers.map((user) => this.queryPersistanceACL.toQueryModel(user));
   }
 
   async findById(id: string): Promise<ChannelQueryModel | null> {
@@ -119,13 +99,10 @@ export class ChannelQueryRepositoryAdapter implements ChannelQueryRepositoryPort
       });
     };
 
-    const foundUser = await this.prismaDatabaseHandler.execute(
-      findUserByIdOperation,
-      {
-        operationType: 'CREATE',
-        entry: {},
-      },
-    );
+    const foundUser = await this.prismaDatabaseHandler.execute(findUserByIdOperation, {
+      operationType: 'CREATE',
+      entry: {},
+    });
 
     return foundUser ? this.queryPersistanceACL.toQueryModel(foundUser) : null;
   }

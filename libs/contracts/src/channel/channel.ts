@@ -5,10 +5,10 @@
 // source: channel.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Channel";
+export const protobufPackage = 'Channel';
 
 export interface GetPresignedUrlDto {
   fileName?: string | undefined;
@@ -82,14 +82,16 @@ export interface ChannelVerifyByIdResponse {
   response: string;
 }
 
-export const CHANNEL_PACKAGE_NAME = "Channel";
+export const CHANNEL_PACKAGE_NAME = 'Channel';
 
 export interface ChannelServiceClient {
   getPresignedUrlForFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
 
   createChannel(request: ChannelCreateDto): Observable<ChannelCreatedResponse>;
 
-  activateMonitization(request: ChannelActivateMonitizationDto): Observable<ChannelMonitizationActivatedResponse>;
+  activateMonitization(
+    request: ChannelActivateMonitizationDto,
+  ): Observable<ChannelMonitizationActivatedResponse>;
 
   findChannelById(request: ChannelFindByIdDto): Observable<ChannelFoundResponse>;
 
@@ -103,7 +105,10 @@ export interface ChannelServiceClient {
 export interface ChannelServiceController {
   getPresignedUrlForFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   createChannel(
     request: ChannelCreateDto,
@@ -126,34 +131,40 @@ export interface ChannelServiceController {
 
   channelUpdateById(
     request: ChannelUpdateByIdDto,
-  ): Promise<ChannelUpdateByIdResponse> | Observable<ChannelUpdateByIdResponse> | ChannelUpdateByIdResponse;
+  ):
+    | Promise<ChannelUpdateByIdResponse>
+    | Observable<ChannelUpdateByIdResponse>
+    | ChannelUpdateByIdResponse;
 
   channelVerify(
     request: ChannelVerifyByIdDto,
-  ): Promise<ChannelVerifyByIdResponse> | Observable<ChannelVerifyByIdResponse> | ChannelVerifyByIdResponse;
+  ):
+    | Promise<ChannelVerifyByIdResponse>
+    | Observable<ChannelVerifyByIdResponse>
+    | ChannelVerifyByIdResponse;
 }
 
 export function ChannelServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getPresignedUrlForFileUpload",
-      "createChannel",
-      "activateMonitization",
-      "findChannelById",
-      "findChannelByUserId",
-      "channelUpdateById",
-      "channelVerify",
+      'getPresignedUrlForFileUpload',
+      'createChannel',
+      'activateMonitization',
+      'findChannelById',
+      'findChannelByUserId',
+      'channelUpdateById',
+      'channelVerify',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("ChannelService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('ChannelService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("ChannelService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('ChannelService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const CHANNEL_SERVICE_NAME = "ChannelService";
+export const CHANNEL_SERVICE_NAME = 'ChannelService';

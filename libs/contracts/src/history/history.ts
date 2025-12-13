@@ -5,10 +5,10 @@
 // source: history.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "History";
+export const protobufPackage = 'History';
 
 export interface SaveVideoInHistoryDto {
   userId: string;
@@ -39,24 +39,34 @@ export interface AllVideoRemovedFromHistoryResponse {
   response: string;
 }
 
-export const HISTORY_PACKAGE_NAME = "History";
+export const HISTORY_PACKAGE_NAME = 'History';
 
 export interface HistoryServiceClient {
   addVideoInHistory(request: SaveVideoInHistoryDto): Observable<VideoSavedInHistoryResponse>;
 
-  removeVideoFromHistory(request: RemoveVideoFromHistoryDto): Observable<VideoRemovedInHistoryResponse>;
+  removeVideoFromHistory(
+    request: RemoveVideoFromHistoryDto,
+  ): Observable<VideoRemovedInHistoryResponse>;
 
-  clearHistory(request: RemoveAllVideosFromHistoryDto): Observable<AllVideoRemovedFromHistoryResponse>;
+  clearHistory(
+    request: RemoveAllVideosFromHistoryDto,
+  ): Observable<AllVideoRemovedFromHistoryResponse>;
 }
 
 export interface HistoryServiceController {
   addVideoInHistory(
     request: SaveVideoInHistoryDto,
-  ): Promise<VideoSavedInHistoryResponse> | Observable<VideoSavedInHistoryResponse> | VideoSavedInHistoryResponse;
+  ):
+    | Promise<VideoSavedInHistoryResponse>
+    | Observable<VideoSavedInHistoryResponse>
+    | VideoSavedInHistoryResponse;
 
   removeVideoFromHistory(
     request: RemoveVideoFromHistoryDto,
-  ): Promise<VideoRemovedInHistoryResponse> | Observable<VideoRemovedInHistoryResponse> | VideoRemovedInHistoryResponse;
+  ):
+    | Promise<VideoRemovedInHistoryResponse>
+    | Observable<VideoRemovedInHistoryResponse>
+    | VideoRemovedInHistoryResponse;
 
   clearHistory(
     request: RemoveAllVideosFromHistoryDto,
@@ -68,17 +78,17 @@ export interface HistoryServiceController {
 
 export function HistoryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["addVideoInHistory", "removeVideoFromHistory", "clearHistory"];
+    const grpcMethods: string[] = ['addVideoInHistory', 'removeVideoFromHistory', 'clearHistory'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("HistoryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('HistoryService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("HistoryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('HistoryService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const HISTORY_SERVICE_NAME = "HistoryService";
+export const HISTORY_SERVICE_NAME = 'HistoryService';

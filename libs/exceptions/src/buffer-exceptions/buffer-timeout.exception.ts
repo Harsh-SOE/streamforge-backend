@@ -22,12 +22,7 @@ export type BufferTimeOutExceptionOptions = {
 
 export class BufferTimeoutException extends InfrastructureException {
   constructor(options: BufferTimeOutExceptionOptions) {
-    const {
-      message = 'Buffer operation timed out',
-      meta,
-      contextError,
-      operation,
-    } = options;
+    const { message = 'Buffer operation timed out', meta, contextError, operation } = options;
     super({
       message,
       code: BUFFER_EXCEPTION.BUFFER_TIMEOUT_EXCEPTION,

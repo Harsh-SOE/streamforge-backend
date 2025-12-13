@@ -1,7 +1,4 @@
-import {
-  VideoDomainPublishStatus,
-  VideoDomainVisibiltyStatus,
-} from '@videos/domain/enums';
+import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
 
 import {
   VideoDescription,
@@ -79,8 +76,7 @@ export class VideoEntity {
       channelId: this.videoProps.channelId.getValue(),
       title: this.videoProps.title.getValue(),
       videoFileIdentifier: this.videoProps.videoFileIdentifier.getValue(),
-      videoThumbnailIdentifier:
-        this.videoProps.videoThumbnailIdentifer.getValue(),
+      videoThumbnailIdentifier: this.videoProps.videoThumbnailIdentifer.getValue(),
       categories: this.videoProps.categories.getValue(),
       description: this.videoProps.description?.getValue(),
       publishStatus: this.videoProps.publishStatus.getValue(),
@@ -94,8 +90,7 @@ export class VideoEntity {
   }
 
   public updateVideoFileIdentifier(newFileIdentifier: string): void {
-    this.videoProps.videoFileIdentifier =
-      VideoFileIdentifier.create(newFileIdentifier);
+    this.videoProps.videoFileIdentifier = VideoFileIdentifier.create(newFileIdentifier);
   }
 
   public updateTitle(newTitle: string): void {
@@ -115,7 +110,6 @@ export class VideoEntity {
   }
 
   public updateVisibiltyStatus(newVisibiltyStatus: string): void {
-    this.videoProps.visibilityStatus =
-      VideoVisibilty.create(newVisibiltyStatus);
+    this.videoProps.visibilityStatus = VideoVisibilty.create(newVisibiltyStatus);
   }
 }

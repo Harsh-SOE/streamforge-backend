@@ -7,10 +7,7 @@ export interface InvalidVideoThumbnailIdentifierExceptionOptions {
 
 export class InvalidVideoThumbnailIndentifierException extends DomainException {
   public constructor(options: InvalidVideoThumbnailIdentifierExceptionOptions) {
-    const {
-      message = `Invalid video thumbnail identifier was received`,
-      meta,
-    } = options || {};
+    const { message = `Invalid video thumbnail identifier was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

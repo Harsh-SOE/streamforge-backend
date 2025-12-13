@@ -12,12 +12,7 @@ export class DomainException extends Error {
   public readonly meta?: Record<string, any>;
 
   public constructor(options: DomainExceptionOptions) {
-    const {
-      message = `Something went wrong`,
-      code = 'ERROR',
-      traceId,
-      meta,
-    } = options || {};
+    const { message = `Something went wrong`, code = 'ERROR', traceId, meta } = options || {};
     super(message);
     this.name = new.target.name;
     this.code = code;

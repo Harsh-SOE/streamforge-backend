@@ -5,10 +5,10 @@
 // source: query.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Query";
+export const protobufPackage = 'Query';
 
 export interface GetUserProfileFromIdDto {
   userId: string;
@@ -36,12 +36,14 @@ export interface GetUserProfileResponse {
   user?: UserProfileMessage | undefined;
 }
 
-export const QUERY_PACKAGE_NAME = "Query";
+export const QUERY_PACKAGE_NAME = 'Query';
 
 export interface QueryServiceClient {
   getUserProfileFromId(request: GetUserProfileFromIdDto): Observable<GetUserProfileResponse>;
 
-  getUserProfileFromAuthId(request: GetUserProfileFromAuthIdDto): Observable<GetUserProfileResponse>;
+  getUserProfileFromAuthId(
+    request: GetUserProfileFromAuthIdDto,
+  ): Observable<GetUserProfileResponse>;
 }
 
 export interface QueryServiceController {
@@ -56,17 +58,17 @@ export interface QueryServiceController {
 
 export function QueryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getUserProfileFromId", "getUserProfileFromAuthId"];
+    const grpcMethods: string[] = ['getUserProfileFromId', 'getUserProfileFromAuthId'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("QueryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('QueryService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("QueryService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('QueryService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const QUERY_SERVICE_NAME = "QueryService";
+export const QUERY_SERVICE_NAME = 'QueryService';

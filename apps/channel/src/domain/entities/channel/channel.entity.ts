@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  ChannelBio,
-  ChannelCoverImage,
-  ChannelUserId,
-} from '@channel/domain/value-objects';
+import { ChannelBio, ChannelCoverImage, ChannelUserId } from '@channel/domain/value-objects';
 
 @Injectable()
 export class ChannelEntity {

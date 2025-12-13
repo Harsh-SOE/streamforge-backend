@@ -18,9 +18,7 @@ export class VerifyChannelHandler implements ICommandHandler<VerifyChannelComman
     private readonly eventPublisher: EventPublisher,
   ) {}
 
-  async execute({
-    verifyChannelDto,
-  }: VerifyChannelCommand): Promise<ChannelVerifyByIdResponse> {
+  async execute({ verifyChannelDto }: VerifyChannelCommand): Promise<ChannelVerifyByIdResponse> {
     const { id } = verifyChannelDto;
 
     const channelAggregate = await this.channelRepository.findOneById(id);
@@ -28,8 +26,7 @@ export class VerifyChannelHandler implements ICommandHandler<VerifyChannelComman
     if (!channelAggregate) {
       throw new Error();
     }
-    const channelAggregateWithEvents =
-      this.eventPublisher.mergeObjectContext(channelAggregate);
+    const channelAggregateWithEvents = this.eventPublisher.mergeObjectContext(channelAggregate);
 
     channelAggregateWithEvents.updateChannelVerificationStatus();
 

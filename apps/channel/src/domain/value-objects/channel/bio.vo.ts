@@ -10,8 +10,7 @@ export class ChannelBio {
   public constructor(private value?: string) {}
 
   public static create(value?: string) {
-    const parsedChannelBio =
-      ChannelBio.channelValidationSchema.safeParse(value);
+    const parsedChannelBio = ChannelBio.channelValidationSchema.safeParse(value);
 
     if (!parsedChannelBio.success) {
       const errorMessage = parsedChannelBio.error.message;

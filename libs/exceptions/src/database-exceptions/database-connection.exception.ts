@@ -20,11 +20,7 @@ export type DatabaseConnectionExceptionOptions = {
 
 export class DatabaseConnectionException extends InfrastructureException {
   constructor(options: DatabaseConnectionExceptionOptions) {
-    const {
-      message = `Unable to connect to database`,
-      contextError,
-      meta,
-    } = options;
+    const { message = `Unable to connect to database`, contextError, meta } = options;
 
     super({
       code: DATABASE_EXCEPTION.DATABASE_CONNECTION_EXCEPTION,

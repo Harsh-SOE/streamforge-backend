@@ -18,26 +18,19 @@ export class VideoCardRepository implements VideoProjectionRepositoryPort {
   ) {}
 
   public async saveVideo(data: VideoUploadedEventDto): Promise<boolean> {
-    await this.projectedVideoCard.create(
-      this.videoCardACL.videoUploadedEventToPersistance(data),
-    );
+    await this.projectedVideoCard.create(this.videoCardACL.videoUploadedEventToPersistance(data));
 
     return true;
   }
 
   async saveManyVideos(event: VideoUploadedEventDto[]): Promise<number> {
-    const data = event.map((data) =>
-      this.videoCardACL.videoUploadedEventToPersistance(data),
-    );
+    const data = event.map((data) => this.videoCardACL.videoUploadedEventToPersistance(data));
     const savedCards = await this.projectedVideoCard.insertMany(data);
 
     return savedCards.length;
   }
 
-  public async updateVideo(
-    videoId: string,
-    event: VideoUploadedEventDto,
-  ): Promise<boolean> {
+  public async updateVideo(videoId: string, event: VideoUploadedEventDto): Promise<boolean> {
     const updated = await this.projectedVideoCard.findOneAndUpdate(
       { videoId },
       { $set: this.videoCardACL.videoUpdatedEventToPersistance(event) },

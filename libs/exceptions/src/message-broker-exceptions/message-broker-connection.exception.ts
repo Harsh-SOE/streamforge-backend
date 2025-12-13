@@ -18,11 +18,7 @@ export type MessageBrokerConnectionExceptionOptions = {
 
 export class MessageBrokerConnectionException extends InfrastructureException {
   constructor(options: MessageBrokerConnectionExceptionOptions) {
-    const {
-      message = 'Unable to connect to message broker',
-      contextError,
-      meta,
-    } = options;
+    const { message = 'Unable to connect to message broker', contextError, meta } = options;
     super({
       message,
       code: MESSAGE_BROKER_EXCEPTION.MESSAGE_BROKER_CONNECTION_EXCEPTION,

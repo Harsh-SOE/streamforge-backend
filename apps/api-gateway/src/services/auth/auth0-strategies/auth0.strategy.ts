@@ -9,10 +9,7 @@ import { AppConfigService } from '@gateway/infrastructure/config';
 import { GATEWAY_AUTH0_GAURD_STRATEGY, Auth0ProfileUser } from '../types';
 
 @Injectable()
-export class Auth0Strategy extends PassportStrategy(
-  Strategy,
-  GATEWAY_AUTH0_GAURD_STRATEGY,
-) {
+export class Auth0Strategy extends PassportStrategy(Strategy, GATEWAY_AUTH0_GAURD_STRATEGY) {
   constructor(
     private readonly configService: AppConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,

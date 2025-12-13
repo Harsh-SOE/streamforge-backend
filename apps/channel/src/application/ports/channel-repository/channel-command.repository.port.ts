@@ -15,20 +15,11 @@ export interface ChannelCommandRepositoryPort {
 
   findMany(filter: DatabaseFilter<Channel>): Promise<ChannelAggregate[]>;
 
-  updateOneById(
-    id: string,
-    updates: ChannelAggregate,
-  ): Promise<ChannelAggregate>;
+  updateOneById(id: string, updates: ChannelAggregate): Promise<ChannelAggregate>;
 
-  updateOne(
-    filter: DatabaseFilter<Channel>,
-    updates: ChannelAggregate,
-  ): Promise<ChannelAggregate>;
+  updateOne(filter: DatabaseFilter<Channel>, updates: ChannelAggregate): Promise<ChannelAggregate>;
 
-  updateMany(
-    filter: DatabaseFilter<Channel>,
-    updates: ChannelAggregate,
-  ): Promise<number>;
+  updateMany(filter: DatabaseFilter<Channel>, updates: ChannelAggregate): Promise<number>;
 
   deleteOneById(id: string): Promise<boolean>;
 

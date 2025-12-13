@@ -53,10 +53,7 @@ export class RedisCacheHandler implements OnModuleInit {
     );
   }
 
-  public enableCircuitBreaker(
-    requestBreakerCount: number,
-    allowHalfRequests: number,
-  ) {
+  public enableCircuitBreaker(requestBreakerCount: number, allowHalfRequests: number) {
     this.circuitBreakerPolicy = circuitBreaker(handleAll, {
       halfOpenAfter: allowHalfRequests * 1000,
       breaker: new ConsecutiveBreaker(requestBreakerCount),
@@ -69,13 +66,10 @@ export class RedisCacheHandler implements OnModuleInit {
     );
 
     this.circuitBreakerPolicy.onHalfOpen(() =>
-      this.logger.alert(
-        'Allowing only half of the requests to be executed now!',
-        {
-          component: Components.CACHE,
-          circuitState: CircuitState.HalfOpen,
-        },
-      ),
+      this.logger.alert('Allowing only half of the requests to be executed now!', {
+        component: Components.CACHE,
+        circuitState: CircuitState.HalfOpen,
+      }),
     );
 
     this.circuitBreakerPolicy.onReset(() =>
@@ -109,9 +103,7 @@ export class RedisCacheHandler implements OnModuleInit {
     } = options || {};
 
     try {
-      return await this.operationPolicy.execute(
-        async () => await cacheOperation(),
-      );
+      return await this.operationPolicy.execute(async () => await cacheOperation());
     } catch (err) {
       if (suppressErrors && fallbackValue) {
         return fallbackValue;
@@ -123,10 +115,7 @@ export class RedisCacheHandler implements OnModuleInit {
           switch (operationType) {
             case 'READ': {
               if (logErrors)
-                this.logger.error(
-                  `An Error while reading key:${key} from cahe`,
-                  error,
-                );
+                this.logger.error(`An Error while reading key:${key} from cahe`, error);
 
               throw new CacheReadException({
                 contextError: error,
@@ -141,10 +130,10 @@ export class RedisCacheHandler implements OnModuleInit {
 
             case 'READ_MANY': {
               if (logErrors)
-                this.logger.error(
-                  `An Error while reading key:${keys.join(', ')} from cahe`,
-                  { component: Components.CACHE, meta: error },
-                );
+                this.logger.error(`An Error while reading key:${keys.join(', ')} from cahe`, {
+                  component: Components.CACHE,
+                  meta: error,
+                });
               throw new CacheWriteException({
                 contextError: error,
                 meta: {
@@ -158,10 +147,10 @@ export class RedisCacheHandler implements OnModuleInit {
 
             case 'WRITE': {
               if (logErrors)
-                this.logger.error(
-                  `Unable to write key:${key} with value:${value} into cache`,
-                  { component: Components.CACHE, meta: error },
-                );
+                this.logger.error(`Unable to write key:${key} with value:${value} into cache`, {
+                  component: Components.CACHE,
+                  meta: error,
+                });
               throw new CacheWriteException({
                 contextError: error,
                 meta: {

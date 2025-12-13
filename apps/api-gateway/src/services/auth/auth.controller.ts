@@ -26,10 +26,7 @@ export class AuthController {
   @UseGuards(Auth0OAuthGaurd)
   @Get(AUTH_API.AUTH0_REDIRECT)
   @Version(AUTH_API_VERSION.V1)
-  onAuthRedirect(
-    @User() auth0User: Auth0ProfileUser,
-    @Res() response: Response,
-  ): Promise<void> {
+  onAuthRedirect(@User() auth0User: Auth0ProfileUser, @Res() response: Response): Promise<void> {
     this.counter.inc();
     return this.authService.onAuthRedirect(auth0User, response);
   }

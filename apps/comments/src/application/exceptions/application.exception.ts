@@ -42,8 +42,7 @@ export class ApplicationException extends Error {
     this.traceId = traceId;
     this.meta = meta;
 
-    if (process.env.NODE_ENV === 'DEVELOPMENT')
-      this.contextError = contextError;
+    if (process.env.NODE_ENV === 'DEVELOPMENT') this.contextError = contextError;
     Error.captureStackTrace(this, this.constructor);
   }
 

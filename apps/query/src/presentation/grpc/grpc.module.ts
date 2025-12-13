@@ -4,10 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { LOGGER_PORT } from '@app/ports/logger';
 
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@query/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@query/infrastructure/config';
 import {
   ProjectedUserQueryModel,
   ProjectUserQuerySchema,

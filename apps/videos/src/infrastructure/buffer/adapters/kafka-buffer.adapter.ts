@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -21,9 +16,7 @@ import { VideoMessage } from '../types';
 export const VIDEO_BUFFER_TOPIC = 'videos';
 
 @Injectable()
-export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, VideosBufferPort
-{
+export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, VideosBufferPort {
   private readonly kafkaClient: Kafka;
   private readonly producer: Producer;
   private readonly consumer: Consumer;
@@ -35,9 +28,7 @@ export class KafkaBufferAdapter
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
-      brokers: [
-        `${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`,
-      ],
+      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
       clientId: this.configService.BUFFER_CLIENT_ID,
     });
 
@@ -84,9 +75,7 @@ export class KafkaBufferAdapter
         const { batch } = payload;
         const messages = batch.messages
           .filter((message) => message.value)
-          .map(
-            (message) => JSON.parse(message.value!.toString()) as VideoMessage,
-          );
+          .map((message) => JSON.parse(message.value!.toString()) as VideoMessage);
 
         const models = messages.map((message) => {
           return VideoAggregate.create({

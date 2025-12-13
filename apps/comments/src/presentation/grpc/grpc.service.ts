@@ -9,9 +9,7 @@ import { CreateCommentCommand } from '@comments/application/commands';
 export class GrpcService {
   public constructor(private readonly commandBus: CommandBus) {}
 
-  public async commentOnVideo(
-    commentVideoDto: CommentVideoDto,
-  ): Promise<CommentVideoResponse> {
+  public async commentOnVideo(commentVideoDto: CommentVideoDto): Promise<CommentVideoResponse> {
     return this.commandBus.execute<CreateCommentCommand, CommentVideoResponse>(
       new CreateCommentCommand(commentVideoDto),
     );

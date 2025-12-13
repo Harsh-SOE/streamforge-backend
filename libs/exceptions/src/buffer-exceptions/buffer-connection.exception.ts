@@ -20,11 +20,7 @@ export type BufferConnectionExceptionOptions = {
 
 export class BufferConnectionException extends InfrastructureException {
   constructor(options: BufferConnectionExceptionOptions) {
-    const {
-      message = `Unable to connect to buffer`,
-      meta,
-      contextError,
-    } = options;
+    const { message = `Unable to connect to buffer`, meta, contextError } = options;
     super({
       message,
       code: BUFFER_EXCEPTION.BUFFER_CONNECTION_EXCEPTION,

@@ -2,10 +2,7 @@ import { throwError } from 'rxjs';
 import { Catch, ExceptionFilter, HttpStatus, Inject } from '@nestjs/common';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 
-import {
-  GrpcApplicationException,
-  GrpcExceptionPayload,
-} from '@app/exceptions/grpc-exceptions';
+import { GrpcApplicationException, GrpcExceptionPayload } from '@app/exceptions/grpc-exceptions';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { InfrastructureException } from '@app/exceptions/infrastructure-exceptions';
 

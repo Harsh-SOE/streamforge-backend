@@ -15,6 +15,4 @@ export interface VideoQueryRepositoryPort {
   findOneByid(id: string): Promise<VideoQueryModel>;
 }
 
-export const VIDEO_QUERY_RESPOSITORY_PORT = Symbol(
-  'VIDEO_QUERY_RESPOSITORY_PORT',
-);
+export const VIDEO_QUERY_RESPOSITORY_PORT = Symbol('VIDEO_QUERY_RESPOSITORY_PORT');

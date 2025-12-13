@@ -91,8 +91,7 @@ export class RedisStreamBufferAdapter implements OnModuleInit, ViewsBufferPort {
       return 0;
     }
 
-    const { ids, extractedMessages } =
-      this.extractMessageFromStream(streamData);
+    const { ids, extractedMessages } = this.extractMessageFromStream(streamData);
 
     return await this.processMessages(ids, extractedMessages);
   }

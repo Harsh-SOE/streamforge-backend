@@ -18,11 +18,7 @@ export type CacheConnectionExceptionOptions = {
 
 export class CacheConnectionException extends InfrastructureException {
   constructor(options: CacheConnectionExceptionOptions) {
-    const {
-      message = `Unable to connect to cache`,
-      meta,
-      contextError,
-    } = options;
+    const { message = `Unable to connect to cache`, meta, contextError } = options;
     super({
       message,
       code: CACHE_EXCEPTION.CACHE_CONNECTION_EXCEPTION,

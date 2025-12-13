@@ -14,9 +14,7 @@ import { CommentAggregate } from '@comments/domain/aggregates';
 import { AppConfigService } from '@comments/infrastructure/config';
 
 @Injectable()
-export class RedisStreamBufferAdapter
-  implements CommentBufferPort, OnModuleInit
-{
+export class RedisStreamBufferAdapter implements CommentBufferPort, OnModuleInit {
   private redisClient: Redis;
 
   public constructor(
@@ -94,8 +92,7 @@ export class RedisStreamBufferAdapter
       return 0;
     }
 
-    const { ids, extractedMessages } =
-      this.extractMessageFromStream(streamData);
+    const { ids, extractedMessages } = this.extractMessageFromStream(streamData);
 
     return await this.processMessages(ids, extractedMessages);
   }
@@ -116,11 +113,7 @@ export class RedisStreamBufferAdapter
 
   public async processMessages(ids: string[], messages: CommentMessage[]) {
     const models = messages.map((message) =>
-      CommentAggregate.create(
-        message.userId,
-        message.videoId,
-        message.commentText,
-      ),
+      CommentAggregate.create(message.userId, message.videoId, message.commentText),
     );
     const processedMessagesNumber = await this.commentsRepo.saveMany(models);
 

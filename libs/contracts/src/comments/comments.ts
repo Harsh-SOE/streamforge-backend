@@ -5,10 +5,10 @@
 // source: comments.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Comment";
+export const protobufPackage = 'Comment';
 
 export interface CommentVideoDto {
   comment: string;
@@ -20,7 +20,7 @@ export interface CommentVideoResponse {
   response: string;
 }
 
-export const COMMENT_PACKAGE_NAME = "Comment";
+export const COMMENT_PACKAGE_NAME = 'Comment';
 
 export interface CommentServiceClient {
   commentService(request: CommentVideoDto): Observable<CommentVideoResponse>;
@@ -34,17 +34,17 @@ export interface CommentServiceController {
 
 export function CommentServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["commentService"];
+    const grpcMethods: string[] = ['commentService'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("CommentService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('CommentService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("CommentService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('CommentService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const COMMENT_SERVICE_NAME = "CommentService";
+export const COMMENT_SERVICE_NAME = 'CommentService';

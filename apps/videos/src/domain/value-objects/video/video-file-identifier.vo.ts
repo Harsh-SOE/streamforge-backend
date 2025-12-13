@@ -8,8 +8,7 @@ export class VideoFileIdentifier {
   public constructor(private readonly value: string) {}
 
   public static create(value: string) {
-    const parsedVideoFileIdentifier =
-      this.VideoFileIdentifierValidationSchema.safeParse(value);
+    const parsedVideoFileIdentifier = this.VideoFileIdentifierValidationSchema.safeParse(value);
     if (!parsedVideoFileIdentifier.success) {
       const errorMessage = parsedVideoFileIdentifier.error.message;
       throw new InvalidVideoFileIndentifierException({

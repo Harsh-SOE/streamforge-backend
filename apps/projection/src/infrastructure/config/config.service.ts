@@ -47,9 +47,7 @@ export class AppConfigService {
   }
 
   get BUFFER_FLUSH_MAX_WAIT_TIME_MS() {
-    return this.configService.getOrThrow<number>(
-      'BUFFER_FLUSH_MAX_WAIT_TIME_MS',
-    );
+    return this.configService.getOrThrow<number>('BUFFER_FLUSH_MAX_WAIT_TIME_MS');
   }
 
   get BUFFER_KEY() {

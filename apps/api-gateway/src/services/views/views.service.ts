@@ -17,10 +17,7 @@ export class WatchService implements OnModuleInit {
     this.watchService = this.watchClient.getService(VIEWS_SERVICE_NAME);
   }
 
-  public async watchVideo(
-    videoId: string,
-    userId: string,
-  ): Promise<ViewsVideoResponse> {
+  public async watchVideo(videoId: string, userId: string): Promise<ViewsVideoResponse> {
     const response$ = this.watchService.viewVideo({
       userId: userId,
       videoId: videoId,

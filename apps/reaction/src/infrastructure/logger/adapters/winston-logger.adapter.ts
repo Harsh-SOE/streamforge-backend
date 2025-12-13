@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import LokiTransport from 'winston-loki';
-import winston, {
-  createLogger,
-  format,
-  Logger,
-  transport,
-  Logform,
-  transports,
-} from 'winston';
+import winston, { createLogger, format, Logger, transport, Logform, transports } from 'winston';
 
 import { LoggerPort } from '@app/ports/logger';
 
@@ -44,19 +37,12 @@ export class WinstonLoggerAdapter implements LoggerPort {
 
   public constructor(private readonly configService: AppConfigService) {
     winston.addColors(colors);
-    const loggerTransports: transport[] = [
-      this.consoleTransport(),
-      this.lokiTransport(),
-    ];
+    const loggerTransports: transport[] = [this.consoleTransport(), this.lokiTransport()];
 
     this.logger = createLogger({
       levels: levels,
       level: 'debug',
-      format: format.combine(
-        format.timestamp(),
-        format.json(),
-        format.errors(),
-      ),
+      format: format.combine(format.timestamp(), format.json(), format.errors()),
       transports: loggerTransports,
     });
   }

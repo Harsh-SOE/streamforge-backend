@@ -56,32 +56,23 @@ export class PrismaDatabaseHandler {
     );
   }
 
-  public circuitBreakerConfig(
-    requestBreakerCount: number,
-    allowHalfRequests: number,
-  ) {
+  public circuitBreakerConfig(requestBreakerCount: number, allowHalfRequests: number) {
     this.circuitBreakerPolicy = circuitBreaker(handleAll, {
       halfOpenAfter: allowHalfRequests * 1000,
       breaker: new ConsecutiveBreaker(requestBreakerCount),
     });
 
     this.circuitBreakerPolicy.onBreak(() =>
-      this.logger.alert(
-        'Too many request failed, Circuit is now Opened/broken',
-        {
-          circuitState: CircuitState.Open,
-        },
-      ),
+      this.logger.alert('Too many request failed, Circuit is now Opened/broken', {
+        circuitState: CircuitState.Open,
+      }),
     );
 
     this.circuitBreakerPolicy.onHalfOpen(() =>
-      this.logger.alert(
-        'Allowing only half of the requests to be executed now!',
-        {
-          component: Components.DATABASE,
-          circuitState: CircuitState.HalfOpen,
-        },
-      ),
+      this.logger.alert('Allowing only half of the requests to be executed now!', {
+        component: Components.DATABASE,
+        circuitState: CircuitState.HalfOpen,
+      }),
     );
 
     this.circuitBreakerPolicy.onReset(() =>

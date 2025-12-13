@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Inject,
-  Injectable,
-  NotImplementedException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -14,11 +9,7 @@ import { UserAuthPayload } from '@app/contracts/auth';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 
-import {
-  PreSignedUrlRequestDto,
-  CompleteUserProfileDto,
-  UpdateUserRequestDto,
-} from './request';
+import { PreSignedUrlRequestDto, CompleteUserProfileDto, UpdateUserRequestDto } from './request';
 import {
   DeleteUserRequestResponse,
   FindUserRequestResponse,
@@ -73,9 +64,7 @@ export class UsersService implements OnModuleInit {
     userId: string,
     userUpdateDto: UpdateUserRequestDto,
   ): Promise<UpdatedUserRequestResponse> {
-    this.logger.info(
-      `Update Request has been made:${JSON.stringify(userUpdateDto)}`,
-    );
+    this.logger.info(`Update Request has been made:${JSON.stringify(userUpdateDto)}`);
 
     const response$ = this.userService.updateProfile({
       ...userUpdateDto,

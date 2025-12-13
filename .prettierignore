@@ -1,0 +1,11 @@
+dist
+build
+coverage
+node_modules
+
+**/generated/**
+**/prisma/generated/**
+**/.prisma/**
+
+*.log
+*.lock

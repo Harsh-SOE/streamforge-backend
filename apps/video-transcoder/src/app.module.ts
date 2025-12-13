@@ -7,11 +7,6 @@ import { AppHealthModule } from './infrastructure/health';
 import { MeasureModule } from './infrastructure/measure';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    VideoTranscoderModule,
-    AppHealthModule,
-    MeasureModule,
-  ],
+  imports: [AppConfigModule, VideoTranscoderModule, AppHealthModule, MeasureModule],
 })
 export class AppModule {}

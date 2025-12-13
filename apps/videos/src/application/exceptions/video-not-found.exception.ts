@@ -7,8 +7,7 @@ export interface VideoNotFoundExceptionOptions {
 
 export class VideoNotFoundException extends ApplicationException {
   public constructor(options: VideoNotFoundExceptionOptions) {
-    const { message = `user was not found in the database`, meta } =
-      options || {};
+    const { message = `user was not found in the database`, meta } = options || {};
     super({
       code: 'NOT_FOUND_EXCEPTION',
       message: message,

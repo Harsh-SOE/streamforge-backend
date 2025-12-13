@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import Redis from 'ioredis';
 import * as fs from 'fs';
 import { join } from 'path';
@@ -18,9 +13,7 @@ import { AppConfigService } from '@reaction/infrastructure/config';
 import { RedisWithCommands } from '../types';
 
 @Injectable()
-export class RedisCacheAdapter
-  implements OnModuleInit, OnModuleDestroy, ReactionCachePort
-{
+export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, ReactionCachePort {
   private readonly SHARDS: number = 64;
   private redisClient: RedisWithCommands;
 
@@ -46,25 +39,13 @@ export class RedisCacheAdapter
   }
 
   public onModuleInit() {
-    const likeScript = fs.readFileSync(
-      join(__dirname, 'scripts/like.lua'),
-      'utf8',
-    );
+    const likeScript = fs.readFileSync(join(__dirname, 'scripts/like.lua'), 'utf8');
 
-    const unlikeScript = fs.readFileSync(
-      join(__dirname, 'scripts/unlike.lua'),
-      'utf8',
-    );
+    const unlikeScript = fs.readFileSync(join(__dirname, 'scripts/unlike.lua'), 'utf8');
 
-    const dislikeScript = fs.readFileSync(
-      join(__dirname, 'scripts/dislike.lua'),
-      'utf8',
-    );
+    const dislikeScript = fs.readFileSync(join(__dirname, 'scripts/dislike.lua'), 'utf8');
 
-    const undislikeScript = fs.readFileSync(
-      join(__dirname, 'scripts/undislike.lua'),
-      'utf8',
-    );
+    const undislikeScript = fs.readFileSync(join(__dirname, 'scripts/undislike.lua'), 'utf8');
 
     this.redisClient.defineCommand('videoLikesCountIncr', {
       numberOfKeys: 4,
@@ -118,8 +99,7 @@ export class RedisCacheAdapter
       this.getVideoLikesCounterKey(videoId, i),
     );
 
-    const getValuesOperations = async () =>
-      await this.redisClient.mget(...allShardedKeys);
+    const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
     const values = await this.redisCacheHandler.filter(getValuesOperations, {
       operationType: 'READ_MANY',
@@ -129,8 +109,7 @@ export class RedisCacheAdapter
     });
 
     const totalLikes = values.reduce(
-      (sum, currentValue) =>
-        sum + (currentValue ? parseInt(currentValue, 10) : 0),
+      (sum, currentValue) => sum + (currentValue ? parseInt(currentValue, 10) : 0),
       0,
     );
 
@@ -142,8 +121,7 @@ export class RedisCacheAdapter
       this.getVideoDislikeCounterKey(videoId, i),
     );
 
-    const getValuesOperations = async () =>
-      await this.redisClient.mget(...allShardedKeys);
+    const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
     const values = await this.redisCacheHandler.filter(getValuesOperations, {
       operationType: 'READ_MANY',
@@ -153,8 +131,7 @@ export class RedisCacheAdapter
     });
 
     const totalDislikes = values.reduce(
-      (sum, currentValue) =>
-        sum + (currentValue ? parseInt(currentValue, 10) : 0),
+      (sum, currentValue) => sum + (currentValue ? parseInt(currentValue, 10) : 0),
       0,
     );
 
@@ -165,10 +142,7 @@ export class RedisCacheAdapter
     const shardNum = this.getShardKey(videoId, userId);
     const usersDislikedSetKey = this.getUserDislikesSetKey(videoId);
     const usersLikedSetKey = this.getUserLikesSetKey(videoId);
-    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(
-      videoId,
-      shardNum,
-    );
+    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(videoId, shardNum);
     const videoLikeCounterKey = this.getVideoLikesCounterKey(videoId, shardNum);
 
     return await this.redisClient.videoLikesCountIncrScriptFunction(
@@ -196,10 +170,7 @@ export class RedisCacheAdapter
     const shardNum = this.getShardKey(videoId, userId);
     const usersDislikedSetKey = this.getUserDislikesSetKey(videoId);
     const usersLikedSetKey = this.getUserLikesSetKey(videoId);
-    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(
-      videoId,
-      shardNum,
-    );
+    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(videoId, shardNum);
     const videoLikeCounterKey = this.getVideoLikesCounterKey(videoId, shardNum);
 
     return await this.redisClient.videoDislikesCountIncrScriptFunction(
@@ -214,10 +185,7 @@ export class RedisCacheAdapter
   public async removeDislike(videoId: string, userId: string): Promise<number> {
     const shardNum = this.getShardKey(videoId, userId);
     const usersDislikedSetKey = this.getUserDislikesSetKey(videoId);
-    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(
-      videoId,
-      shardNum,
-    );
+    const videoDislikeCounterKey = this.getVideoDislikeCounterKey(videoId, shardNum);
 
     return await this.redisClient.videoDislikesCountDecrScriptFunction(
       usersDislikedSetKey,

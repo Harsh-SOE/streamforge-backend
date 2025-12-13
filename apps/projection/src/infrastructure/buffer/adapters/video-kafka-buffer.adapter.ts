@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -33,9 +28,7 @@ export class VideoKafkaBufferAdapter
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
-      brokers: [
-        `${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`,
-      ],
+      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
       clientId: this.configService.BUFFER_CLIENT_ID,
     });
 
@@ -82,14 +75,9 @@ export class VideoKafkaBufferAdapter
         const { batch } = payload;
         const messages = batch.messages
           .filter((message) => message.value)
-          .map(
-            (message) =>
-              JSON.parse(message.value!.toString()) as VideoUploadedEventDto,
-          );
+          .map((message) => JSON.parse(message.value!.toString()) as VideoUploadedEventDto);
 
-        this.logger.info(
-          `Saving ${messages.length} profiles in projection database`,
-        );
+        this.logger.info(`Saving ${messages.length} profiles in projection database`);
 
         await this.projectionRepo.saveManyVideos(messages);
 

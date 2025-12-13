@@ -21,11 +21,7 @@ export type BufferFlushExceptionOptions = {
 
 export class BufferFlushException extends InfrastructureException {
   constructor(options: BufferFlushExceptionOptions) {
-    const {
-      message = `Unable to flush values from buffer`,
-      meta,
-      contextError,
-    } = options;
+    const { message = `Unable to flush values from buffer`, meta, contextError } = options;
     super({
       message,
       code: BUFFER_EXCEPTION.BUFFER_FLUSH_EXCEPTION,

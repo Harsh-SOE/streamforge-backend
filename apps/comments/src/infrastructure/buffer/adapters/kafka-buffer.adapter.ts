@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -20,9 +15,7 @@ import { AppConfigService } from '@comments/infrastructure/config';
 export const COMMENT_BUFFER_TOPIC = 'comment';
 
 @Injectable()
-export class KafkaBufferAdapter
-  implements OnModuleInit, OnModuleDestroy, CommentBufferPort
-{
+export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, CommentBufferPort {
   private kafkaClient: Kafka;
   private producer: Producer;
   private consumer: Consumer;
@@ -34,9 +27,7 @@ export class KafkaBufferAdapter
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
-      brokers: [
-        `${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`,
-      ],
+      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
       clientId: this.configService.BUFFER_CLIENT_ID,
     });
 
@@ -83,17 +74,10 @@ export class KafkaBufferAdapter
         const { batch } = payload;
         const messages = batch.messages
           .filter((message) => message.value)
-          .map(
-            (message) =>
-              JSON.parse(message.value!.toString()) as CommentMessage,
-          );
+          .map((message) => JSON.parse(message.value!.toString()) as CommentMessage);
 
         const models = messages.map((message) =>
-          CommentAggregate.create(
-            message.userId,
-            message.videoId,
-            message.commentText,
-          ),
+          CommentAggregate.create(message.userId, message.videoId, message.commentText),
         );
 
         this.logger.info(`Saving ${models.length} comments in database`);

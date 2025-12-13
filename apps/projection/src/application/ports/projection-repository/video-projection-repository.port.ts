@@ -5,14 +5,9 @@ export interface VideoProjectionRepositoryPort {
 
   saveManyVideos(data: VideoUploadedEventDto[]): Promise<number>;
 
-  updateVideo(
-    videoId: string,
-    data: Partial<VideoUploadedEventDto>,
-  ): Promise<boolean>;
+  updateVideo(videoId: string, data: Partial<VideoUploadedEventDto>): Promise<boolean>;
 
   deleteVideo(videoId: string): Promise<boolean>;
 }
 
-export const VIDEO_PROJECTION_REPOSITORY_PORT = Symbol(
-  'VIDEO_PROJECTION_REPOSITORY_PORT',
-);
+export const VIDEO_PROJECTION_REPOSITORY_PORT = Symbol('VIDEO_PROJECTION_REPOSITORY_PORT');

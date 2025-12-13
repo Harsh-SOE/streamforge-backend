@@ -48,10 +48,7 @@ export class VideoController {
     @User('id') userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
     this.counter.inc();
-    return this.videoService.getPresignedUploadVideoUrl(
-      FileMetaDataDto,
-      userId,
-    );
+    return this.videoService.getPresignedUploadVideoUrl(FileMetaDataDto, userId);
   }
 
   @Post(VIDEO_API.PRESIGNED_URL_FOR_VIDEO_THUMBNAIL)
@@ -61,17 +58,12 @@ export class VideoController {
     @User('id') userId: string,
   ): Promise<PreSignedUrlRequestResponse> {
     this.counter.inc();
-    return this.videoService.getPresignedUploadThumbnailUrl(
-      FileMetaDataDto,
-      userId,
-    );
+    return this.videoService.getPresignedUploadThumbnailUrl(FileMetaDataDto, userId);
   }
 
   @Get(VIDEO_API.FIND_A_VIDEO)
   @Version(VIDEO_API_VERSION.V1)
-  async findOneVideo(
-    @Param('id') id: string,
-  ): Promise<FoundVideoRequestResponse> {
+  async findOneVideo(@Param('id') id: string): Promise<FoundVideoRequestResponse> {
     this.counter.inc();
     console.log(id);
     return this.videoService.findOneVideo(id);

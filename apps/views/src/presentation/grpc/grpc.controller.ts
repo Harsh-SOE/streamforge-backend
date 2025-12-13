@@ -19,10 +19,7 @@ export class GrpcController implements ViewsServiceController {
 
   viewVideo(
     watchVideoDto: ViewsVideoDto,
-  ):
-    | Promise<ViewsVideoResponse>
-    | Observable<ViewsVideoResponse>
-    | ViewsVideoResponse {
+  ): Promise<ViewsVideoResponse> | Observable<ViewsVideoResponse> | ViewsVideoResponse {
     return this.watchService.watchVideo(watchVideoDto);
   }
 }

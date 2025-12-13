@@ -20,16 +20,9 @@ export class CreateChannelCommandHandler implements ICommandHandler<CreateChanne
     private readonly eventPublisher: EventPublisher,
   ) {}
 
-  async execute({
-    channelCreateDto,
-  }: CreateChannelCommand): Promise<ChannelCreatedResponse> {
-    const {
-      userId,
-      channelBio,
-      isChannelMonitized,
-      channelCoverImage,
-      isChannelVerified,
-    } = channelCreateDto;
+  async execute({ channelCreateDto }: CreateChannelCommand): Promise<ChannelCreatedResponse> {
+    const { userId, channelBio, isChannelMonitized, channelCoverImage, isChannelVerified } =
+      channelCreateDto;
 
     const id = uuidv4();
 

@@ -21,14 +21,8 @@ import {
   UserCardRepository,
   VideoCardRepository,
 } from '@projection/infrastructure/repository/adapters';
-import {
-  UserCardACL,
-  VideoCardACL,
-} from '@projection/infrastructure/anti-corruption';
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@projection/infrastructure/config';
+import { UserCardACL, VideoCardACL } from '@projection/infrastructure/anti-corruption';
+import { AppConfigModule, AppConfigService } from '@projection/infrastructure/config';
 import { EventHandler } from '@projection/application/events';
 
 import { KafkaService } from './kafka.service';

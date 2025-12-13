@@ -10,13 +10,7 @@ import { WinstonLoggerAdapter } from './infrastructure/logger';
 import { MeasureModule } from './infrastructure/measure';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    GrpcModule,
-    AppHealthModule,
-    ScheduleModule.forRoot(),
-    MeasureModule,
-  ],
+  imports: [AppConfigModule, GrpcModule, AppHealthModule, ScheduleModule.forRoot(), MeasureModule],
   providers: [{ provide: LOGGER_PORT, useClass: WinstonLoggerAdapter }],
 })
 export class AppModule {}

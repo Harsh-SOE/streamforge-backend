@@ -29,8 +29,7 @@ export class ActivateMonitizationCommandHandler implements ICommandHandler<Activ
       throw new Error();
     }
 
-    const channelAggregateWithEvents =
-      this.eventPublisher.mergeObjectContext(channelAggregate);
+    const channelAggregateWithEvents = this.eventPublisher.mergeObjectContext(channelAggregate);
 
     channelAggregateWithEvents.updateChannelMonitizedStatus(true);
 

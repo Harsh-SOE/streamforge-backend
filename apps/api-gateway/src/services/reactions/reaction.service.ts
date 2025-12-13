@@ -2,18 +2,11 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import {
-  REACTION_SERVICE_NAME,
-  ReactionServiceClient,
-} from '@app/contracts/reaction';
+import { REACTION_SERVICE_NAME, ReactionServiceClient } from '@app/contracts/reaction';
 import { SERVICES } from '@app/clients';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  GetLikesCountForVideo,
-  GetDislikesCountForVideo,
-  VideoReactedResponse,
-} from './response';
+import { GetLikesCountForVideo, GetDislikesCountForVideo, VideoReactedResponse } from './response';
 import { ClientGrpcLikeStatusEnumMapper } from './mappers';
 import { VideoReactionDto } from './request';
 
@@ -27,9 +20,7 @@ export class ReactionService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.reactionService = this.reactionClient.getService(
-      REACTION_SERVICE_NAME,
-    );
+    this.reactionService = this.reactionClient.getService(REACTION_SERVICE_NAME);
   }
 
   async reactToVideo(
@@ -65,9 +56,7 @@ export class ReactionService implements OnModuleInit {
     return await firstValueFrom(response$);
   }
 
-  async getDislikesCountForVideo(
-    videoId: string,
-  ): Promise<GetDislikesCountForVideo> {
+  async getDislikesCountForVideo(videoId: string): Promise<GetDislikesCountForVideo> {
     this.logger.info(`Request recieved:${videoId}`);
 
     const response$ = this.reactionService.getDislikesCountForVideo({

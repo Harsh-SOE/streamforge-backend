@@ -16,9 +16,7 @@ export class VideoThumbnailFileIdentifier {
         message: `Video thumbnailIdentifier validation has failed. Reason: ${errorMessage}`,
       });
     }
-    return new VideoThumbnailFileIdentifier(
-      parsedVideoThumbnailIdentifier.data,
-    );
+    return new VideoThumbnailFileIdentifier(parsedVideoThumbnailIdentifier.data);
   }
 
   public getValue() {

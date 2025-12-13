@@ -8,10 +8,7 @@ import { RedisBufferHandler } from '@app/handlers/buffer-handler';
 import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
 import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
 
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@videos/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@videos/infrastructure/config';
 import {
   VIDEOS_BUFFER_PORT,
   VIDEOS_CACHE_PORT,

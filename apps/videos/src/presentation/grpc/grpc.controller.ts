@@ -57,10 +57,7 @@ export class GrpcController implements VideoServiceController {
 
   save(
     videoCreateDto: VideoCreateDto,
-  ):
-    | Promise<VideoPublishedResponse>
-    | Observable<VideoPublishedResponse>
-    | VideoPublishedResponse {
+  ): Promise<VideoPublishedResponse> | Observable<VideoPublishedResponse> | VideoPublishedResponse {
     return this.videoService.create(videoCreateDto);
   }
 
@@ -74,10 +71,7 @@ export class GrpcController implements VideoServiceController {
 
   findVideos(
     videoFindQueryDto: VideoFindQueryDto,
-  ):
-    | Promise<VideosFoundResponse>
-    | Observable<VideosFoundResponse>
-    | VideosFoundResponse {
+  ): Promise<VideosFoundResponse> | Observable<VideosFoundResponse> | VideosFoundResponse {
     return this.videoService.findVideos(videoFindQueryDto);
   }
 

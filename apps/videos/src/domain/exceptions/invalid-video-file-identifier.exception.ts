@@ -7,8 +7,7 @@ export interface InvalidVideoFileIdentifierExceptionOptions {
 
 export class InvalidVideoFileIndentifierException extends DomainException {
   public constructor(options: InvalidVideoFileIdentifierExceptionOptions) {
-    const { message = `Invalid video file identifier was received`, meta } =
-      options || {};
+    const { message = `Invalid video file identifier was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

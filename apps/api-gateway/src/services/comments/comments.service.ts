@@ -3,10 +3,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/clients';
-import {
-  COMMENT_SERVICE_NAME,
-  CommentServiceClient,
-} from '@app/contracts/comments';
+import { COMMENT_SERVICE_NAME, CommentServiceClient } from '@app/contracts/comments';
 
 import { CommentVideoResponse } from './response';
 
@@ -18,9 +15,7 @@ export class CommentsService implements OnModuleInit {
 
   onModuleInit() {
     this.commentsService =
-      this.commentsClient.getService<CommentServiceClient>(
-        COMMENT_SERVICE_NAME,
-      );
+      this.commentsClient.getService<CommentServiceClient>(COMMENT_SERVICE_NAME);
   }
   async commentVideo(
     comment: string,

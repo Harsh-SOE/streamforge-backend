@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import Redis from 'ioredis';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -14,9 +9,7 @@ import { VideoCachePort } from '@videos/application/ports';
 import { AppConfigService } from '@videos/infrastructure/config';
 
 @Injectable()
-export class RedisCacheAdapter
-  implements OnModuleInit, OnModuleDestroy, VideoCachePort
-{
+export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, VideoCachePort {
   private readonly SHARDS: number = 64;
   private redisClient: Redis;
 

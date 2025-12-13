@@ -7,8 +7,7 @@ export interface InvalidCommentTextExceptionOptions {
 
 export class InvalidCommentTextException extends DomainException {
   public constructor(options: InvalidCommentTextExceptionOptions) {
-    const { message = `Invalid comemnt text was received`, meta } =
-      options || {};
+    const { message = `Invalid comemnt text was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

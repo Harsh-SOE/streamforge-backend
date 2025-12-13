@@ -1,11 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  ReactionStatus,
-  UserId,
-  VideoId,
-} from '@reaction/domain/value-objects';
+import { ReactionStatus, UserId, VideoId } from '@reaction/domain/value-objects';
 import { ReactionDomainStatus } from '@reaction/domain/enums';
 
 import { ReactionEntity } from '../../entities/reaction/reaction.entity';
@@ -15,11 +11,7 @@ export class ReactionAggregate extends AggregateRoot {
     super();
   }
 
-  public static create(
-    userId: string,
-    videoId: string,
-    reactionStatus: ReactionDomainStatus,
-  ) {
+  public static create(userId: string, videoId: string, reactionStatus: ReactionDomainStatus) {
     const reactionEntity = new ReactionEntity(
       uuidv4(),
       UserId.create(userId),

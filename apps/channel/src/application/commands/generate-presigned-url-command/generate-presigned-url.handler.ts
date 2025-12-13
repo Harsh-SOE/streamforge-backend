@@ -1,15 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import {
-  GetPresignedUrlDto,
-  GetPreSignedUrlResponse,
-} from '@app/contracts/channel';
+import { GetPresignedUrlDto, GetPreSignedUrlResponse } from '@app/contracts/channel';
 
-import {
-  CHANNEL_STORAGE_PORT,
-  ChannelStoragePort,
-} from '@channel/application/ports';
+import { CHANNEL_STORAGE_PORT, ChannelStoragePort } from '@channel/application/ports';
 
 import { GeneratePreSignedUrlCommand } from './generate-presigned-url.command';
 
@@ -23,10 +17,7 @@ export class GeneratePreSignedUrlHandler implements ICommandHandler<
     private readonly storageAdapter: ChannelStoragePort,
   ) {}
 
-  public async execute({
-    fileName,
-    userId,
-  }: GetPresignedUrlDto): Promise<GetPreSignedUrlResponse> {
+  public async execute({ fileName, userId }: GetPresignedUrlDto): Promise<GetPreSignedUrlResponse> {
     if (!fileName) {
       fileName = `cover-image-${new Date().toISOString()}-${userId}.mp4`;
     }

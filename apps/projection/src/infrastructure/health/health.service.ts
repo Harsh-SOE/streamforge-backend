@@ -1,8 +1,5 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import {
-  HealthIndicatorResult,
-  HealthIndicatorService,
-} from '@nestjs/terminus';
+import { HealthIndicatorResult, HealthIndicatorService } from '@nestjs/terminus';
 import { Admin, Kafka, logLevel } from 'kafkajs';
 
 import { AppConfigService } from '../config';

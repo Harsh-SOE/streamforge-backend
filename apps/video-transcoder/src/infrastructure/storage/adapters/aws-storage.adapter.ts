@@ -6,17 +6,11 @@ import { Upload } from '@aws-sdk/lib-storage';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  UploadResult,
-  UploadOptions,
-  TranscoderStoragePort,
-} from '@transcoder/application/ports';
+import { UploadResult, UploadOptions, TranscoderStoragePort } from '@transcoder/application/ports';
 import { AppConfigService } from '@transcoder/infrastructure/config';
 
 @Injectable()
-export class AwsS3StorageAdapter
-  implements OnModuleInit, TranscoderStoragePort
-{
+export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort {
   private readonly AWS_RAW_VIDEOS_KEY = `raw-videos`;
   private readonly AWS_TRANSCODED_VIDEOS_KEY = `transcoded-videos`;
 
@@ -41,9 +35,7 @@ export class AwsS3StorageAdapter
     return `${this.AWS_TRANSCODED_VIDEOS_KEY}/videoId/${videoId}.m3u8`;
   }
 
-  public async getRawVideoFileAsReadableStream(
-    fileIdentifier: string,
-  ): Promise<Readable> {
+  public async getRawVideoFileAsReadableStream(fileIdentifier: string): Promise<Readable> {
     this.logger.alert(`Downloading ${fileIdentifier} file as stream...`);
 
     const getObjectCommand = new GetObjectCommand({
@@ -91,9 +83,7 @@ export class AwsS3StorageAdapter
         uploader
           .abort()
           .then(() => this.logger.info('Upload aborted cleanly.'))
-          .catch((err) =>
-            this.logger.error('Error while aborting', err as Error),
-          );
+          .catch((err) => this.logger.error('Error while aborting', err as Error));
       });
     }
     await uploader.done();

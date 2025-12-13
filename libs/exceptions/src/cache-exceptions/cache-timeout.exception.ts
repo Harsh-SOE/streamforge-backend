@@ -20,11 +20,7 @@ export type CacheTimeOutExceptionOptions = {
 
 export class CacheTimeoutException extends InfrastructureException {
   constructor(options: CacheTimeOutExceptionOptions) {
-    const {
-      message = 'Cache operation timed out',
-      meta,
-      contextError,
-    } = options;
+    const { message = 'Cache operation timed out', meta, contextError } = options;
     super({
       message,
       code: CACHE_EXCEPTION.CACHE_TIMEOUT_EXCEPTION,

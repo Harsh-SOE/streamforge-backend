@@ -25,9 +25,7 @@ export class EditVideoHandler implements ICommandHandler<EditVideoCommand> {
     private readonly videoQueryAdapter: VideoQueryRepositoryPort,
   ) {}
 
-  public async execute({
-    updateVideoDto,
-  }: EditVideoCommand): Promise<VideoUpdatedResponse> {
+  public async execute({ updateVideoDto }: EditVideoCommand): Promise<VideoUpdatedResponse> {
     const {
       id,
       title,
@@ -43,9 +41,7 @@ export class EditVideoHandler implements ICommandHandler<EditVideoCommand> {
       ? TransportToDomainPublishEnumMapper.get(videoTransportPublishStatus)
       : undefined;
     const domainVisibiltyStatus = videoTransportVisibilityStatus
-      ? TransportToDomainVisibilityEnumMapper.get(
-          videoTransportVisibilityStatus,
-        )
+      ? TransportToDomainVisibilityEnumMapper.get(videoTransportVisibilityStatus)
       : undefined;
 
     const videoAggregate = await this.videoCommandAdapter.findOneById(id);

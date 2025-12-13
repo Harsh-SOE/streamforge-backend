@@ -3,10 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
 import { ProjectedVideoCardModel } from '@projection/infrastructure/repository/models';
-import {
-  VideoUpatedEventDto,
-  VideoUploadedEventDto,
-} from '@app/contracts/videos';
+import { VideoUpatedEventDto, VideoUploadedEventDto } from '@app/contracts/videos';
 
 @Injectable()
 export class VideoCardACL {
@@ -15,9 +12,7 @@ export class VideoCardACL {
     private readonly videoCard: Model<ProjectedVideoCardModel>,
   ) {}
 
-  public videoUploadedEventToPersistance(
-    event: VideoUploadedEventDto,
-  ): ProjectedVideoCardModel {
+  public videoUploadedEventToPersistance(event: VideoUploadedEventDto): ProjectedVideoCardModel {
     const videoCard = {
       videoId: event.videoId,
       channelId: event.channelId,

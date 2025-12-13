@@ -29,9 +29,7 @@ export class KafkaMessageBrokerHandler implements OnModuleInit {
   private circuitBreakerPolicy: CircuitBreakerPolicy;
   private operationPolicy: IPolicy;
 
-  public constructor(
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-  ) {}
+  public constructor(@Inject(LOGGER_PORT) private readonly logger: LoggerPort) {}
 
   public onModuleInit() {
     this.retryPolicyConfig(3);
@@ -58,32 +56,23 @@ export class KafkaMessageBrokerHandler implements OnModuleInit {
     );
   }
 
-  public circuitBreakerConfig(
-    requestBreakerCount: number,
-    allowHalfRequests: number,
-  ) {
+  public circuitBreakerConfig(requestBreakerCount: number, allowHalfRequests: number) {
     this.circuitBreakerPolicy = circuitBreaker(handleAll, {
       halfOpenAfter: allowHalfRequests * 1000,
       breaker: new ConsecutiveBreaker(requestBreakerCount),
     });
 
     this.circuitBreakerPolicy.onBreak(() =>
-      this.logger.alert(
-        'Too many request failed, Circuit is now Opened/broken',
-        {
-          circuitState: CircuitState.Open,
-        },
-      ),
+      this.logger.alert('Too many request failed, Circuit is now Opened/broken', {
+        circuitState: CircuitState.Open,
+      }),
     );
 
     this.circuitBreakerPolicy.onHalfOpen(() =>
-      this.logger.alert(
-        'Allowing only half of the requests to be executed now!',
-        {
-          component: Components.MESSAGE_BROKER,
-          circuitState: CircuitState.HalfOpen,
-        },
-      ),
+      this.logger.alert('Allowing only half of the requests to be executed now!', {
+        component: Components.MESSAGE_BROKER,
+        circuitState: CircuitState.HalfOpen,
+      }),
     );
 
     this.circuitBreakerPolicy.onReset(() =>
@@ -97,15 +86,7 @@ export class KafkaMessageBrokerHandler implements OnModuleInit {
     kafkaOperation: () => TMessageBrokerResponse,
     options: MessageBrokerFilterOptions<TFallback>,
   ) {
-    const {
-      logErrors,
-      host,
-      port,
-      suppressErrors,
-      fallbackValue,
-      topic,
-      message,
-    } = options;
+    const { logErrors, host, port, suppressErrors, fallbackValue, topic, message } = options;
     try {
       return await this.operationPolicy.execute(() => kafkaOperation());
     } catch (error) {
@@ -145,10 +126,7 @@ export class KafkaMessageBrokerHandler implements OnModuleInit {
 
         default:
           if (logErrors) {
-            this.logger.fatal(
-              `Unknown message broker error occured`,
-              error as Error,
-            );
+            this.logger.fatal(`Unknown message broker error occured`, error as Error);
           }
           throw new MessageBrokerUnknownException({
             message: `An Unknown error occured while executing kafka operation`,

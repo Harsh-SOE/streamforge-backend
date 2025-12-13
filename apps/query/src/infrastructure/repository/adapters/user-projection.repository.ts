@@ -19,18 +19,12 @@ export class UserQueryRepository implements UserQueryRepositoryPort {
   public async getUserFromId(userId: string): Promise<UserQueryModel | null> {
     const user = await this.projectedUserInfo.findById(userId);
 
-    return user
-      ? this.userQueryACL.userProjectionSchemaToQueryModel(user)
-      : null;
+    return user ? this.userQueryACL.userProjectionSchemaToQueryModel(user) : null;
   }
 
-  public async getUserFromAuthId(
-    userAuthId: string,
-  ): Promise<UserQueryModel | null> {
+  public async getUserFromAuthId(userAuthId: string): Promise<UserQueryModel | null> {
     const user = await this.projectedUserInfo.findOne({ userAuthId });
 
-    return user
-      ? this.userQueryACL.userProjectionSchemaToQueryModel(user)
-      : null;
+    return user ? this.userQueryACL.userProjectionSchemaToQueryModel(user) : null;
   }
 }

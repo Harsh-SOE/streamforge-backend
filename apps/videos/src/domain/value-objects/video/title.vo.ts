@@ -13,8 +13,7 @@ export class VideoTitle {
   public constructor(private readonly value: string) {}
 
   public static create(value: string) {
-    const parsedVideoTitle =
-      VideoTitle.VideoTitleValidationSchema.safeParse(value);
+    const parsedVideoTitle = VideoTitle.VideoTitleValidationSchema.safeParse(value);
     if (!parsedVideoTitle.success) {
       const errorMessages = parsedVideoTitle.error.message;
       throw new InvalidTitleException({

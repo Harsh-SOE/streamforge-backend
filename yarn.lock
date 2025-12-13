@@ -6025,6 +6025,13 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.11,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
+grpc-health-check@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/grpc-health-check/-/grpc-health-check-2.1.0.tgz#55c86ad7fd8daa35e89d29ed1d17f6b9c981b3ad"
+  integrity sha512-HH3WjwNtusMTEQAtRelFgsFyNcOdihvpjusNDIrGYfWG8tPNSHqELrSyriIjm70k65YSxetsKG1y4H1L5gi1wQ==
+  dependencies:
+    "@grpc/proto-loader" "^0.7.13"
+
 handlebars@^4.7.8:
   version "4.7.8"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.8.tgz#41c42c18b1be2365439188c77c6afae71c0cd9e9"

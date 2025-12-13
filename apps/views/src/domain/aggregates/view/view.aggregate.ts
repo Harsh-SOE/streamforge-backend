@@ -10,11 +10,7 @@ export class ViewAggregate extends AggregateRoot {
   }
 
   public static create(userId: string, videoId: string) {
-    const view = new ViewEntity(
-      uuidv4(),
-      UserId.create(userId),
-      VideoId.create(videoId),
-    );
+    const view = new ViewEntity(uuidv4(), UserId.create(userId), VideoId.create(videoId));
     const viewAggregate = new ViewAggregate(view);
     return viewAggregate;
   }

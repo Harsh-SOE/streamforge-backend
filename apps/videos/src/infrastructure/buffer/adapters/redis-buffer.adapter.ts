@@ -15,9 +15,7 @@ import { AppConfigService } from '@videos/infrastructure/config';
 import { VideoMessage, StreamData } from '../types';
 
 @Injectable()
-export class RedisStreamBufferAdapter
-  implements OnModuleInit, VideosBufferPort
-{
+export class RedisStreamBufferAdapter implements OnModuleInit, VideosBufferPort {
   private redisClient: Redis;
 
   public constructor(
@@ -40,10 +38,7 @@ export class RedisStreamBufferAdapter
     });
 
     this.redisClient.on('error', (error) => {
-      this.logger.info(
-        '❌ Error buffer occured while connecting to redis',
-        error,
-      );
+      this.logger.info('❌ Error buffer occured while connecting to redis', error);
     });
   }
 
@@ -96,8 +91,7 @@ export class RedisStreamBufferAdapter
       return 0;
     }
 
-    const { ids, extractedMessages } =
-      this.extractMessageFromStream(streamData);
+    const { ids, extractedMessages } = this.extractMessageFromStream(streamData);
 
     return await this.processMessages(ids, extractedMessages);
   }
@@ -132,8 +126,7 @@ export class RedisStreamBufferAdapter
       });
     });
 
-    const processedMessagesNumber =
-      await this.videosRepository.saveMany(models);
+    const processedMessagesNumber = await this.videosRepository.saveMany(models);
 
     await this.redisClient.xack(
       this.configService.BUFFER_KEY,

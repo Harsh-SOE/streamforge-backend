@@ -13,8 +13,6 @@ export class AppHealthController {
   @Get()
   @HealthCheck()
   monitor() {
-    return this.healthCheck.check([
-      () => this.healthService.isHealthy('kafka'),
-    ]);
+    return this.healthCheck.check([() => this.healthService.isHealthy('kafka')]);
   }
 }

@@ -7,8 +7,7 @@ export interface InvalidDescriptionExceptionOptions {
 
 export class InvalidDescriptionException extends DomainException {
   public constructor(options: InvalidDescriptionExceptionOptions) {
-    const { message = `Invalid description was received`, meta } =
-      options || {};
+    const { message = `Invalid description was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

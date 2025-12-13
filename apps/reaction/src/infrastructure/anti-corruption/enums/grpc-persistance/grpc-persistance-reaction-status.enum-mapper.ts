@@ -2,10 +2,7 @@ import { ReactionType } from '@app/contracts/reaction';
 
 import { ReactionPersistanceStatus } from '@peristance/reaction';
 
-const GrpcPersistanceReactionStatusEnumMapper = new Map<
-  ReactionType,
-  ReactionPersistanceStatus
->();
+const GrpcPersistanceReactionStatusEnumMapper = new Map<ReactionType, ReactionPersistanceStatus>();
 
 GrpcPersistanceReactionStatusEnumMapper.set(
   ReactionType.REACTION_LIKE,

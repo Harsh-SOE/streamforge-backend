@@ -7,8 +7,7 @@ export interface InvalidPublishStatusExceptionOptions {
 
 export class InvalidPublishStatusException extends DomainException {
   public constructor(options: InvalidPublishStatusExceptionOptions) {
-    const { message = `Invalid publish status was received`, meta } =
-      options || {};
+    const { message = `Invalid publish status was received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

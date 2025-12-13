@@ -18,14 +18,10 @@ export class KafkaService {
   ) {}
 
   public onVideoUploadedProjectionEvent(message: VideoUploadedEventDto) {
-    this.eventBus.publish<VideoUploadedProjectionEvent>(
-      new VideoUploadedProjectionEvent(message),
-    );
+    this.eventBus.publish<VideoUploadedProjectionEvent>(new VideoUploadedProjectionEvent(message));
   }
 
-  public onUserProfileCreatedProjectionEvent(
-    message: UserProfileCreatedEventDto,
-  ) {
+  public onUserProfileCreatedProjectionEvent(message: UserProfileCreatedEventDto) {
     this.logger.info(`Projecting user to projection database`, message);
     this.eventBus.publish<UserProfileCreatedProjectionEvent>(
       new UserProfileCreatedProjectionEvent(message),

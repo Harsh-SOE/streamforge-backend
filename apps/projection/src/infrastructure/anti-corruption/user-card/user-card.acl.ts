@@ -2,10 +2,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import {
-  UserProfileCreatedEventDto,
-  UserProfileUpdatedEventDto,
-} from '@app/contracts/users';
+import { UserProfileCreatedEventDto, UserProfileUpdatedEventDto } from '@app/contracts/users';
 
 import { ProjectedUserQueryModel } from '@projection/infrastructure/repository/models';
 

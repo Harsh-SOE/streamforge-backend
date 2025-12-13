@@ -5,10 +5,10 @@
 // source: views.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Views";
+export const protobufPackage = 'Views';
 
 export interface ViewsVideoDto {
   userId: string;
@@ -19,29 +19,31 @@ export interface ViewsVideoResponse {
   response: string;
 }
 
-export const VIEWS_PACKAGE_NAME = "Views";
+export const VIEWS_PACKAGE_NAME = 'Views';
 
 export interface ViewsServiceClient {
   viewVideo(request: ViewsVideoDto): Observable<ViewsVideoResponse>;
 }
 
 export interface ViewsServiceController {
-  viewVideo(request: ViewsVideoDto): Promise<ViewsVideoResponse> | Observable<ViewsVideoResponse> | ViewsVideoResponse;
+  viewVideo(
+    request: ViewsVideoDto,
+  ): Promise<ViewsVideoResponse> | Observable<ViewsVideoResponse> | ViewsVideoResponse;
 }
 
 export function ViewsServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["viewVideo"];
+    const grpcMethods: string[] = ['viewVideo'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("ViewsService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('ViewsService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("ViewsService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('ViewsService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const VIEWS_SERVICE_NAME = "ViewsService";
+export const VIEWS_SERVICE_NAME = 'ViewsService';

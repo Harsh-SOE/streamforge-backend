@@ -8,9 +8,7 @@ import { VideoCreatedEvent } from './video-created.event';
 
 @EventsHandler(VideoCreatedEvent)
 export class VideoCreatedEventHandler implements IEventHandler<VideoCreatedEvent> {
-  constructor(
-    @Inject(MESSAGE_BROKER) private messaageBroker: MessageBrokerPort,
-  ) {}
+  constructor(@Inject(MESSAGE_BROKER) private messaageBroker: MessageBrokerPort) {}
 
   public async handle({ transcodeVideoMessage }: VideoCreatedEvent) {
     await this.messaageBroker.publishMessage(

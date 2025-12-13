@@ -11,9 +11,7 @@ import { GrpcFilter } from '../filters';
 export class GrpcController {
   public constructor(private commentsService: GrpcService) {}
 
-  commentVideo(
-    commentVideoDto: CommentVideoDto,
-  ): Promise<CommentVideoResponse> {
+  commentVideo(commentVideoDto: CommentVideoDto): Promise<CommentVideoResponse> {
     return this.commentsService.commentOnVideo(commentVideoDto);
   }
 }

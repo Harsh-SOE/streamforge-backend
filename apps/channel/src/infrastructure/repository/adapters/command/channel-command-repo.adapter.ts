@@ -25,9 +25,7 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
     filter: DatabaseFilter<Channel>,
     mode: 'many' | 'unique',
   ): Prisma.ChannelWhereInput | Prisma.ChannelWhereUniqueInput {
-    const prismaFilter:
-      | Prisma.ChannelWhereInput
-      | Prisma.ChannelWhereUniqueInput = {};
+    const prismaFilter: Prisma.ChannelWhereInput | Prisma.ChannelWhereUniqueInput = {};
 
     (Object.keys(filter) as Array<keyof Channel>).forEach((key) => {
       const value = filter[key];
@@ -70,13 +68,10 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       await this.persistanceService.channel.create({
         data: this.channelPersistanceACL.toPersistance(model),
       });
-    const createdChannel = await this.prismaDatabaseHandler.execute(
-      saveChannelOperation,
-      {
-        operationType: 'CREATE',
-        entry: this.channelPersistanceACL.toPersistance(model),
-      },
-    );
+    const createdChannel = await this.prismaDatabaseHandler.execute(saveChannelOperation, {
+      operationType: 'CREATE',
+      entry: this.channelPersistanceACL.toPersistance(model),
+    });
     return this.channelPersistanceACL.toAggregate(createdChannel);
   }
 
@@ -85,27 +80,20 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       return 0;
     }
 
-    const channelsToCreate = models.map((model) =>
-      this.channelPersistanceACL.toPersistance(model),
-    );
-    this.logger.info(
-      `Saving: ${channelsToCreate.length} documents into the database as a batch`,
-      {
-        component: Components.DATABASE,
-        service: 'CHANNELS',
-      },
-    );
+    const channelsToCreate = models.map((model) => this.channelPersistanceACL.toPersistance(model));
+    this.logger.info(`Saving: ${channelsToCreate.length} documents into the database as a batch`, {
+      component: Components.DATABASE,
+      service: 'CHANNELS',
+    });
     const saveManyChannelsOperations = async () =>
       await this.persistanceService.channel.createMany({
-        data: models.map((model) =>
-          this.channelPersistanceACL.toPersistance(model),
-        ),
+        data: models.map((model) => this.channelPersistanceACL.toPersistance(model)),
       });
 
-    const createdEntities = await this.prismaDatabaseHandler.execute(
-      saveManyChannelsOperations,
-      { operationType: 'CREATE', entry: channelsToCreate },
-    );
+    const createdEntities = await this.prismaDatabaseHandler.execute(saveManyChannelsOperations, {
+      operationType: 'CREATE',
+      entry: channelsToCreate,
+    });
     return createdEntities.count;
   }
 
@@ -119,14 +107,11 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannel = await this.prismaDatabaseHandler.execute(
-      updateChannelByIdOperation,
-      {
-        operationType: 'UPDATE',
-        entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
-        filter: { id },
-      },
-    );
+    const updatedChannel = await this.prismaDatabaseHandler.execute(updateChannelByIdOperation, {
+      operationType: 'UPDATE',
+      entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
+      filter: { id },
+    });
 
     return this.channelPersistanceACL.toAggregate(updatedChannel);
   }
@@ -137,21 +122,15 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
   ): Promise<ChannelAggregate> {
     const updateChannelOperation = async () =>
       await this.persistanceService.channel.update({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.ChannelWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.ChannelWhereUniqueInput,
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannel = await this.prismaDatabaseHandler.execute(
-      updateChannelOperation,
-      {
-        operationType: 'UPDATE',
-        entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
-        filter,
-      },
-    );
+    const updatedChannel = await this.prismaDatabaseHandler.execute(updateChannelOperation, {
+      operationType: 'UPDATE',
+      entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
+      filter,
+    });
 
     return this.channelPersistanceACL.toAggregate(updatedChannel);
   }
@@ -166,14 +145,11 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
         data: this.channelPersistanceACL.toPersistance(updatedChannelModel),
       });
 
-    const updatedChannels = await this.prismaDatabaseHandler.execute(
-      updateManyChannelsOperation,
-      {
-        operationType: 'UPDATE',
-        entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
-        filter,
-      },
-    );
+    const updatedChannels = await this.prismaDatabaseHandler.execute(updateManyChannelsOperation, {
+      operationType: 'UPDATE',
+      entry: this.channelPersistanceACL.toPersistance(updatedChannelModel),
+      filter,
+    });
 
     return updatedChannels.count;
   }
@@ -185,42 +161,27 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       });
     };
 
-    const foundChannel = await this.prismaDatabaseHandler.execute(
-      findChannelByIdOperation,
-      {
-        operationType: 'READ',
-        filter: { id },
-      },
-    );
+    const foundChannel = await this.prismaDatabaseHandler.execute(findChannelByIdOperation, {
+      operationType: 'READ',
+      filter: { id },
+    });
 
-    return foundChannel
-      ? this.channelPersistanceACL.toAggregate(foundChannel)
-      : null;
+    return foundChannel ? this.channelPersistanceACL.toAggregate(foundChannel) : null;
   }
 
-  async findOne(
-    filter: DatabaseFilter<Channel>,
-  ): Promise<ChannelAggregate | null> {
+  async findOne(filter: DatabaseFilter<Channel>): Promise<ChannelAggregate | null> {
     const findChannelOperation = async () => {
       return await this.persistanceService.channel.findUnique({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.ChannelWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.ChannelWhereUniqueInput,
       });
     };
 
-    const foundChannel = await this.prismaDatabaseHandler.execute(
-      findChannelOperation,
-      {
-        operationType: 'READ',
-        filter,
-      },
-    );
+    const foundChannel = await this.prismaDatabaseHandler.execute(findChannelOperation, {
+      operationType: 'READ',
+      filter,
+    });
 
-    return foundChannel
-      ? this.channelPersistanceACL.toAggregate(foundChannel)
-      : null;
+    return foundChannel ? this.channelPersistanceACL.toAggregate(foundChannel) : null;
   }
 
   async findMany(filter: DatabaseFilter<Channel>): Promise<ChannelAggregate[]> {
@@ -230,17 +191,12 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       });
     };
 
-    const foundChannels = await this.prismaDatabaseHandler.execute(
-      findManyChannelsOperation,
-      {
-        operationType: 'READ',
-        filter,
-      },
-    );
+    const foundChannels = await this.prismaDatabaseHandler.execute(findManyChannelsOperation, {
+      operationType: 'READ',
+      filter,
+    });
 
-    return foundChannels.map((channel) =>
-      this.channelPersistanceACL.toAggregate(channel),
-    );
+    return foundChannels.map((channel) => this.channelPersistanceACL.toAggregate(channel));
   }
 
   async deleteOneById(id: string): Promise<boolean> {
@@ -250,13 +206,10 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       });
     };
 
-    const deletedChannel = await this.prismaDatabaseHandler.execute(
-      deleteChannelByIdOperation,
-      {
-        operationType: 'DELETE',
-        filter: { id },
-      },
-    );
+    const deletedChannel = await this.prismaDatabaseHandler.execute(deleteChannelByIdOperation, {
+      operationType: 'DELETE',
+      filter: { id },
+    });
 
     return deletedChannel ? true : false;
   }
@@ -264,20 +217,14 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
   async deleteOne(filter: DatabaseFilter<Channel>): Promise<boolean> {
     const deleteChannelOperation = async () => {
       return await this.persistanceService.channel.delete({
-        where: this.toPrismaFilter(
-          filter,
-          'many',
-        ) as Prisma.ChannelWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'many') as Prisma.ChannelWhereUniqueInput,
       });
     };
 
-    const deletedChannel = await this.prismaDatabaseHandler.execute(
-      deleteChannelOperation,
-      {
-        operationType: 'DELETE',
-        filter,
-      },
-    );
+    const deletedChannel = await this.prismaDatabaseHandler.execute(deleteChannelOperation, {
+      operationType: 'DELETE',
+      filter,
+    });
 
     return deletedChannel ? true : false;
   }
@@ -289,13 +236,10 @@ export class ChannelCommandRepositoryAdapter implements ChannelCommandRepository
       });
     };
 
-    const deletedChannels = await this.prismaDatabaseHandler.execute(
-      deleteManyChannelsOperation,
-      {
-        operationType: 'DELETE',
-        filter,
-      },
-    );
+    const deletedChannels = await this.prismaDatabaseHandler.execute(deleteManyChannelsOperation, {
+      operationType: 'DELETE',
+      filter,
+    });
 
     return deletedChannels.count;
   }

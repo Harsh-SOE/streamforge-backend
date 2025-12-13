@@ -44,9 +44,7 @@ export class OpenFGAAuthAdapter implements AuthorizePort {
     };
   }
 
-  async checkRelation(
-    checkRelationOptions: CheckRelationOptions,
-  ): Promise<CheckRelationResponse> {
+  async checkRelation(checkRelationOptions: CheckRelationOptions): Promise<CheckRelationResponse> {
     const response = await this.client.check({
       user: checkRelationOptions.user,
       relation: checkRelationOptions.relation,

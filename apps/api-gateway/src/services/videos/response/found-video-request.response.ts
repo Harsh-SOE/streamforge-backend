@@ -1,7 +1,4 @@
-import {
-  VideoRequestPublishStatus,
-  VideoRequestVisibilityStatus,
-} from '../enums';
+import { VideoRequestPublishStatus, VideoRequestVisibilityStatus } from '../enums';
 
 export class FoundVideoRequestResponse {
   id: string;

@@ -3,10 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { VideosFoundResponse } from '@app/contracts/videos';
 
-import {
-  VIDEO_QUERY_RESPOSITORY_PORT,
-  VideoQueryRepositoryPort,
-} from '@videos/application/ports';
+import { VIDEO_QUERY_RESPOSITORY_PORT, VideoQueryRepositoryPort } from '@videos/application/ports';
 import {
   QueryToTransportPublishEnumMapper,
   QueryToTransportVisibilityEnumMapper,
@@ -34,10 +31,9 @@ export class QueryVideoHandler implements IQueryHandler<QueryVideo> {
       const videoPublishStatusForGrpc = QueryToTransportPublishEnumMapper.get(
         video.videoProps.videoPublishStatus,
       );
-      const videoVisibilityStatusForGrpc =
-        QueryToTransportVisibilityEnumMapper.get(
-          video.videoProps.videoVisibilityStatus,
-        );
+      const videoVisibilityStatusForGrpc = QueryToTransportVisibilityEnumMapper.get(
+        video.videoProps.videoVisibilityStatus,
+      );
 
       if (!videoPublishStatusForGrpc || !videoVisibilityStatusForGrpc) {
         throw new Error();

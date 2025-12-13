@@ -7,9 +7,7 @@ import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler'
 import { AppConfigService } from '@channel/infrastructure/config';
 
 @Injectable()
-export class KafkaMessageBrokerAdapter
-  implements MessageBrokerPort, OnModuleInit, OnModuleDestroy
-{
+export class KafkaMessageBrokerAdapter implements MessageBrokerPort, OnModuleInit, OnModuleDestroy {
   private kafka: Kafka;
   private producer: Producer;
   private consumer: Consumer;
@@ -55,8 +53,7 @@ export class KafkaMessageBrokerAdapter
   }
 
   public async subscribeTo(topic: string): Promise<void> {
-    const kafkaSubscribeOperation = () =>
-      this.consumer.subscribe({ topic, fromBeginning: true });
+    const kafkaSubscribeOperation = () => this.consumer.subscribe({ topic, fromBeginning: true });
     await this.kafkaMessageBrokerHandler.execute(kafkaSubscribeOperation, {
       operationType: 'SUBSCRIBE',
       topic,

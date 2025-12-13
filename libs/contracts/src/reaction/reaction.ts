@@ -5,10 +5,10 @@
 // source: reaction.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Reaction";
+export const protobufPackage = 'Reaction';
 
 export enum ReactionType {
   REACTION_LIKE = 0,
@@ -48,8 +48,7 @@ export interface ReactionFoundForVideoResponse {
   reaction: ReactionType;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
 export interface ReactionHealthCheckRequest {
   service: string;
@@ -75,14 +74,18 @@ export enum ReactionHealthCheckResponse_ServingStatus {
   UNRECOGNIZED = -1,
 }
 
-export const REACTION_PACKAGE_NAME = "Reaction";
+export const REACTION_PACKAGE_NAME = 'Reaction';
 
 export interface ReactionServiceClient {
   reactToVideo(request: VideoReactionDto): Observable<ReactionResponse>;
 
-  getLikesCountForVideo(request: ReactionLikeCountVideoDto): Observable<ReactionLikeCountVideoResponse>;
+  getLikesCountForVideo(
+    request: ReactionLikeCountVideoDto,
+  ): Observable<ReactionLikeCountVideoResponse>;
 
-  getDislikesCountForVideo(request: ReactionDislikeCountVideoDto): Observable<ReactionDislikeCountVideoResponse>;
+  getDislikesCountForVideo(
+    request: ReactionDislikeCountVideoDto,
+  ): Observable<ReactionDislikeCountVideoResponse>;
 
   findReactionOfUserOnVideo(request: ReactedOnVideoDto): Observable<ReactionFoundForVideoResponse>;
 
@@ -90,7 +93,9 @@ export interface ReactionServiceClient {
 }
 
 export interface ReactionServiceController {
-  reactToVideo(request: VideoReactionDto): Promise<ReactionResponse> | Observable<ReactionResponse> | ReactionResponse;
+  reactToVideo(
+    request: VideoReactionDto,
+  ): Promise<ReactionResponse> | Observable<ReactionResponse> | ReactionResponse;
 
   getLikesCountForVideo(
     request: ReactionLikeCountVideoDto,
@@ -108,32 +113,42 @@ export interface ReactionServiceController {
 
   findReactionOfUserOnVideo(
     request: ReactedOnVideoDto,
-  ): Promise<ReactionFoundForVideoResponse> | Observable<ReactionFoundForVideoResponse> | ReactionFoundForVideoResponse;
+  ):
+    | Promise<ReactionFoundForVideoResponse>
+    | Observable<ReactionFoundForVideoResponse>
+    | ReactionFoundForVideoResponse;
 
   check(
     request: ReactionHealthCheckRequest,
-  ): Promise<ReactionHealthCheckResponse> | Observable<ReactionHealthCheckResponse> | ReactionHealthCheckResponse;
+  ):
+    | Promise<ReactionHealthCheckResponse>
+    | Observable<ReactionHealthCheckResponse>
+    | ReactionHealthCheckResponse;
 }
 
 export function ReactionServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "reactToVideo",
-      "getLikesCountForVideo",
-      "getDislikesCountForVideo",
-      "findReactionOfUserOnVideo",
-      "check",
+      'reactToVideo',
+      'getLikesCountForVideo',
+      'getDislikesCountForVideo',
+      'findReactionOfUserOnVideo',
+      'check',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("ReactionService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('ReactionService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("ReactionService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('ReactionService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const REACTION_SERVICE_NAME = "ReactionService";
+export const REACTION_SERVICE_NAME = 'ReactionService';

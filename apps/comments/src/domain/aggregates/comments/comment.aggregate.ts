@@ -7,11 +7,7 @@ export class CommentAggregate extends AggregateRoot {
     super();
   }
 
-  public static create(
-    userId: string,
-    videoId: string,
-    commentText: string,
-  ): CommentAggregate {
+  public static create(userId: string, videoId: string, commentText: string): CommentAggregate {
     const commentEntity = CommentEntity.create(userId, videoId, commentText);
     return new CommentAggregate(commentEntity);
   }

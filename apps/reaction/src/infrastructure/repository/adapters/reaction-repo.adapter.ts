@@ -26,9 +26,8 @@ export class ReactionRepositoryAdapter implements ReactionRepositoryPort {
     filter: DatabaseFilter<VideoReactions>,
     mode: 'many' | 'unique',
   ): Prisma.VideoReactionsWhereInput | Prisma.VideoReactionsWhereUniqueInput {
-    const prismaFilter:
-      | Prisma.VideoReactionsWhereInput
-      | Prisma.VideoReactionsWhereUniqueInput = {};
+    const prismaFilter: Prisma.VideoReactionsWhereInput | Prisma.VideoReactionsWhereUniqueInput =
+      {};
 
     (Object.keys(filter) as Array<keyof VideoReactions>).forEach((key) => {
       const value = filter[key];
@@ -78,27 +77,20 @@ export class ReactionRepositoryAdapter implements ReactionRepositoryPort {
       return 0;
     }
 
-    const dataToCreate = models.map((model) =>
-      this.reactionPersistanceACL.toPersistance(model),
-    );
-    this.logger.info(
-      `Saving: ${dataToCreate.length} documents into the database as a batch`,
-      {
-        component: Components.DATABASE,
-        service: 'REACTION',
-      },
-    );
+    const dataToCreate = models.map((model) => this.reactionPersistanceACL.toPersistance(model));
+    this.logger.info(`Saving: ${dataToCreate.length} documents into the database as a batch`, {
+      component: Components.DATABASE,
+      service: 'REACTION',
+    });
     const createdEntitiesFunc = async () =>
       await this.persistanceService.videoReactions.createMany({
-        data: models.map((model) =>
-          this.reactionPersistanceACL.toPersistance(model),
-        ),
+        data: models.map((model) => this.reactionPersistanceACL.toPersistance(model)),
       });
 
-    const createdEntities = await this.reactionRepoFilter.execute(
-      createdEntitiesFunc,
-      { operationType: 'CREATE', entry: dataToCreate },
-    );
+    const createdEntities = await this.reactionRepoFilter.execute(createdEntitiesFunc, {
+      operationType: 'CREATE',
+      entry: dataToCreate,
+    });
     return createdEntities.count;
   }
 
@@ -108,21 +100,15 @@ export class ReactionRepositoryAdapter implements ReactionRepositoryPort {
   ): Promise<ReactionAggregate> {
     const updateReactionOperation = async () =>
       await this.persistanceService.videoReactions.update({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.VideoReactionsWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.VideoReactionsWhereUniqueInput,
         data: { reactionStatus: newReactionStatus },
       });
 
-    const updatedReaction = await this.reactionRepoFilter.execute(
-      updateReactionOperation,
-      {
-        operationType: 'UPDATE',
-        entry: {},
-        filter: { newReactionStatus: newReactionStatus },
-      },
-    );
+    const updatedReaction = await this.reactionRepoFilter.execute(updateReactionOperation, {
+      operationType: 'UPDATE',
+      entry: {},
+      filter: { newReactionStatus: newReactionStatus },
+    });
 
     return this.reactionPersistanceACL.toAggregate(updatedReaction);
   }
@@ -133,21 +119,15 @@ export class ReactionRepositoryAdapter implements ReactionRepositoryPort {
   ): Promise<number> {
     const updatedReactionsOperation = async () =>
       await this.persistanceService.videoReactions.updateMany({
-        where: this.toPrismaFilter(
-          filter,
-          'many',
-        ) as Prisma.VideoReactionsWhereInput,
+        where: this.toPrismaFilter(filter, 'many') as Prisma.VideoReactionsWhereInput,
         data: { reactionStatus: newReactionStatus },
       });
 
-    const updatedReactions = await this.reactionRepoFilter.execute(
-      updatedReactionsOperation,
-      {
-        operationType: 'UPDATE',
-        entry: {},
-        filter,
-      },
-    );
+    const updatedReactions = await this.reactionRepoFilter.execute(updatedReactionsOperation, {
+      operationType: 'UPDATE',
+      entry: {},
+      filter,
+    });
 
     return updatedReactions.count;
   }

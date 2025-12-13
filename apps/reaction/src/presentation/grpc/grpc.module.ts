@@ -12,10 +12,7 @@ import {
   REACTION_CACHE_PORT,
   REACTION_DATABASE_PORT,
 } from '@reaction/application/ports';
-import {
-  AppConfigService,
-  AppConfigModule,
-} from '@reaction/infrastructure/config';
+import { AppConfigService, AppConfigModule } from '@reaction/infrastructure/config';
 import { RedisCacheAdapter } from '@reaction/infrastructure/cache/adapters';
 import { ReactionRepositoryAdapter } from '@reaction/infrastructure/repository/adapters';
 import { RedisStreamBufferAdapter } from '@reaction/infrastructure/buffer/adapters';

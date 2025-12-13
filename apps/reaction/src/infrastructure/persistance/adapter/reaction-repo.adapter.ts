@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { AppConfigService } from '@reaction/infrastructure/config';
 
@@ -14,10 +9,7 @@ import { Prisma, PrismaClient } from '@peristance/reaction';
 
 @Injectable()
 export class PersistanceService
-  extends PrismaClient<
-    Prisma.PrismaClientOptions,
-    'query' | 'info' | 'warn' | 'error'
-  >
+  extends PrismaClient<Prisma.PrismaClientOptions, 'query' | 'info' | 'warn' | 'error'>
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(
@@ -47,9 +39,7 @@ export class PersistanceService
   }
 
   async onModuleInit() {
-    this.logger.info(
-      `Prisma connecting to URL: ${this.configService.DATABASE_URL}`,
-    );
+    this.logger.info(`Prisma connecting to URL: ${this.configService.DATABASE_URL}`);
 
     this.$on('query', (e) => {
       this.logger.info('--- Database Query Info Begins ---', {

@@ -26,9 +26,7 @@ export class UnDislikeCommandHandler implements ICommandHandler<
     private readonly bufferAdapter: ReactionBufferPort,
   ) {}
 
-  public async execute({
-    videoUndisikeDto,
-  }: UnDislikeCommand): Promise<ReactionResponse> {
+  public async execute({ videoUndisikeDto }: UnDislikeCommand): Promise<ReactionResponse> {
     const { userId, videoId, reaction } = videoUndisikeDto;
 
     const likeDomainStatus = GrpcDomainReactionStatusEnumMapper.get(reaction);
@@ -37,11 +35,7 @@ export class UnDislikeCommandHandler implements ICommandHandler<
       throw new Error();
     }
 
-    const reactionAggregate = ReactionAggregate.create(
-      userId,
-      videoId,
-      likeDomainStatus,
-    );
+    const reactionAggregate = ReactionAggregate.create(userId, videoId, likeDomainStatus);
 
     const res = await this.cacheAdapter.removeDislike(videoId, userId);
 

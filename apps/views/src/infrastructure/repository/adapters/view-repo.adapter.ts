@@ -25,8 +25,7 @@ export class ViewRepositoryAdapter implements ViewRepositoryPort {
     filter: DatabaseFilter<View>,
     mode: 'many' | 'unique',
   ): Prisma.ViewWhereInput | Prisma.ViewWhereUniqueInput {
-    const prismaFilter: Prisma.ViewWhereInput | Prisma.ViewWhereUniqueInput =
-      {};
+    const prismaFilter: Prisma.ViewWhereInput | Prisma.ViewWhereUniqueInput = {};
 
     (Object.keys(filter) as Array<keyof View>).forEach((key) => {
       const value = filter[key];
@@ -76,27 +75,20 @@ export class ViewRepositoryAdapter implements ViewRepositoryPort {
       return 0;
     }
 
-    const dataToCreate = models.map((model) =>
-      this.viewPersistanceACL.toPersistance(model),
-    );
-    this.logger.info(
-      `Saving: ${dataToCreate.length} documents into the database as a batch`,
-      {
-        component: Components.DATABASE,
-        service: 'VIEW',
-      },
-    );
+    const dataToCreate = models.map((model) => this.viewPersistanceACL.toPersistance(model));
+    this.logger.info(`Saving: ${dataToCreate.length} documents into the database as a batch`, {
+      component: Components.DATABASE,
+      service: 'VIEW',
+    });
     const createdEntitiesFunc = async () =>
       await this.persistanceService.view.createMany({
-        data: models.map((model) =>
-          this.viewPersistanceACL.toPersistance(model),
-        ),
+        data: models.map((model) => this.viewPersistanceACL.toPersistance(model)),
       });
 
-    const createdEntities = await this.databaseHandler.execute(
-      createdEntitiesFunc,
-      { operationType: 'CREATE', entry: dataToCreate },
-    );
+    const createdEntities = await this.databaseHandler.execute(createdEntitiesFunc, {
+      operationType: 'CREATE',
+      entry: dataToCreate,
+    });
     return createdEntities.count;
   }
 }

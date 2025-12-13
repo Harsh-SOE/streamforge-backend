@@ -9,9 +9,7 @@ export class VideoId {
     const parsedVideoId = this.VideoIdValidationSchema.safeParse(value);
     if (!parsedVideoId.success) {
       const errorMessage = parsedVideoId.error.message;
-      throw new Error(
-        `An error occured while validating the videoId. Reason: ${errorMessage}`,
-      );
+      throw new Error(`An error occured while validating the videoId. Reason: ${errorMessage}`);
     }
     return new VideoId(parsedVideoId.data);
   }

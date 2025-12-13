@@ -5,10 +5,10 @@
 // source: cloud.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Cloud";
+export const protobufPackage = 'Cloud';
 
 export interface FileChunk {
   data: Uint8Array;
@@ -40,7 +40,7 @@ export interface StreamFileToCloudResponse {
   upload: boolean;
 }
 
-export const CLOUD_PACKAGE_NAME = "Cloud";
+export const CLOUD_PACKAGE_NAME = 'Cloud';
 
 export interface CloudServiceClient {
   getPresignedUrl(request: GetPresignedUrlDto): Observable<CloudPreSignedUrlResponse>;
@@ -53,28 +53,34 @@ export interface CloudServiceClient {
 export interface CloudServiceController {
   getPresignedUrl(
     request: GetPresignedUrlDto,
-  ): Promise<CloudPreSignedUrlResponse> | Observable<CloudPreSignedUrlResponse> | CloudPreSignedUrlResponse;
+  ):
+    | Promise<CloudPreSignedUrlResponse>
+    | Observable<CloudPreSignedUrlResponse>
+    | CloudPreSignedUrlResponse;
 
   downloadFileAsStream(request: DownloadFileAsStreamDto): Observable<FileChunk>;
 
   uploadFile(
     request: Observable<UploadFileDto>,
-  ): Promise<StreamFileToCloudResponse> | Observable<StreamFileToCloudResponse> | StreamFileToCloudResponse;
+  ):
+    | Promise<StreamFileToCloudResponse>
+    | Observable<StreamFileToCloudResponse>
+    | StreamFileToCloudResponse;
 }
 
 export function CloudServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getPresignedUrl", "downloadFileAsStream"];
+    const grpcMethods: string[] = ['getPresignedUrl', 'downloadFileAsStream'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("CloudService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('CloudService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods: string[] = ["uploadFile"];
+    const grpcStreamMethods: string[] = ['uploadFile'];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("CloudService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('CloudService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const CLOUD_SERVICE_NAME = "CloudService";
+export const CLOUD_SERVICE_NAME = 'CloudService';

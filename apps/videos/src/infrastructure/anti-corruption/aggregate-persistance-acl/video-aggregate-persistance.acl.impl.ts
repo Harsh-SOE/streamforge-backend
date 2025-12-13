@@ -24,9 +24,7 @@ export class VideoAggregatePersistanceACL implements IAggregatePersistanceACL<
   VideoAggregate,
   Omit<Video, 'publishedAt' | 'updatedAt'>
 > {
-  public toAggregate(
-    persistance: Omit<Video, 'publishedAt' | 'updatedAt'>,
-  ): VideoAggregate {
+  public toAggregate(persistance: Omit<Video, 'publishedAt' | 'updatedAt'>): VideoAggregate {
     const videoEntity = new VideoEntity({
       id: VideoId.create(persistance.id),
       ownerId: VideoOwnerId.create(persistance.ownerId),
@@ -35,36 +33,24 @@ export class VideoAggregatePersistanceACL implements IAggregatePersistanceACL<
       videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(
         persistance.videoThumbnailIdentifer,
       ),
-      videoFileIdentifier: VideoFileIdentifier.create(
-        persistance.videoFileIdentifier,
-      ),
+      videoFileIdentifier: VideoFileIdentifier.create(persistance.videoFileIdentifier),
       categories: VideoCategories.create(persistance.categories),
-      publishStatus: VideoPublish.create(
-        persistance.videoPublishStatus.toString(),
-      ),
-      visibilityStatus: VideoVisibilty.create(
-        persistance.videoVisibiltyStatus.toString(),
-      ),
-      description: VideoDescription.create(
-        persistance.description ?? undefined,
-      ),
+      publishStatus: VideoPublish.create(persistance.videoPublishStatus.toString()),
+      visibilityStatus: VideoVisibilty.create(persistance.videoVisibiltyStatus.toString()),
+      description: VideoDescription.create(persistance.description ?? undefined),
     });
 
     return new VideoAggregate(videoEntity);
   }
 
-  public toPersistance(
-    aggregate: VideoAggregate,
-  ): Omit<Video, 'publishedAt' | 'updatedAt'> {
+  public toPersistance(aggregate: VideoAggregate): Omit<Video, 'publishedAt' | 'updatedAt'> {
     return {
       id: aggregate.getVideo().getId(),
       ownerId: aggregate.getVideo().getOwnerId(),
       channelId: aggregate.getVideo().getChannelId(),
       title: aggregate.getVideo().getTitle(),
       videoFileIdentifier: aggregate.getVideo().getVideoFileIdentifier(),
-      videoThumbnailIdentifer: aggregate
-        .getVideo()
-        .getVideoThumbnailIdentifier(),
+      videoThumbnailIdentifer: aggregate.getVideo().getVideoThumbnailIdentifier(),
       categories: aggregate.getVideo().getCategories(),
       description: aggregate.getVideo().getDescription() ?? null,
       videoPublishStatus: aggregate.getVideo().getPublishStatus(),

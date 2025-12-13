@@ -51,9 +51,7 @@ export class AppConfigService {
   }
 
   get VIDEO_TRANSCODER_CONSUMER_ID() {
-    return this.configService.getOrThrow<string>(
-      'VIDEO_TRANSCODER_CONSUMER_ID',
-    );
+    return this.configService.getOrThrow<string>('VIDEO_TRANSCODER_CONSUMER_ID');
   }
 
   get KAFKA_OPTIONS(): KafkaOptions {

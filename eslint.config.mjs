@@ -8,8 +8,12 @@ export default tseslint.config(
   {
     ignores: [
       'eslint.config.mjs',
-      'apps/**/webpack.config.js',
-      'jest.config.js',
+      '**/dist/**',
+      '**/build/**',
+      '**/generated/**',
+      '**/.prisma/**',
+      '**/*.js',
+      '**/*.mjs',
     ],
   },
   eslint.configs.recommended,

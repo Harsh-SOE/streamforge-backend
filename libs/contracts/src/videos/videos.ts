@@ -5,10 +5,10 @@
 // source: videos.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Video";
+export const protobufPackage = 'Video';
 
 export enum VideoTransportPublishStatus {
   TRANSPORT_PENDING = 0,
@@ -108,8 +108,7 @@ export interface VideoUpdatedResponse {
   videoId: string;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
 export interface VideosHealthCheckRequest {
   service: string;
@@ -127,12 +126,16 @@ export enum VideosHealthCheckResponse_ServingStatus {
   UNRECOGNIZED = -1,
 }
 
-export const VIDEO_PACKAGE_NAME = "Video";
+export const VIDEO_PACKAGE_NAME = 'Video';
 
 export interface VideoServiceClient {
-  getPresignedUrlForVideoFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
+  getPresignedUrlForVideoFileUpload(
+    request: GetPresignedUrlDto,
+  ): Observable<GetPreSignedUrlResponse>;
 
-  getPresignedUrlForThumbnailFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
+  getPresignedUrlForThumbnailFileUpload(
+    request: GetPresignedUrlDto,
+  ): Observable<GetPreSignedUrlResponse>;
 
   save(request: VideoCreateDto): Observable<VideoPublishedResponse>;
 
@@ -150,19 +153,29 @@ export interface VideoServiceClient {
 export interface VideoServiceController {
   getPresignedUrlForVideoFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   getPresignedUrlForThumbnailFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   save(
     request: VideoCreateDto,
   ): Promise<VideoPublishedResponse> | Observable<VideoPublishedResponse> | VideoPublishedResponse;
 
-  findOne(request: VideoFindDto): Promise<VideoFoundResponse> | Observable<VideoFoundResponse> | VideoFoundResponse;
+  findOne(
+    request: VideoFindDto,
+  ): Promise<VideoFoundResponse> | Observable<VideoFoundResponse> | VideoFoundResponse;
 
-  findAll(request: Empty): Promise<VideosFoundResponse> | Observable<VideosFoundResponse> | VideosFoundResponse;
+  findAll(
+    request: Empty,
+  ): Promise<VideosFoundResponse> | Observable<VideosFoundResponse> | VideosFoundResponse;
 
   update(
     request: VideoUpdateDto,
@@ -174,31 +187,34 @@ export interface VideoServiceController {
 
   check(
     request: VideosHealthCheckRequest,
-  ): Promise<VideosHealthCheckResponse> | Observable<VideosHealthCheckResponse> | VideosHealthCheckResponse;
+  ):
+    | Promise<VideosHealthCheckResponse>
+    | Observable<VideosHealthCheckResponse>
+    | VideosHealthCheckResponse;
 }
 
 export function VideoServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getPresignedUrlForVideoFileUpload",
-      "getPresignedUrlForThumbnailFileUpload",
-      "save",
-      "findOne",
-      "findAll",
-      "update",
-      "findVideos",
-      "check",
+      'getPresignedUrlForVideoFileUpload',
+      'getPresignedUrlForThumbnailFileUpload',
+      'save',
+      'findOne',
+      'findAll',
+      'update',
+      'findVideos',
+      'check',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("VideoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('VideoService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("VideoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('VideoService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const VIDEO_SERVICE_NAME = "VideoService";
+export const VIDEO_SERVICE_NAME = 'VideoService';

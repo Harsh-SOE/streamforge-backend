@@ -15,10 +15,7 @@ import { GrpcDomainReactionStatusEnumMapper } from '@reaction/infrastructure/ant
 import { DislikeCommand } from './dislike.command';
 
 @CommandHandler(DislikeCommand)
-export class DislikeCommandHandler implements ICommandHandler<
-  DislikeCommand,
-  ReactionResponse
-> {
+export class DislikeCommandHandler implements ICommandHandler<DislikeCommand, ReactionResponse> {
   public constructor(
     @Inject(REACTION_CACHE_PORT)
     private readonly cacheAdapter: ReactionCachePort,
@@ -26,9 +23,7 @@ export class DislikeCommandHandler implements ICommandHandler<
     private readonly bufferAdapter: ReactionBufferPort,
   ) {}
 
-  public async execute({
-    videoDislikeDto,
-  }: DislikeCommand): Promise<ReactionResponse> {
+  public async execute({ videoDislikeDto }: DislikeCommand): Promise<ReactionResponse> {
     const { userId, videoId, reaction } = videoDislikeDto;
 
     const likeDomainStatus = GrpcDomainReactionStatusEnumMapper.get(reaction);
@@ -37,11 +32,7 @@ export class DislikeCommandHandler implements ICommandHandler<
       throw new Error();
     }
 
-    const reactionAggregate = ReactionAggregate.create(
-      userId,
-      videoId,
-      likeDomainStatus,
-    );
+    const reactionAggregate = ReactionAggregate.create(userId, videoId, likeDomainStatus);
 
     const res = await this.cacheAdapter.recordDislike(videoId, userId);
 

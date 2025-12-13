@@ -13,9 +13,7 @@ export class CommentAggregatePersistance implements IAggregatePersistanceACL<
   CommentAggregate,
   Omit<Comment, 'createdAt' | 'updatedAt'>
 > {
-  public toAggregate(
-    persistance: Omit<Comment, 'createdAt' | 'updatedAt'>,
-  ): CommentAggregate {
+  public toAggregate(persistance: Omit<Comment, 'createdAt' | 'updatedAt'>): CommentAggregate {
     const commentEntity = new CommentEntity(
       persistance.id,
       UserId.create(persistance.commentedByUserId),
@@ -25,9 +23,7 @@ export class CommentAggregatePersistance implements IAggregatePersistanceACL<
     return new CommentAggregate(commentEntity);
   }
 
-  public toPersistance(
-    aggregate: CommentAggregate,
-  ): Omit<Comment, 'createdAt' | 'updatedAt'> {
+  public toPersistance(aggregate: CommentAggregate): Omit<Comment, 'createdAt' | 'updatedAt'> {
     return {
       id: aggregate.getComment().getId(),
       commentedByUserId: aggregate.getComment().getUserId(),

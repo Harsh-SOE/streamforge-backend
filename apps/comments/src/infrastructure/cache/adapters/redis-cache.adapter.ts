@@ -41,10 +41,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
   }
 
   public onModuleInit() {
-    const commentVideoScript = readFileSync(
-      join(__dirname, 'scripts/comments.lua'),
-      'utf-8',
-    );
+    const commentVideoScript = readFileSync(join(__dirname, 'scripts/comments.lua'), 'utf-8');
 
     this.redisClient.defineCommand('commentVideo', {
       numberOfKeys: 2,
@@ -66,20 +63,13 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
     return `video_comments_counter:${videoId}:${shardNum}`;
   }
 
-  public async incrementCommentsCounter(
-    userId: string,
-    videoId: string,
-  ): Promise<number | null> {
+  public async incrementCommentsCounter(userId: string, videoId: string): Promise<number | null> {
     const shardNum = this.getShard(userId, videoId);
     const userCommentCounterKey = this.getCommentsCountKey(videoId, shardNum);
     const userCommentSetKey = this.getUserCommentedVideoSetKey(videoId);
 
     const operation = async () =>
-      await this.redisClient.commentVideo(
-        userCommentSetKey,
-        userCommentCounterKey,
-        userId,
-      );
+      await this.redisClient.commentVideo(userCommentSetKey, userCommentCounterKey, userId);
 
     return await this.redisHandler.filter(operation, {
       key: userCommentCounterKey,
@@ -95,8 +85,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
       this.getCommentsCountKey(videoId, i),
     );
 
-    const getValuesOperations = async () =>
-      await this.redisClient.mget(...allShardedKeys);
+    const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
     const values = await this.redisHandler.filter(getValuesOperations, {
       operationType: 'READ_MANY',
@@ -106,8 +95,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
     });
 
     const totalComments = values.reduce(
-      (sum, currentValue) =>
-        sum + (currentValue ? parseInt(currentValue, 10) : 0),
+      (sum, currentValue) => sum + (currentValue ? parseInt(currentValue, 10) : 0),
       0,
     );
 

@@ -14,10 +14,7 @@ import {
 import { TranscodeVideoCommand } from './transcode-video.command';
 
 @CommandHandler(TranscodeVideoCommand)
-export class TranscodeVideoHandler implements ICommandHandler<
-  TranscodeVideoCommand,
-  void
-> {
+export class TranscodeVideoHandler implements ICommandHandler<TranscodeVideoCommand, void> {
   public constructor(
     @Inject(TRANSCODER_PORT) private readonly transcoderAdapter: TranscoderPort,
     @Inject(MESSAGE_BROKER)
@@ -26,9 +23,7 @@ export class TranscodeVideoHandler implements ICommandHandler<
     private readonly storagePortAdapter: TranscoderStoragePort,
   ) {}
 
-  public async execute({
-    transcodeVideoDto,
-  }: TranscodeVideoCommand): Promise<void> {
+  public async execute({ transcodeVideoDto }: TranscodeVideoCommand): Promise<void> {
     const { fileIdentifier, videoId } = transcodeVideoDto;
 
     await this.transcoderAdapter.transcodeVideo({
@@ -36,8 +31,7 @@ export class TranscodeVideoHandler implements ICommandHandler<
       videoId,
     });
 
-    const newFileIdentifier =
-      this.storagePortAdapter.getTranscodedFileIdentifier(videoId);
+    const newFileIdentifier = this.storagePortAdapter.getTranscodedFileIdentifier(videoId);
 
     const messagePayload: VideoTranscodedUpdateIdentifierDto = {
       videoId,

@@ -44,10 +44,7 @@ export class GrpcController implements ChannelServiceController {
 
   createChannel(
     channelCreateDto: ChannelCreateDto,
-  ):
-    | Promise<ChannelCreatedResponse>
-    | Observable<ChannelCreatedResponse>
-    | ChannelCreatedResponse {
+  ): Promise<ChannelCreatedResponse> | Observable<ChannelCreatedResponse> | ChannelCreatedResponse {
     return this.grpcService.createChannel(channelCreateDto);
   }
 
@@ -57,17 +54,12 @@ export class GrpcController implements ChannelServiceController {
     | Promise<ChannelMonitizationActivatedResponse>
     | Observable<ChannelMonitizationActivatedResponse>
     | ChannelMonitizationActivatedResponse {
-    return this.grpcService.activateMonitization(
-      channelActivateMonitizationDto,
-    );
+    return this.grpcService.activateMonitization(channelActivateMonitizationDto);
   }
 
   findChannelById(
     channelFindByIdDto: ChannelFindByIdDto,
-  ):
-    | Promise<ChannelFoundResponse>
-    | Observable<ChannelFoundResponse>
-    | ChannelFoundResponse {
+  ): Promise<ChannelFoundResponse> | Observable<ChannelFoundResponse> | ChannelFoundResponse {
     return this.grpcService.findChannelById(channelFindByIdDto);
   }
 
@@ -91,10 +83,7 @@ export class GrpcController implements ChannelServiceController {
 
   findChannelByUserId(
     channelFindByUserIdDto: ChannelFindByUserIdDto,
-  ):
-    | Promise<ChannelFoundResponse>
-    | Observable<ChannelFoundResponse>
-    | ChannelFoundResponse {
+  ): Promise<ChannelFoundResponse> | Observable<ChannelFoundResponse> | ChannelFoundResponse {
     this.logger.info(`Request recieved`, channelFindByUserIdDto);
     return this.grpcService.findChannelByUserId(channelFindByUserIdDto);
   }

@@ -6,11 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/clients/constant';
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
-import {
-  QUERY_SERVICE_NAME,
-  QueryServiceClient,
-  UserProfileMessage,
-} from '@app/contracts/query';
+import { QUERY_SERVICE_NAME, QueryServiceClient, UserProfileMessage } from '@app/contracts/query';
 import { UserAuthPayload } from '@app/contracts/auth';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
@@ -49,24 +45,16 @@ export class AuthService implements OnModuleInit {
       avatar: userAuthCredentials.avatar,
     };
 
-    response.cookie(
-      ONBOARDING_INFO_COOKIE_NAME,
-      JSON.stringify(onBoardingCookie),
-      {
-        httpOnly: false,
-        secure:
-          this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 1000 * 60 * 5,
-      },
-    );
+    response.cookie(ONBOARDING_INFO_COOKIE_NAME, JSON.stringify(onBoardingCookie), {
+      httpOnly: false,
+      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 1000 * 60 * 5,
+    });
   }
 
-  private prepareAndSendAccessTokenCookie(
-    response: Response,
-    foundUser: UserProfileMessage,
-  ) {
+  private prepareAndSendAccessTokenCookie(response: Response, foundUser: UserProfileMessage) {
     const loggedInUserPayload: UserAuthPayload = {
       id: foundUser.userId,
       authId: foundUser.userAuthId,
@@ -78,18 +66,14 @@ export class AuthService implements OnModuleInit {
 
     response.cookie(ACCESS_TOKEN_COOKIE_NAME, token, {
       httpOnly: true,
-      secure:
-        this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
       sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
     });
   }
 
-  private prepareAndSendUserMetadata(
-    response: Response,
-    foundUser: UserProfileMessage,
-  ) {
+  private prepareAndSendUserMetadata(response: Response, foundUser: UserProfileMessage) {
     const userMetaData = {
       id: foundUser.userId,
       email: foundUser.email,
@@ -100,18 +84,14 @@ export class AuthService implements OnModuleInit {
 
     response.cookie(USER_METADATA_COOKIE_NAME, JSON.stringify(userMetaData), {
       httpOnly: false,
-      secure:
-        this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
       sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 5,
     });
   }
 
-  async onAuthRedirect(
-    userAuthCredentials: Auth0ProfileUser,
-    response: Response,
-  ): Promise<void> {
+  async onAuthRedirect(userAuthCredentials: Auth0ProfileUser, response: Response): Promise<void> {
     this.logger.info('User from auth0', userAuthCredentials);
 
     const responseUserProjection$ = this.queryService.getUserProfileFromAuthId({

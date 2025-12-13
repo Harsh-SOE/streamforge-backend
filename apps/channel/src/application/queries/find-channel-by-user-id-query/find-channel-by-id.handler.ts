@@ -4,10 +4,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ChannelFoundResponse } from '@app/contracts/channel';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  CHANNEL_QUERY_REPOSITORY,
-  ChannelQueryRepositoryPort,
-} from '@channel/application/ports';
+import { CHANNEL_QUERY_REPOSITORY, ChannelQueryRepositoryPort } from '@channel/application/ports';
 
 import { FindChannelByUserIdQuery } from './find-channel-by-id.query';
 

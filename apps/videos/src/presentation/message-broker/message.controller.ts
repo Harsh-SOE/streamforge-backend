@@ -12,11 +12,7 @@ export class MessageController {
   constructor(private readonly messageHandlerService: MessageHandlerService) {}
 
   @EventPattern('video-service.transcoded')
-  updateVideoIdentifier(
-    transcodedVideoMessage: VideoTranscodedUpdateIdentifierDto,
-  ) {
-    return this.messageHandlerService.updateVideoIdentifier(
-      transcodedVideoMessage,
-    );
+  updateVideoIdentifier(transcodedVideoMessage: VideoTranscodedUpdateIdentifierDto) {
+    return this.messageHandlerService.updateVideoIdentifier(transcodedVideoMessage);
   }
 }

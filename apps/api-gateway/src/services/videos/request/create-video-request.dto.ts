@@ -1,15 +1,6 @@
-import {
-  IsArray,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import {
-  VideoRequestPublishStatus,
-  VideoRequestVisibilityStatus,
-} from '../enums';
+import { VideoRequestPublishStatus, VideoRequestVisibilityStatus } from '../enums';
 
 export class CreateVideoRequestDto {
   @IsNotEmpty()
@@ -37,6 +28,5 @@ export class CreateVideoRequestDto {
   status: VideoRequestPublishStatus = VideoRequestPublishStatus.PENDING;
 
   @IsEnum(VideoRequestVisibilityStatus)
-  visibility: VideoRequestVisibilityStatus =
-    VideoRequestVisibilityStatus.PRIVATE;
+  visibility: VideoRequestVisibilityStatus = VideoRequestVisibilityStatus.PRIVATE;
 }

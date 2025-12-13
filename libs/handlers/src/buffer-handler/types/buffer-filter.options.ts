@@ -28,9 +28,7 @@ interface BufferSaveOperationOptions extends BasicBufferOptions {
   valueToBuffer: string;
 }
 
-type BufferOperationOptions =
-  | BufferFlushOperationOptions
-  | BufferSaveOperationOptions;
+type BufferOperationOptions = BufferFlushOperationOptions | BufferSaveOperationOptions;
 
-export type BufferFilterOptions<TFallback = never> =
-  BufferBasicFilterOptions<TFallback> & BufferOperationOptions;
+export type BufferFilterOptions<TFallback = never> = BufferBasicFilterOptions<TFallback> &
+  BufferOperationOptions;

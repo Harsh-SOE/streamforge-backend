@@ -8,12 +8,6 @@ import { GrpcModule } from './presentation/grpc';
 import { MeasureModule } from './infrastructure/measure';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    GrpcModule,
-    AppHealthModule,
-    ScheduleModule.forRoot(),
-    MeasureModule,
-  ],
+  imports: [AppConfigModule, GrpcModule, AppHealthModule, ScheduleModule.forRoot(), MeasureModule],
 })
 export class AppModule {}

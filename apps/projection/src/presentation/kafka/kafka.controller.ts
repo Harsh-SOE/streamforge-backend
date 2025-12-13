@@ -12,16 +12,12 @@ export class KafkaController {
   public constructor(private readonly kafkaService: KafkaService) {}
 
   @EventPattern(VIDEO_EVENTS.VIDEO_PUBLISHED_EVENT)
-  public onVideoUploadedProjectionEvent(
-    @Payload() message: VideoUploadedEventDto,
-  ) {
+  public onVideoUploadedProjectionEvent(@Payload() message: VideoUploadedEventDto) {
     this.kafkaService.onVideoUploadedProjectionEvent(message);
   }
 
   @EventPattern(USERS_EVENTS.USER_ONBOARDED_EVENT)
-  public onUserProfileCreatedProjectionEvent(
-    @Payload() message: UserProfileCreatedEventDto,
-  ) {
+  public onUserProfileCreatedProjectionEvent(@Payload() message: UserProfileCreatedEventDto) {
     this.kafkaService.onUserProfileCreatedProjectionEvent(message);
   }
 }

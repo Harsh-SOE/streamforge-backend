@@ -6,10 +6,7 @@ import { LOGGER_PORT } from '@app/ports/logger';
 import { MESSAGE_BROKER } from '@app/ports/message-broker';
 import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
 
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@transcoder/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@transcoder/infrastructure/config';
 import {
   SEGMENT_DELETE_QUEUE,
   SEGMENT_UPLOADER_QUEUE,
@@ -20,10 +17,7 @@ import {
   BullTranscodeJobsWorker,
 } from '@transcoder/infrastructure/workers';
 import { SegmentWatcher } from '@transcoder/infrastructure/transcoder/segment-watcher/watcher';
-import {
-  TRANSCODER_STORAGE_PORT,
-  TRANSCODER_PORT,
-} from '@transcoder/application/ports';
+import { TRANSCODER_STORAGE_PORT, TRANSCODER_PORT } from '@transcoder/application/ports';
 import { WinstonLoggerAdapter } from '@transcoder/infrastructure/logger';
 import { VideoTranscoderCommandHandlers } from '@transcoder/application/commands';
 import { AwsS3StorageAdapter } from '@transcoder/infrastructure/storage/adapters';
@@ -70,11 +64,6 @@ import { VideoTranscoderController } from './message-broker.controller';
     { provide: MESSAGE_BROKER, useClass: KafkaMessageBrokerAdapter },
     ...VideoTranscoderCommandHandlers,
   ],
-  exports: [
-    TRANSCODER_STORAGE_PORT,
-    TRANSCODER_PORT,
-    LOGGER_PORT,
-    MESSAGE_BROKER,
-  ],
+  exports: [TRANSCODER_STORAGE_PORT, TRANSCODER_PORT, LOGGER_PORT, MESSAGE_BROKER],
 })
 export class VideoTranscoderModule {}

@@ -55,6 +55,4 @@ type DatabaseOperationOptions =
   | DatabaseDeleteOperationOptions;
 
 export type DatabaseFilterOptions<TFallbackResult = never> =
-  DatabaseOperationOptions extends infer T
-    ? T & ErrorHandlingOptions<TFallbackResult>
-    : never;
+  DatabaseOperationOptions extends infer T ? T & ErrorHandlingOptions<TFallbackResult> : never;

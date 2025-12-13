@@ -5,10 +5,10 @@
 // source: authz.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "authZ";
+export const protobufPackage = 'authZ';
 
 export interface CheckRelationDto {
   user: string;
@@ -30,7 +30,7 @@ export interface RelationCreatedResponse {
   created: boolean;
 }
 
-export const AUTH_Z_PACKAGE_NAME = "authZ";
+export const AUTH_Z_PACKAGE_NAME = 'authZ';
 
 export interface AuthZServiceClient {
   checkRelation(request: CheckRelationDto): Observable<IsRelatedResponse>;
@@ -45,22 +45,25 @@ export interface AuthZServiceController {
 
   createRelation(
     request: CreateRelationDto,
-  ): Promise<RelationCreatedResponse> | Observable<RelationCreatedResponse> | RelationCreatedResponse;
+  ):
+    | Promise<RelationCreatedResponse>
+    | Observable<RelationCreatedResponse>
+    | RelationCreatedResponse;
 }
 
 export function AuthZServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["checkRelation", "createRelation"];
+    const grpcMethods: string[] = ['checkRelation', 'createRelation'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("AuthZService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('AuthZService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("AuthZService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('AuthZService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const AUTH_Z_SERVICE_NAME = "AuthZService";
+export const AUTH_Z_SERVICE_NAME = 'AuthZService';

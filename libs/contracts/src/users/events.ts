@@ -13,6 +13,27 @@ export interface UserProfileUpdatedEventDto {
   id: string;
   avatar?: string;
   dob?: string;
+  phoneNumber?: string;
+}
+
+export interface UserPhoneNumberEventDto {
+  id: string;
+  phoneNumber: string;
+}
+
+export interface UserThemeChangedEventDto {
+  id: string;
+  theme: string;
+}
+
+export interface UserNotificationChangedEventDto {
+  id: string;
+  status: boolean;
+}
+
+export interface UserLanguageChangedEventDto {
+  id: string;
+  language: string;
 }
 
 export interface UserProfileDeletedEventDto {

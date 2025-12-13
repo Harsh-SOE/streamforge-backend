@@ -34,6 +34,4 @@ export class ProjectedUserQueryModel extends Document {
   dob?: string;
 }
 
-export const ProjectUserQuerySchema = SchemaFactory.createForClass(
-  ProjectedUserQueryModel,
-);
+export const ProjectUserQuerySchema = SchemaFactory.createForClass(ProjectedUserQueryModel);

@@ -11,9 +11,7 @@ export class ChannelQueryPersistanceACL implements IQueryPersistanceACL<
   ChannelQueryModel,
   Omit<Channel, 'createdAt' | 'updatedAt'>
 > {
-  public toQueryModel(
-    persistance: Omit<Channel, 'createdAt' | 'updatedAt'>,
-  ): ChannelQueryModel {
+  public toQueryModel(persistance: Omit<Channel, 'createdAt' | 'updatedAt'>): ChannelQueryModel {
     return {
       id: persistance.id,
       bio: persistance.bio,
@@ -24,9 +22,7 @@ export class ChannelQueryPersistanceACL implements IQueryPersistanceACL<
     };
   }
 
-  public toPersistance(
-    entity: ChannelQueryModel,
-  ): Omit<Channel, 'createdAt' | 'updatedAt'> {
+  public toPersistance(entity: ChannelQueryModel): Omit<Channel, 'createdAt' | 'updatedAt'> {
     return {
       id: entity.id,
       bio: entity.bio,

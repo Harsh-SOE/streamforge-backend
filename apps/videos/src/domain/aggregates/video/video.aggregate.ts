@@ -1,10 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
 import { VideoCreatedEvent } from '@videos/application/events';
-import {
-  VideoDomainPublishStatus,
-  VideoDomainVisibiltyStatus,
-} from '@videos/domain/enums';
+import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
 import {
   VideoDescription,
   VideoOwnerId,
@@ -57,9 +54,7 @@ export class VideoAggregate extends AggregateRoot {
       ownerId: VideoOwnerId.create(ownerId),
       channelId: VideoChannelId.create(channelId),
       title: VideoTitle.create(title),
-      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(
-        videoThumbnailFileIdentifier,
-      ),
+      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(videoThumbnailFileIdentifier),
       videoFileIdentifier: VideoFileIdentifier.create(videoFileIdentifier),
       categories: VideoCategories.create(categories),
       publishStatus: VideoPublish.create(publishStatus),
@@ -95,10 +90,8 @@ export class VideoAggregate extends AggregateRoot {
     newPublishStatus?: string;
     newThumbnailIdentifier?: string;
   }) {
-    if (updateProps.newTitle)
-      this.videoEntity.updateTitle(updateProps.newTitle);
-    if (updateProps.newDescription)
-      this.videoEntity.updateDescription(updateProps.newDescription);
+    if (updateProps.newTitle) this.videoEntity.updateTitle(updateProps.newTitle);
+    if (updateProps.newDescription) this.videoEntity.updateDescription(updateProps.newDescription);
     if (updateProps.newPublishStatus)
       this.videoEntity.updatePublishStatus(updateProps.newPublishStatus);
     if (updateProps.newVisibilityStatus)
@@ -106,11 +99,8 @@ export class VideoAggregate extends AggregateRoot {
     if (updateProps.newFileIdentifier)
       this.videoEntity.updateVideoFileIdentifier(updateProps.newFileIdentifier);
     if (updateProps.newThumbnailIdentifier)
-      this.videoEntity.updateVideoFileIdentifier(
-        updateProps.newThumbnailIdentifier,
-      );
-    if (updateProps.newCategories)
-      this.videoEntity.updateCategories(updateProps.newCategories);
+      this.videoEntity.updateVideoFileIdentifier(updateProps.newThumbnailIdentifier);
+    if (updateProps.newCategories) this.videoEntity.updateCategories(updateProps.newCategories);
     return this.videoEntity;
   }
 }

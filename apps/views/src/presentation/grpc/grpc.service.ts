@@ -9,9 +9,7 @@ import { WatchVideoCommand } from '@views/application/commands';
 export class GrpcService {
   public constructor(public readonly commandBus: CommandBus) {}
 
-  public async watchVideo(
-    watchVideoDto: ViewsVideoDto,
-  ): Promise<ViewsVideoResponse> {
+  public async watchVideo(watchVideoDto: ViewsVideoDto): Promise<ViewsVideoResponse> {
     return this.commandBus.execute<WatchVideoCommand, ViewsVideoResponse>(
       new WatchVideoCommand(watchVideoDto),
     );

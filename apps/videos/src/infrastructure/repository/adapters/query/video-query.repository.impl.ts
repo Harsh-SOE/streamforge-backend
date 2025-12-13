@@ -25,8 +25,7 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
     filter: DatabaseFilter<Video>,
     mode: 'many' | 'unique',
   ): Prisma.VideoWhereInput | Prisma.VideoWhereUniqueInput {
-    const prismaFilter: Prisma.VideoWhereInput | Prisma.VideoWhereUniqueInput =
-      {};
+    const prismaFilter: Prisma.VideoWhereInput | Prisma.VideoWhereUniqueInput = {};
 
     (Object.keys(filter) as Array<keyof Video>).forEach((key) => {
       const value = filter[key];
@@ -68,20 +67,14 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
   async findOne(filter: DatabaseFilter<Video>): Promise<VideoQueryModel> {
     const findVideoOperation = async () => {
       return await this.persistanceService.video.findUnique({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.VideoWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.VideoWhereUniqueInput,
       });
     };
 
-    const foundVideo = await this.prismaDatabaseHandler.execute(
-      findVideoOperation,
-      {
-        operationType: 'CREATE',
-        entry: {},
-      },
-    );
+    const foundVideo = await this.prismaDatabaseHandler.execute(findVideoOperation, {
+      operationType: 'CREATE',
+      entry: {},
+    });
 
     if (!foundVideo) {
       throw new VideoNotFoundException({
@@ -98,23 +91,17 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
   ): Promise<VideoQueryModel[]> {
     const findVideosOperation = async () => {
       return await this.persistanceService.video.findMany({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.VideoWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.VideoWhereUniqueInput,
         take: queryOptions?.limit,
         skip: queryOptions?.skip,
         orderBy: queryOptions?.orderBy,
       });
     };
 
-    const foundVideos = await this.prismaDatabaseHandler.execute(
-      findVideosOperation,
-      {
-        operationType: 'READ',
-        filter,
-      },
-    );
+    const foundVideos = await this.prismaDatabaseHandler.execute(findVideosOperation, {
+      operationType: 'READ',
+      filter,
+    });
 
     if (!foundVideos) {
       throw new VideoNotFoundException({
@@ -122,9 +109,7 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
       });
     }
 
-    return foundVideos.map((video) =>
-      this.videoQueryPersistanceACL.toQueryModel(video),
-    );
+    return foundVideos.map((video) => this.videoQueryPersistanceACL.toQueryModel(video));
   }
 
   async findOneByid(id: string): Promise<VideoQueryModel> {
@@ -134,13 +119,10 @@ export class VideoQueryRepositoryAdapter implements VideoQueryRepositoryPort {
       });
     };
 
-    const foundVideo = await this.prismaDatabaseHandler.execute(
-      findVideoOperation,
-      {
-        operationType: 'CREATE',
-        entry: {},
-      },
-    );
+    const foundVideo = await this.prismaDatabaseHandler.execute(findVideoOperation, {
+      operationType: 'CREATE',
+      entry: {},
+    });
 
     if (!foundVideo) {
       throw new VideoNotFoundException({

@@ -16,9 +16,7 @@ import { GrpcDomainReactionStatusEnumMapper } from '@reaction/infrastructure/ant
 import { ReactionMessage, StreamData } from '../types';
 
 @Injectable()
-export class RedisStreamBufferAdapter
-  implements OnModuleInit, ReactionBufferPort
-{
+export class RedisStreamBufferAdapter implements OnModuleInit, ReactionBufferPort {
   private redisClient: Redis;
 
   public constructor(
@@ -94,8 +92,7 @@ export class RedisStreamBufferAdapter
       return 0;
     }
 
-    const { ids, extractedMessages } =
-      this.extractMessageFromStream(streamData);
+    const { ids, extractedMessages } = this.extractMessageFromStream(streamData);
 
     return await this.processMessages(ids, extractedMessages);
   }
@@ -116,15 +113,9 @@ export class RedisStreamBufferAdapter
 
   public async processMessages(ids: string[], messages: ReactionMessage[]) {
     const models = messages.map((message) => {
-      const reactionStatus = GrpcDomainReactionStatusEnumMapper.get(
-        message.reactionStatus,
-      );
+      const reactionStatus = GrpcDomainReactionStatusEnumMapper.get(message.reactionStatus);
       if (!reactionStatus) throw new Error();
-      return ReactionAggregate.create(
-        message.userId,
-        message.videoId,
-        reactionStatus,
-      );
+      return ReactionAggregate.create(message.userId, message.videoId, reactionStatus);
     });
 
     const processedMessagesNumber = await this.reactionRepo.saveMany(models);

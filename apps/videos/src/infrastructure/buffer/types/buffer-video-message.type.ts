@@ -1,7 +1,4 @@
-import {
-  VideoDomainPublishStatus,
-  VideoDomainVisibiltyStatus,
-} from '@videos/domain/enums';
+import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
 
 export type VideoMessage = {
   id: string;

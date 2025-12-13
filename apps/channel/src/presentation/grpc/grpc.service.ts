@@ -24,10 +24,7 @@ import {
   UpdateChannelCommand,
   VerifyChannelCommand,
 } from '@channel/application/commands';
-import {
-  FindChannelByIdQuery,
-  FindChannelByUserIdQuery,
-} from '@channel/application/queries';
+import { FindChannelByIdQuery, FindChannelByUserIdQuery } from '@channel/application/queries';
 
 @Injectable()
 export class GrpcService {
@@ -39,19 +36,15 @@ export class GrpcService {
   generatePreSignedUrl(
     generatePreSignedUrlDto: GetPresignedUrlDto,
   ): Promise<GetPreSignedUrlResponse> {
-    return this.commandBus.execute<
-      GeneratePreSignedUrlCommand,
-      GetPreSignedUrlResponse
-    >(new GeneratePreSignedUrlCommand(generatePreSignedUrlDto));
+    return this.commandBus.execute<GeneratePreSignedUrlCommand, GetPreSignedUrlResponse>(
+      new GeneratePreSignedUrlCommand(generatePreSignedUrlDto),
+    );
   }
 
-  public createChannel(
-    channelCreateDto: ChannelCreateDto,
-  ): Promise<ChannelCreatedResponse> {
-    return this.commandBus.execute<
-      CreateChannelCommand,
-      ChannelCreatedResponse
-    >(new CreateChannelCommand(channelCreateDto));
+  public createChannel(channelCreateDto: ChannelCreateDto): Promise<ChannelCreatedResponse> {
+    return this.commandBus.execute<CreateChannelCommand, ChannelCreatedResponse>(
+      new CreateChannelCommand(channelCreateDto),
+    );
   }
 
   public activateMonitization(
@@ -66,15 +59,12 @@ export class GrpcService {
   public updateChannelById(
     updateChannelByIdDto: ChannelUpdateByIdDto,
   ): Promise<ChannelUpdateByIdResponse> {
-    return this.commandBus.execute<
-      UpdateChannelCommand,
-      ChannelUpdateByIdResponse
-    >(new UpdateChannelCommand(updateChannelByIdDto));
+    return this.commandBus.execute<UpdateChannelCommand, ChannelUpdateByIdResponse>(
+      new UpdateChannelCommand(updateChannelByIdDto),
+    );
   }
 
-  public findChannelById(
-    channelFindByIdDto: ChannelFindByIdDto,
-  ): Promise<ChannelFoundResponse> {
+  public findChannelById(channelFindByIdDto: ChannelFindByIdDto): Promise<ChannelFoundResponse> {
     return this.queryBus.execute<FindChannelByIdQuery, ChannelFoundResponse>(
       new FindChannelByIdQuery(channelFindByIdDto),
     );
@@ -83,18 +73,16 @@ export class GrpcService {
   public channelVerify(
     channelVerifyByIdDto: ChannelVerifyByIdDto,
   ): Promise<ChannelVerifyByIdResponse> {
-    return this.commandBus.execute<
-      VerifyChannelCommand,
-      ChannelVerifyByIdResponse
-    >(new VerifyChannelCommand(channelVerifyByIdDto));
+    return this.commandBus.execute<VerifyChannelCommand, ChannelVerifyByIdResponse>(
+      new VerifyChannelCommand(channelVerifyByIdDto),
+    );
   }
 
   public findChannelByUserId(
     channelFindByUserIdDto: ChannelFindByUserIdDto,
   ): Promise<ChannelFoundResponse> {
-    return this.queryBus.execute<
-      FindChannelByUserIdQuery,
-      ChannelFoundResponse
-    >(new FindChannelByUserIdQuery(channelFindByUserIdDto));
+    return this.queryBus.execute<FindChannelByUserIdQuery, ChannelFoundResponse>(
+      new FindChannelByUserIdQuery(channelFindByUserIdDto),
+    );
   }
 }

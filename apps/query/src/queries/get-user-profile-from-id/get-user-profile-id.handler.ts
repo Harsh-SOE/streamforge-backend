@@ -1,9 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import {
-  USER_QUERY_REPOSITORY_PORT,
-  UserQueryRepositoryPort,
-} from '@query/application/ports';
+import { USER_QUERY_REPOSITORY_PORT, UserQueryRepositoryPort } from '@query/application/ports';
 
 import { GetUserProfileResponse } from '@app/contracts/query';
 
@@ -17,12 +14,8 @@ export class GetUserProfileFromIdHandler implements IQueryHandler<GetUserProfile
     private readonly userQueryRepository: UserQueryRepositoryPort,
   ) {}
 
-  async execute({
-    getUserProfileDto,
-  }: GetUserProfileFromIdQuery): Promise<GetUserProfileResponse> {
-    const user = await this.userQueryRepository.getUserFromId(
-      getUserProfileDto.userId,
-    );
+  async execute({ getUserProfileDto }: GetUserProfileFromIdQuery): Promise<GetUserProfileResponse> {
+    const user = await this.userQueryRepository.getUserFromId(getUserProfileDto.userId);
     return {
       found: user ? true : false,
       user: user ?? undefined,

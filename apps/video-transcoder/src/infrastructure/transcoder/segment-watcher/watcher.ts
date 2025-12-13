@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  OnModuleInit,
-  OnModuleDestroy,
-  Inject,
-} from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, Inject } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import chokidar, { FSWatcher } from 'chokidar';
@@ -11,10 +6,7 @@ import path from 'path';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import {
-  SEGMENT_UPLOADER,
-  SEGMENT_UPLOADER_QUEUE,
-} from '@transcoder/utils/constants';
+import { SEGMENT_UPLOADER, SEGMENT_UPLOADER_QUEUE } from '@transcoder/utils/constants';
 
 @Injectable()
 export class SegmentWatcher implements OnModuleInit, OnModuleDestroy {
@@ -49,21 +41,15 @@ export class SegmentWatcher implements OnModuleInit, OnModuleDestroy {
     });
 
     this.watcher.on('addDir', (path) => {
-      this.logger.info(
-        `Dir ${path} was created in the directory that was being watched`,
-      );
+      this.logger.info(`Dir ${path} was created in the directory that was being watched`);
     });
 
     this.watcher.on('add', (filePath) => {
-      this.logger.info(
-        `file ${filePath} was created in the directory that was being watched`,
-      );
+      this.logger.info(`file ${filePath} was created in the directory that was being watched`);
 
       this.uploaderQueue
         .add(SEGMENT_UPLOADER, { filePath })
-        .catch((err) =>
-          this.logger.error(`Error occured in chokidar`, err as Error),
-        );
+        .catch((err) => this.logger.error(`Error occured in chokidar`, err as Error));
 
       this.logger.info(`Job added to upload queue...`);
     });

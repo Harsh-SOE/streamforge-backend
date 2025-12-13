@@ -11,13 +11,9 @@ import { AUTHORIZE_PORT, AuthorizePort } from '@authz/application/ports/auth';
 
 @Injectable()
 export class GrpcService {
-  constructor(
-    @Inject(AUTHORIZE_PORT) private readonly openFGAService: AuthorizePort,
-  ) {}
+  constructor(@Inject(AUTHORIZE_PORT) private readonly openFGAService: AuthorizePort) {}
 
-  async checkRelation(
-    checkRelationDto: CheckRelationDto,
-  ): Promise<IsRelatedResponse> {
+  async checkRelation(checkRelationDto: CheckRelationDto): Promise<IsRelatedResponse> {
     const response = await this.openFGAService.checkRelation({
       user: checkRelationDto.user,
       relation: checkRelationDto.relation,
@@ -28,9 +24,7 @@ export class GrpcService {
     };
   }
 
-  async createRelation(
-    createRelationDto: CreateRelationDto,
-  ): Promise<RelationCreatedResponse> {
+  async createRelation(createRelationDto: CreateRelationDto): Promise<RelationCreatedResponse> {
     const response = await this.openFGAService.createRelation({
       user: createRelationDto.user,
       relation: createRelationDto.relation,

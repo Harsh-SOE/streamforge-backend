@@ -3,10 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { ReactionLikeCountVideoResponse } from '@app/contracts/reaction';
 
-import {
-  REACTION_CACHE_PORT,
-  ReactionCachePort,
-} from '@reaction/application/ports';
+import { REACTION_CACHE_PORT, ReactionCachePort } from '@reaction/application/ports';
 
 import { GetLikesVideoQuery } from './get-likes-video.queries';
 

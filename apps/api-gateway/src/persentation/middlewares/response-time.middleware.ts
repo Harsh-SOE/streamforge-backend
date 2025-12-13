@@ -8,11 +8,7 @@ import { REQUEST_PROCESSING_TIME } from '../../infrastructure/measure';
 
 @Injectable()
 export class ResponseTimeMiddleware implements NestMiddleware {
-  private readonly handler: (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => void;
+  private readonly handler: (req: Request, res: Response, next: NextFunction) => void;
 
   constructor(
     @InjectMetric(REQUEST_PROCESSING_TIME)
@@ -20,9 +16,7 @@ export class ResponseTimeMiddleware implements NestMiddleware {
   ) {
     this.handler = responseTime((req: Request, res: Response, time: number) => {
       const route = req.baseUrl + req.path;
-      this.metric
-        .labels(req.method, route, res.statusCode.toString())
-        .observe(time);
+      this.metric.labels(req.method, route, res.statusCode.toString()).observe(time);
     });
   }
 

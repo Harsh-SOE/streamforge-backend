@@ -23,9 +23,7 @@ export class CreateCommentCommandHandler implements ICommandHandler<
     @Inject(COMMENTS_CACHE_PORT) private cache: CommentCachePort,
   ) {}
 
-  public async execute({
-    createCommentDto,
-  }: CreateCommentCommand): Promise<CommentVideoResponse> {
+  public async execute({ createCommentDto }: CreateCommentCommand): Promise<CommentVideoResponse> {
     const { comment, userId, videoId } = createCommentDto;
 
     const commentAggregate = CommentAggregate.create(userId, videoId, comment);

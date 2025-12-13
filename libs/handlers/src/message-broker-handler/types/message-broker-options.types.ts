@@ -4,6 +4,11 @@ interface BaseMessageBrokerOptions {
   port?: number;
 }
 
+interface MessageBrokerConnectionOperationOptions extends BaseMessageBrokerOptions {
+  operationType: 'CONNECT';
+  topic?: never;
+  message?: never;
+}
 interface MessageBrokerPublishOrSendOperationOptions extends BaseMessageBrokerOptions {
   operationType: 'PUBLISH_OR_SEND';
   topic: string;
@@ -31,6 +36,7 @@ type ErrorHandlingOptions<TFallbackResult> =
   | ThrowErrorsOptions;
 
 export type MessageBrokerFilterOptions<TFallbackResult = never> = (
+  | MessageBrokerConnectionOperationOptions
   | MessageBrokerPublishOrSendOperationOptions
   | MessageBrokerSubscribeOperationOptions
 ) &

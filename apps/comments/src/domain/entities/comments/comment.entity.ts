@@ -10,11 +10,7 @@ export class CommentEntity {
     private commentText: CommentText,
   ) {}
 
-  public static create(
-    userId: string,
-    videoId: string,
-    commentText: string,
-  ): CommentEntity {
+  public static create(userId: string, videoId: string, commentText: string): CommentEntity {
     return new CommentEntity(
       uuidv4(),
       UserId.create(userId),

@@ -21,10 +21,7 @@ import {
   UnDislikeCommand,
   UnlikeCommand,
 } from '@reaction/application/commands';
-import {
-  GetDislikesVideoQuery,
-  GetLikesVideoQuery,
-} from '@reaction/application/queries';
+import { GetDislikesVideoQuery, GetLikesVideoQuery } from '@reaction/application/queries';
 
 @Injectable()
 export class GrpcService {
@@ -36,9 +33,7 @@ export class GrpcService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async reactToVideo(
-    videoReactionDto: VideoReactionDto,
-  ): Promise<ReactionResponse> {
+  public async reactToVideo(videoReactionDto: VideoReactionDto): Promise<ReactionResponse> {
     const { reaction } = videoReactionDto;
 
     switch (true) {
@@ -71,19 +66,17 @@ export class GrpcService {
   public async getLikesCountForVideo(
     reactionLikeCountVideoDto: ReactionLikeCountVideoDto,
   ): Promise<ReactionLikeCountVideoResponse> {
-    return await this.queryBus.execute<
-      GetLikesVideoQuery,
-      ReactionLikeCountVideoResponse
-    >(new GetLikesVideoQuery(reactionLikeCountVideoDto));
+    return await this.queryBus.execute<GetLikesVideoQuery, ReactionLikeCountVideoResponse>(
+      new GetLikesVideoQuery(reactionLikeCountVideoDto),
+    );
   }
 
   async getDislikesCountForVideo(
     reactionDislikeCountVideoDto: ReactionDislikeCountVideoDto,
   ): Promise<ReactionDislikeCountVideoResponse> {
-    return await this.queryBus.execute<
-      GetDislikesVideoQuery,
-      ReactionDislikeCountVideoResponse
-    >(new GetDislikesVideoQuery(reactionDislikeCountVideoDto));
+    return await this.queryBus.execute<GetDislikesVideoQuery, ReactionDislikeCountVideoResponse>(
+      new GetDislikesVideoQuery(reactionDislikeCountVideoDto),
+    );
   }
 
   async findReactionOfUserOnVideo(

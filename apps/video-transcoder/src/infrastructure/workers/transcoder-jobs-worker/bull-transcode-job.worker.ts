@@ -10,9 +10,7 @@ import { TRANSCODER_JOB_QUEUE } from '@transcoder/utils/constants';
 @Injectable()
 @Processor(TRANSCODER_JOB_QUEUE)
 export class BullTranscodeJobsWorker extends WorkerHost {
-  constructor(
-    @Inject(TRANSCODER_PORT) private readonly transcoder: TranscoderPort,
-  ) {
+  constructor(@Inject(TRANSCODER_PORT) private readonly transcoder: TranscoderPort) {
     super();
   }
 

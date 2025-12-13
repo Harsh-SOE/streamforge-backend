@@ -5,10 +5,10 @@
 // source: subscribe.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Subscribe";
+export const protobufPackage = 'Subscribe';
 
 export interface SubscribeMessage {
   userId: string;
@@ -25,7 +25,7 @@ export interface SubscribedResponse {
   response: string;
 }
 
-export const SUBSCRIBE_PACKAGE_NAME = "Subscribe";
+export const SUBSCRIBE_PACKAGE_NAME = 'Subscribe';
 
 export interface SubscribeServiceClient {
   subscribe(request: SubscribeMessage): Observable<SubscribedResponse>;
@@ -45,17 +45,21 @@ export interface SubscribeServiceController {
 
 export function SubscribeServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["subscribe", "unSubscribe"];
+    const grpcMethods: string[] = ['subscribe', 'unSubscribe'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("SubscribeService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('SubscribeService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("SubscribeService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('SubscribeService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const SUBSCRIBE_SERVICE_NAME = "SubscribeService";
+export const SUBSCRIBE_SERVICE_NAME = 'SubscribeService';

@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, Kafka, Producer } from 'kafkajs';
 
 import { UserProfileCreatedEventDto } from '@app/contracts/users';
@@ -16,8 +11,7 @@ import {
 } from '@projection/application/ports';
 import { AppConfigService } from '@projection/infrastructure/config';
 
-export const USER_PROFILE_PROJECTION_BUFFER_TOPIC =
-  'user_profile_created_projection_topic';
+export const USER_PROFILE_PROJECTION_BUFFER_TOPIC = 'user_profile_created_projection_topic';
 
 @Injectable()
 export class UserKafkaBufferAdapter
@@ -34,9 +28,7 @@ export class UserKafkaBufferAdapter
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.kafkaClient = new Kafka({
-      brokers: [
-        `${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`,
-      ],
+      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
       clientId: this.configService.BUFFER_CLIENT_ID,
     });
 
@@ -83,16 +75,9 @@ export class UserKafkaBufferAdapter
         const { batch } = payload;
         const messages = batch.messages
           .filter((message) => message.value)
-          .map(
-            (message) =>
-              JSON.parse(
-                message.value!.toString(),
-              ) as UserProfileCreatedEventDto,
-          );
+          .map((message) => JSON.parse(message.value!.toString()) as UserProfileCreatedEventDto);
 
-        this.logger.info(
-          `Saving ${messages.length} profiles in projection database`,
-        );
+        this.logger.info(`Saving ${messages.length} profiles in projection database`);
 
         await this.projectionRepo.saveManyUser(messages);
 

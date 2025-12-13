@@ -8,8 +8,7 @@ export class VideoChannelId {
   public constructor(private readonly value: string) {}
 
   public static create(value: string) {
-    const parsedVideoChannelId =
-      this.VideoChannelIdValidationSchema.safeParse(value);
+    const parsedVideoChannelId = this.VideoChannelIdValidationSchema.safeParse(value);
     if (!parsedVideoChannelId.success) {
       const errorMessage = parsedVideoChannelId.error.message;
       throw new InvalidChannelIdException({

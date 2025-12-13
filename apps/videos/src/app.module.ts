@@ -8,12 +8,6 @@ import { AppHealthModule } from './infrastructure/health';
 import { MessageModule } from './presentation/message-broker';
 
 @Module({
-  imports: [
-    GrpcModule,
-    MessageModule,
-    MeasureModule,
-    AppConfigModule,
-    AppHealthModule,
-  ],
+  imports: [GrpcModule, MessageModule, MeasureModule, AppConfigModule, AppHealthModule],
 })
 export class AppModule {}

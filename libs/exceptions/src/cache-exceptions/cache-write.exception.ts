@@ -20,11 +20,7 @@ export type CacheWriteExceptionOptions = {
 
 export class CacheWriteException extends InfrastructureException {
   constructor(options: CacheWriteExceptionOptions) {
-    const {
-      message = 'Unable to write into cache',
-      contextError,
-      meta,
-    } = options;
+    const { message = 'Unable to write into cache', contextError, meta } = options;
 
     super({
       message,

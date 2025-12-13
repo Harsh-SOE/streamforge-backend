@@ -26,18 +26,13 @@ export class UserCardRepository implements UserProjectionRepositoryPort {
   }
 
   async saveManyUser(event: UserProfileCreatedEventDto[]): Promise<number> {
-    const data = event.map((data) =>
-      this.userCardACL.userProfileCreatedEventToPersistance(data),
-    );
+    const data = event.map((data) => this.userCardACL.userProfileCreatedEventToPersistance(data));
     const savedCards = await this.projectedVideoCard.insertMany(data);
 
     return savedCards.length;
   }
 
-  public async updateUser(
-    videoId: string,
-    event: UserProfileCreatedEventDto,
-  ): Promise<boolean> {
+  public async updateUser(videoId: string, event: UserProfileCreatedEventDto): Promise<boolean> {
     const updated = await this.projectedVideoCard.findOneAndUpdate(
       { videoId },
       { $set: this.userCardACL.userProfileUpdatedEventToPersistance(event) },

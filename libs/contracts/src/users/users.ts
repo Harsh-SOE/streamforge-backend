@@ -5,10 +5,10 @@
 // source: users.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "User";
+export const protobufPackage = 'User';
 
 export enum UserGrpcThemePreferences {
   LIGHT = 0,
@@ -103,10 +103,9 @@ export interface UserProfileUpdatedResponse {
   userId: string;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
-export const USER_PACKAGE_NAME = "User";
+export const USER_PACKAGE_NAME = 'User';
 
 export interface UserServiceClient {
   getPresignedUrlForFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
@@ -115,11 +114,17 @@ export interface UserServiceClient {
 
   updateProfile(request: UserUpdateProfileDto): Observable<UserUpdateProfileResponse>;
 
-  changeNotificationStatus(request: UserChangeNotificationStatusDto): Observable<UserNotificationStatusChangedResponse>;
+  changeNotificationStatus(
+    request: UserChangeNotificationStatusDto,
+  ): Observable<UserNotificationStatusChangedResponse>;
 
-  changePreferredLanguage(request: UserChangePreferredLanguageDto): Observable<UserPreferredLanguageChangedResponse>;
+  changePreferredLanguage(
+    request: UserChangePreferredLanguageDto,
+  ): Observable<UserPreferredLanguageChangedResponse>;
 
-  changePreferredTheme(request: UserChangePreferredThemeDto): Observable<UserPreferredThemeChangedResponse>;
+  changePreferredTheme(
+    request: UserChangePreferredThemeDto,
+  ): Observable<UserPreferredThemeChangedResponse>;
 
   verifyPhoneNumber(request: UserVerifyPhoneNumberDto): Observable<UserPhoneNumberVerifiedResponse>;
 
@@ -129,15 +134,24 @@ export interface UserServiceClient {
 export interface UserServiceController {
   getPresignedUrlForFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   createProfile(
     request: UserCreateProfileDto,
-  ): Promise<UserProfileCreatedResponse> | Observable<UserProfileCreatedResponse> | UserProfileCreatedResponse;
+  ):
+    | Promise<UserProfileCreatedResponse>
+    | Observable<UserProfileCreatedResponse>
+    | UserProfileCreatedResponse;
 
   updateProfile(
     request: UserUpdateProfileDto,
-  ): Promise<UserUpdateProfileResponse> | Observable<UserUpdateProfileResponse> | UserUpdateProfileResponse;
+  ):
+    | Promise<UserUpdateProfileResponse>
+    | Observable<UserUpdateProfileResponse>
+    | UserUpdateProfileResponse;
 
   changeNotificationStatus(
     request: UserChangeNotificationStatusDto,
@@ -169,31 +183,34 @@ export interface UserServiceController {
 
   updateUserProfileById(
     request: UserUpdateByIdDto,
-  ): Promise<UserProfileUpdatedResponse> | Observable<UserProfileUpdatedResponse> | UserProfileUpdatedResponse;
+  ):
+    | Promise<UserProfileUpdatedResponse>
+    | Observable<UserProfileUpdatedResponse>
+    | UserProfileUpdatedResponse;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getPresignedUrlForFileUpload",
-      "createProfile",
-      "updateProfile",
-      "changeNotificationStatus",
-      "changePreferredLanguage",
-      "changePreferredTheme",
-      "verifyPhoneNumber",
-      "updateUserProfileById",
+      'getPresignedUrlForFileUpload',
+      'createProfile',
+      'updateProfile',
+      'changeNotificationStatus',
+      'changePreferredLanguage',
+      'changePreferredTheme',
+      'verifyPhoneNumber',
+      'updateUserProfileById',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('UserService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("UserService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('UserService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const USER_SERVICE_NAME = "UserService";
+export const USER_SERVICE_NAME = 'UserService';

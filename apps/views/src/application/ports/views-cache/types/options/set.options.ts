@@ -8,6 +8,4 @@ export interface CacheSetWithoutTTLOptions {
   TTL?: never;
 }
 
-export type CacheSetoptions =
-  | CacheSetWithTTLOptions
-  | CacheSetWithoutTTLOptions;
+export type CacheSetoptions = CacheSetWithTTLOptions | CacheSetWithoutTTLOptions;

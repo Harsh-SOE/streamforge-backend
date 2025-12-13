@@ -54,13 +54,10 @@ export class GrpcService {
     return result;
   }
 
-  async create(
-    videoCreateDto: VideoCreateDto,
-  ): Promise<VideoPublishedResponse> {
-    return await this.commandBus.execute<
-      PublishVideoCommand,
-      VideoPublishedResponse
-    >(new PublishVideoCommand(videoCreateDto));
+  async create(videoCreateDto: VideoCreateDto): Promise<VideoPublishedResponse> {
+    return await this.commandBus.execute<PublishVideoCommand, VideoPublishedResponse>(
+      new PublishVideoCommand(videoCreateDto),
+    );
   }
 
   findAll(): Promise<VideosFoundResponse> {
@@ -74,21 +71,16 @@ export class GrpcService {
   }
 
   findVideos(videoFindDto: VideoFindQueryDto): Promise<VideosFoundResponse> {
-    return this.queryBus.execute<QueryVideo, VideosFoundResponse>(
-      new QueryVideo(videoFindDto),
-    );
+    return this.queryBus.execute<QueryVideo, VideosFoundResponse>(new QueryVideo(videoFindDto));
   }
 
   async update(videoUpdateDto: VideoUpdateDto): Promise<VideoUpdatedResponse> {
-    return await this.commandBus.execute<
-      EditVideoCommand,
-      VideoUpdatedResponse
-    >(new EditVideoCommand(videoUpdateDto));
+    return await this.commandBus.execute<EditVideoCommand, VideoUpdatedResponse>(
+      new EditVideoCommand(videoUpdateDto),
+    );
   }
 
   remove(id: string): Promise<boolean> {
-    throw new NotImplementedException(
-      `remove with id:${id} is not implemented`,
-    );
+    throw new NotImplementedException(`remove with id:${id} is not implemented`);
   }
 }

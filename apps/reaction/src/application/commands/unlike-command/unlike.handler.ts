@@ -15,10 +15,7 @@ import { GrpcDomainReactionStatusEnumMapper } from '@reaction/infrastructure/ant
 import { UnlikeCommand } from './unlike.command';
 
 @CommandHandler(UnlikeCommand)
-export class UnlikeCommandHandler implements ICommandHandler<
-  UnlikeCommand,
-  ReactionResponse
-> {
+export class UnlikeCommandHandler implements ICommandHandler<UnlikeCommand, ReactionResponse> {
   public constructor(
     @Inject(REACTION_CACHE_PORT)
     private readonly cacheAdapter: ReactionCachePort,
@@ -26,9 +23,7 @@ export class UnlikeCommandHandler implements ICommandHandler<
     private readonly bufferAdapter: ReactionBufferPort,
   ) {}
 
-  public async execute({
-    videoUnlikeDto,
-  }: UnlikeCommand): Promise<ReactionResponse> {
+  public async execute({ videoUnlikeDto }: UnlikeCommand): Promise<ReactionResponse> {
     const { userId, videoId, reaction } = videoUnlikeDto;
 
     const likeDomainStatus = GrpcDomainReactionStatusEnumMapper.get(reaction);
@@ -37,11 +32,7 @@ export class UnlikeCommandHandler implements ICommandHandler<
       throw new Error();
     }
 
-    const reactionAggregate = ReactionAggregate.create(
-      userId,
-      videoId,
-      likeDomainStatus,
-    );
+    const reactionAggregate = ReactionAggregate.create(userId, videoId, likeDomainStatus);
 
     const res = await this.cacheAdapter.removeLike(videoId, userId);
 

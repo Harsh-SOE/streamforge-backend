@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import Redis from 'ioredis';
 import * as fs from 'fs';
 import { join } from 'path';
@@ -18,9 +13,7 @@ import { AppConfigService } from '@views/infrastructure/config';
 import { RedisWithCommands } from '../types';
 
 @Injectable()
-export class ViewCacheAdapter
-  implements OnModuleInit, OnModuleDestroy, ViewCachePort
-{
+export class ViewCacheAdapter implements OnModuleInit, OnModuleDestroy, ViewCachePort {
   private readonly SHARDS: number = 64;
   private redisClient: RedisWithCommands;
 
@@ -46,10 +39,7 @@ export class ViewCacheAdapter
   }
 
   public onModuleInit() {
-    const watchScript = fs.readFileSync(
-      join(__dirname, 'scripts/watch.lua'),
-      'utf8',
-    );
+    const watchScript = fs.readFileSync(join(__dirname, 'scripts/watch.lua'), 'utf8');
 
     this.redisClient.defineCommand('watchVideoCounterIncr', {
       numberOfKeys: 2,
@@ -80,8 +70,7 @@ export class ViewCacheAdapter
       this.getViewsCounterKey(videoId, i),
     );
 
-    const getValuesOperations = async () =>
-      await this.redisClient.mget(...allShardedKeys);
+    const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
     const values = await this.redisfilter.filter(getValuesOperations, {
       operationType: 'READ_MANY',
@@ -91,8 +80,7 @@ export class ViewCacheAdapter
     });
 
     const totalViews = values.reduce(
-      (sum, currentValue) =>
-        sum + (currentValue ? parseInt(currentValue, 10) : 0),
+      (sum, currentValue) => sum + (currentValue ? parseInt(currentValue, 10) : 0),
       0,
     );
 

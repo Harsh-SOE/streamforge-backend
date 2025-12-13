@@ -57,6 +57,4 @@ export class ProjectedVideoCardModel extends Document {
   updatedAt: Date;
 }
 
-export const ProjectedVideoCardSchema = SchemaFactory.createForClass(
-  ProjectedVideoCardModel,
-);
+export const ProjectedVideoCardSchema = SchemaFactory.createForClass(ProjectedVideoCardModel);

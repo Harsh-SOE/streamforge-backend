@@ -5,10 +5,10 @@
 // source: playlist.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Playlist";
+export const protobufPackage = 'Playlist';
 
 export interface CreatePlaylistDto {
   userId: string;
@@ -42,24 +42,32 @@ export interface VideoRemovedFromPlaylistResponse {
   response: string;
 }
 
-export const PLAYLIST_PACKAGE_NAME = "Playlist";
+export const PLAYLIST_PACKAGE_NAME = 'Playlist';
 
 export interface PlaylistServiceClient {
   createPlaylist(request: CreatePlaylistDto): Observable<PlaylistCreatedResponse>;
 
   addVideoToPlaylist(request: AddVideoInPlaylist): Observable<VideoAddedToPlaylistResponse>;
 
-  removeVideoFromPlaylist(request: RemoveVideoFromPlaylist): Observable<VideoRemovedFromPlaylistResponse>;
+  removeVideoFromPlaylist(
+    request: RemoveVideoFromPlaylist,
+  ): Observable<VideoRemovedFromPlaylistResponse>;
 }
 
 export interface PlaylistServiceController {
   createPlaylist(
     request: CreatePlaylistDto,
-  ): Promise<PlaylistCreatedResponse> | Observable<PlaylistCreatedResponse> | PlaylistCreatedResponse;
+  ):
+    | Promise<PlaylistCreatedResponse>
+    | Observable<PlaylistCreatedResponse>
+    | PlaylistCreatedResponse;
 
   addVideoToPlaylist(
     request: AddVideoInPlaylist,
-  ): Promise<VideoAddedToPlaylistResponse> | Observable<VideoAddedToPlaylistResponse> | VideoAddedToPlaylistResponse;
+  ):
+    | Promise<VideoAddedToPlaylistResponse>
+    | Observable<VideoAddedToPlaylistResponse>
+    | VideoAddedToPlaylistResponse;
 
   removeVideoFromPlaylist(
     request: RemoveVideoFromPlaylist,
@@ -71,17 +79,25 @@ export interface PlaylistServiceController {
 
 export function PlaylistServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createPlaylist", "addVideoToPlaylist", "removeVideoFromPlaylist"];
+    const grpcMethods: string[] = [
+      'createPlaylist',
+      'addVideoToPlaylist',
+      'removeVideoFromPlaylist',
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("PlaylistService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('PlaylistService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("PlaylistService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('PlaylistService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const PLAYLIST_SERVICE_NAME = "PlaylistService";
+export const PLAYLIST_SERVICE_NAME = 'PlaylistService';

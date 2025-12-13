@@ -3,10 +3,7 @@ import { Module } from '@nestjs/common';
 import { LOGGER_PORT } from '@app/ports/logger';
 
 import { EMAIL_PORT } from '@email/application/ports';
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@email/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@email/infrastructure/config';
 import { WinstonLoggerAdapter } from '@email/infrastructure/logger';
 import { MailerSendEmailAdapter } from '@email/infrastructure/email';
 import { MeasureModule } from '@email/infrastructure/measure';

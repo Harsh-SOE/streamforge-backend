@@ -27,8 +27,7 @@ export class GeneratePreSignedUrlVideoHandler implements ICommandHandler<
       fileName = `video-${new Date().toISOString()}-${userId}.mp4`;
     }
 
-    const presignedUrlResponse =
-      await this.storageAdapter.getPresignedUrlForVideo(fileName);
+    const presignedUrlResponse = await this.storageAdapter.getPresignedUrlForVideo(fileName);
 
     const response = {
       response: 'Presigned url generated successfully',

@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  UseGuards,
-  Version,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, UseGuards, Version } from '@nestjs/common';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
@@ -17,11 +8,7 @@ import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { User } from '@gateway/services/auth/decorators';
 
-import {
-  PreSignedUrlRequestDto,
-  CompleteUserProfileDto,
-  UpdateUserRequestDto,
-} from './request';
+import { PreSignedUrlRequestDto, CompleteUserProfileDto, UpdateUserRequestDto } from './request';
 import {
   DeleteUserRequestResponse,
   FindUserRequestResponse,
@@ -51,9 +38,7 @@ export class UsersController {
 
   @Post(USER_API.COMPLETE_PROFILE)
   @Version(USER_API_VERSION.V1)
-  async saveUserInDatabase(
-    @Body() saveUserProfileDto: CompleteUserProfileDto,
-  ): Promise<{
+  async saveUserInDatabase(@Body() saveUserProfileDto: CompleteUserProfileDto): Promise<{
     token: string;
   }> {
     this.counter.inc();
@@ -74,9 +59,7 @@ export class UsersController {
   @UseGuards(GatewayJwtGuard)
   @Delete(USER_API.DELETE_USER)
   @Version(USER_API_VERSION.V1)
-  deleteUser(
-    @User() loggedInUser: UserAuthPayload,
-  ): Promise<DeleteUserRequestResponse> {
+  deleteUser(@User() loggedInUser: UserAuthPayload): Promise<DeleteUserRequestResponse> {
     this.counter.inc();
     return this.userService.deleteUser(loggedInUser);
   }

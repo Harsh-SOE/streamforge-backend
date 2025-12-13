@@ -4,10 +4,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import { SERVICES } from '@app/clients/constant';
 import { LOGGER_PORT } from '@app/ports/logger';
 
-import {
-  AppConfigModule,
-  AppConfigService,
-} from '@gateway/infrastructure/config';
+import { AppConfigModule, AppConfigService } from '@gateway/infrastructure/config';
 import { WinstonLoggerAdapter } from '@gateway/infrastructure/logger';
 import { MeasureModule } from '@gateway/infrastructure/measure';
 
@@ -24,14 +21,10 @@ import { ReactionService } from './reaction.service';
         name: SERVICES.REACTION,
         imports: [AppConfigModule],
         inject: [AppConfigService],
-        useFactory: (configService: AppConfigService) =>
-          configService.REACTION_SERVICE_OPTIONS,
+        useFactory: (configService: AppConfigService) => configService.REACTION_SERVICE_OPTIONS,
       },
     ]),
   ],
-  providers: [
-    ReactionService,
-    { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
-  ],
+  providers: [ReactionService, { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter }],
 })
 export class ReactionModule {}

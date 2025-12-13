@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { Components } from '@app/common/components';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -14,10 +9,7 @@ import { Prisma, PrismaClient } from '@persistance/views';
 
 @Injectable()
 export class PersistanceService
-  extends PrismaClient<
-    Prisma.PrismaClientOptions,
-    'query' | 'info' | 'warn' | 'error'
-  >
+  extends PrismaClient<Prisma.PrismaClientOptions, 'query' | 'info' | 'warn' | 'error'>
   implements OnModuleInit, OnModuleDestroy
 {
   public constructor(
@@ -47,9 +39,7 @@ export class PersistanceService
   }
 
   public async onModuleInit() {
-    this.logger.info(
-      `Prisma connecting to URL: ${this.configService.DATABASE_URL}`,
-    );
+    this.logger.info(`Prisma connecting to URL: ${this.configService.DATABASE_URL}`);
 
     this.$on('query', (e) => {
       this.logger.info('--- MongoDB Query Info Begins ---', {

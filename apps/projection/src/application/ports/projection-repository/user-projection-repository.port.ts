@@ -5,14 +5,9 @@ export interface UserProjectionRepositoryPort {
 
   saveManyUser(data: UserProfileCreatedEventDto[]): Promise<number>;
 
-  updateUser(
-    userId: string,
-    data: Partial<UserProfileCreatedEventDto>,
-  ): Promise<boolean>;
+  updateUser(userId: string, data: Partial<UserProfileCreatedEventDto>): Promise<boolean>;
 
   deleteUser(userId: string): Promise<boolean>;
 }
 
-export const USER_PROJECTION_REPOSITORY_PORT = Symbol(
-  'USER_PROJECTION_REPOSITORY_PORT',
-);
+export const USER_PROJECTION_REPOSITORY_PORT = Symbol('USER_PROJECTION_REPOSITORY_PORT');

@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import {
   circuitBreaker,
   CircuitBreakerPolicy,
@@ -65,10 +60,7 @@ export class RedisBufferHandler implements OnModuleInit, OnModuleDestroy {
     );
   }
 
-  public circuitBreakerConfig(
-    allowHalfRequest: number,
-    maxRequestFailureBreaker: number,
-  ): void {
+  public circuitBreakerConfig(allowHalfRequest: number, maxRequestFailureBreaker: number): void {
     this.circuitBreakerPolicy = circuitBreaker(handleAll, {
       halfOpenAfter: allowHalfRequest * 1000,
       breaker: new ConsecutiveBreaker(maxRequestFailureBreaker),
@@ -81,13 +73,10 @@ export class RedisBufferHandler implements OnModuleInit, OnModuleDestroy {
     );
 
     this.circuitBreakerPolicy.onHalfOpen(() =>
-      this.logger.alert(
-        'Allowing only half of the requests to be executed now!',
-        {
-          component: Components.BUFFER,
-          circuitState: CircuitState.HalfOpen,
-        },
-      ),
+      this.logger.alert('Allowing only half of the requests to be executed now!', {
+        component: Components.BUFFER,
+        circuitState: CircuitState.HalfOpen,
+      }),
     );
 
     this.circuitBreakerPolicy.onReset(() =>
@@ -101,19 +90,10 @@ export class RedisBufferHandler implements OnModuleInit, OnModuleDestroy {
     infrastructureOperation: () => Promise<TResult>,
     bufferFilter: BufferFilterOptions<TFallback>,
   ): Promise<TResult | NonNullable<TFallback>> {
-    const {
-      host,
-      port,
-      suppressErrors,
-      fallbackValue,
-      logErrors,
-      operationType,
-      valueToBuffer,
-    } = bufferFilter || {};
+    const { host, port, suppressErrors, fallbackValue, logErrors, operationType, valueToBuffer } =
+      bufferFilter || {};
     try {
-      return await this.operationPolicy.execute(
-        async () => await infrastructureOperation(),
-      );
+      return await this.operationPolicy.execute(async () => await infrastructureOperation());
     } catch (err) {
       if (suppressErrors && fallbackValue) {
         return fallbackValue;
@@ -125,10 +105,7 @@ export class RedisBufferHandler implements OnModuleInit, OnModuleDestroy {
           switch (operationType) {
             case 'FLUSH': {
               if (logErrors)
-                this.logger.error(
-                  `An Error while reading flushing values from buffer`,
-                  error,
-                );
+                this.logger.error(`An Error while reading flushing values from buffer`, error);
 
               throw new BufferFlushException({
                 contextError: error,

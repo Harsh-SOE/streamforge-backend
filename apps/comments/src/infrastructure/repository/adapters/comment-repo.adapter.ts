@@ -25,9 +25,7 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
     filter: DatabaseFilter<Comment>,
     mode: 'many' | 'unique',
   ): Prisma.CommentWhereInput | Prisma.CommentWhereUniqueInput {
-    const prismaFilter:
-      | Prisma.CommentWhereInput
-      | Prisma.CommentWhereUniqueInput = {};
+    const prismaFilter: Prisma.CommentWhereInput | Prisma.CommentWhereUniqueInput = {};
 
     (Object.keys(filter) as Array<keyof Comment>).forEach((key) => {
       const value = filter[key];
@@ -77,27 +75,20 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
       return 0;
     }
 
-    const dataToCreate = models.map((model) =>
-      this.commentPersistanceACL.toPersistance(model),
-    );
-    this.logger.info(
-      `Saving: ${dataToCreate.length} documents into the database as a batch`,
-      {
-        component: Components.DATABASE,
-        service: 'COMMENTS',
-      },
-    );
+    const dataToCreate = models.map((model) => this.commentPersistanceACL.toPersistance(model));
+    this.logger.info(`Saving: ${dataToCreate.length} documents into the database as a batch`, {
+      component: Components.DATABASE,
+      service: 'COMMENTS',
+    });
     const createdEntitiesFunc = async () =>
       await this.persistanceService.comment.createMany({
-        data: models.map((model) =>
-          this.commentPersistanceACL.toPersistance(model),
-        ),
+        data: models.map((model) => this.commentPersistanceACL.toPersistance(model)),
       });
 
-    const createdEntities = await this.prismaDatabaseHandler.execute(
-      createdEntitiesFunc,
-      { operationType: 'CREATE', entry: dataToCreate },
-    );
+    const createdEntities = await this.prismaDatabaseHandler.execute(createdEntitiesFunc, {
+      operationType: 'CREATE',
+      entry: dataToCreate,
+    });
     return createdEntities.count;
   }
 
@@ -107,21 +98,15 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
   ): Promise<CommentAggregate> {
     const updateLikeOperation = async () =>
       await this.persistanceService.comment.update({
-        where: this.toPrismaFilter(
-          filter,
-          'unique',
-        ) as Prisma.CommentWhereUniqueInput,
+        where: this.toPrismaFilter(filter, 'unique') as Prisma.CommentWhereUniqueInput,
         data: { commentText: newCommentText },
       });
 
-    const updatedLike = await this.prismaDatabaseHandler.execute(
-      updateLikeOperation,
-      {
-        operationType: 'UPDATE',
-        entry: {},
-        filter: { newCommentText },
-      },
-    );
+    const updatedLike = await this.prismaDatabaseHandler.execute(updateLikeOperation, {
+      operationType: 'UPDATE',
+      entry: {},
+      filter: { newCommentText },
+    });
 
     return this.commentPersistanceACL.toAggregate(updatedLike);
   }
@@ -136,14 +121,11 @@ export class PrismaMongoDBRepositoryAdapter implements CommentRepositoryPort {
         data: { commentText: newCommentText },
       });
 
-    const updatedLikes = await this.prismaDatabaseHandler.execute(
-      updatedLikesOperation,
-      {
-        operationType: 'UPDATE',
-        entry: {},
-        filter,
-      },
-    );
+    const updatedLikes = await this.prismaDatabaseHandler.execute(updatedLikesOperation, {
+      operationType: 'UPDATE',
+      entry: {},
+      filter,
+    });
 
     return updatedLikes.count;
   }

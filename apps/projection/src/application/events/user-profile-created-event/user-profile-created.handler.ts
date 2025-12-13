@@ -18,9 +18,7 @@ export class UserProfileCreatedProjectionHandler implements IEventHandler<UserPr
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  async handle({
-    userProfileCreatedEventDto,
-  }: UserProfileCreatedProjectionEvent) {
+  async handle({ userProfileCreatedEventDto }: UserProfileCreatedProjectionEvent) {
     this.logger.info(`saving user projection`);
     await this.userCardRespository.saveUser(userProfileCreatedEventDto);
   }

@@ -5,10 +5,10 @@
 // source: email.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Email";
+export const protobufPackage = 'Email';
 
 export interface CreatedUserMessageDto {
   id: string;
@@ -20,8 +20,7 @@ export interface CreatedUserMessageDto {
   coverImage?: string | undefined;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
 export interface EmailHealthCheckRequest {
   service: string;
@@ -39,7 +38,7 @@ export enum EmailHealthCheckResponse_ServingStatus {
   UNRECOGNIZED = -1,
 }
 
-export const EMAIL_PACKAGE_NAME = "Email";
+export const EMAIL_PACKAGE_NAME = 'Email';
 
 export interface EmailServiceClient {
   sendEMail(request: CreatedUserMessageDto): Observable<Empty>;
@@ -52,22 +51,25 @@ export interface EmailServiceController {
 
   check(
     request: EmailHealthCheckRequest,
-  ): Promise<EmailHealthCheckResponse> | Observable<EmailHealthCheckResponse> | EmailHealthCheckResponse;
+  ):
+    | Promise<EmailHealthCheckResponse>
+    | Observable<EmailHealthCheckResponse>
+    | EmailHealthCheckResponse;
 }
 
 export function EmailServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["sendEMail", "check"];
+    const grpcMethods: string[] = ['sendEMail', 'check'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("EmailService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('EmailService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("EmailService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('EmailService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const EMAIL_SERVICE_NAME = "EmailService";
+export const EMAIL_SERVICE_NAME = 'EmailService';

@@ -20,21 +20,13 @@ export class GrpcController implements QueryServiceController {
 
   getUserProfileFromId(
     getUserProfileFromIdDto: GetUserProfileFromIdDto,
-  ):
-    | Promise<GetUserProfileResponse>
-    | Observable<GetUserProfileResponse>
-    | GetUserProfileResponse {
+  ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse {
     return this.grpcService.getUserProfileFromIdQuery(getUserProfileFromIdDto);
   }
 
   getUserProfileFromAuthId(
     getUserProfileFromAuthIdDto: GetUserProfileFromAuthIdDto,
-  ):
-    | Promise<GetUserProfileResponse>
-    | Observable<GetUserProfileResponse>
-    | GetUserProfileResponse {
-    return this.grpcService.getUserProfileFromAuthIdQuery(
-      getUserProfileFromAuthIdDto,
-    );
+  ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse {
+    return this.grpcService.getUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto);
   }
 }

@@ -20,11 +20,7 @@ export type CachReadExceptionOptions = {
 
 export class CacheReadException extends InfrastructureException {
   constructor(options: CachReadExceptionOptions) {
-    const {
-      message = `Unable to read from cache`,
-      meta,
-      contextError,
-    } = options;
+    const { message = `Unable to read from cache`, meta, contextError } = options;
     super({
       message,
       code: CACHE_EXCEPTION.CACHE_READ_EXCEPTION,

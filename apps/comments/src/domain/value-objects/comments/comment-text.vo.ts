@@ -8,8 +8,7 @@ export class CommentText {
   public constructor(private value: string) {}
 
   public static create(value: string) {
-    const parsedCommentValue =
-      CommentText.CommentTextValidationSchema.safeParse(value);
+    const parsedCommentValue = CommentText.CommentTextValidationSchema.safeParse(value);
 
     if (!parsedCommentValue.success) {
       const message = parsedCommentValue.error.message;

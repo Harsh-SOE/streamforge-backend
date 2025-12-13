@@ -21,9 +21,7 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
     @Inject(LOGGER_PORT) private readonly loggerAdapter: LoggerPort,
   ) {}
 
-  public async transcodeVideo(
-    transcodeVideoOptions: TranscodeVideoOptions,
-  ): Promise<void> {
+  public async transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void> {
     const { fileIdentifier, videoId } = transcodeVideoOptions;
     this.loggerAdapter.alert(`Transcoding video now: ${fileIdentifier}`);
 
@@ -51,9 +49,7 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
           reject(err);
         })
         .on('end', () => {
-          this.loggerAdapter.info(
-            `HLS transcoding for ${videoId} finished successfully.`,
-          );
+          this.loggerAdapter.info(`HLS transcoding for ${videoId} finished successfully.`);
           resolve();
         })
         .on('progress', (progress) => {

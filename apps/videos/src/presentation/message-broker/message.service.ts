@@ -9,11 +9,7 @@ import { VideoTranscodedEvent } from '@videos/application/events';
 export class MessageHandlerService {
   public constructor(private readonly eventBus: EventBus) {}
 
-  updateVideoIdentifier(
-    transcodedVideoMessage: VideoTranscodedUpdateIdentifierDto,
-  ) {
-    this.eventBus.publish<VideoTranscodedEvent>(
-      new VideoTranscodedEvent(transcodedVideoMessage),
-    );
+  updateVideoIdentifier(transcodedVideoMessage: VideoTranscodedUpdateIdentifierDto) {
+    this.eventBus.publish<VideoTranscodedEvent>(new VideoTranscodedEvent(transcodedVideoMessage));
   }
 }

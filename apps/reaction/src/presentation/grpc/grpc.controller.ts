@@ -39,10 +39,7 @@ export class GrpcController implements ReactionServiceController {
 
   reactToVideo(
     videoReactionDto: VideoReactionDto,
-  ):
-    | Promise<ReactionResponse>
-    | Observable<ReactionResponse>
-    | ReactionResponse {
+  ): Promise<ReactionResponse> | Observable<ReactionResponse> | ReactionResponse {
     return this.grpcService.reactToVideo(videoReactionDto);
   }
 
@@ -61,9 +58,7 @@ export class GrpcController implements ReactionServiceController {
     | Promise<ReactionDislikeCountVideoResponse>
     | Observable<ReactionDislikeCountVideoResponse>
     | ReactionDislikeCountVideoResponse {
-    return this.grpcService.getDislikesCountForVideo(
-      reactionDislikeCountVideoDto,
-    );
+    return this.grpcService.getDislikesCountForVideo(reactionDislikeCountVideoDto);
   }
 
   findReactionOfUserOnVideo(

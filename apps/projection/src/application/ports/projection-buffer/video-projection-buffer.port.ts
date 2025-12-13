@@ -6,6 +6,4 @@ export interface VideoProjectionBufferPort {
   processVideoCards(): Promise<number | void>;
 }
 
-export const VIDEO_PROJECTION_BUFFER_PORT = Symbol(
-  'VIDEO_PROJECTION_BUFFER_PORT',
-);
+export const VIDEO_PROJECTION_BUFFER_PORT = Symbol('VIDEO_PROJECTION_BUFFER_PORT');

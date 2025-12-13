@@ -32,10 +32,7 @@ export class AppConfigService {
     const options: GrpcOptions = {
       transport: Transport.GRPC,
       options: {
-        protoPath: [
-          join(__dirname, 'proto/query.proto'),
-          join(__dirname, 'proto/health.proto'),
-        ],
+        protoPath: [join(__dirname, 'proto/query.proto'), join(__dirname, 'proto/health.proto')],
         package: [QUERY_PACKAGE_NAME, GRPC_HEALTH_V1_PACKAGE_NAME],
         url: `0.0.0.0:${this.GRPC_PORT}`,
         onLoadPackageDefinition(pkg, server) {

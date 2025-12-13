@@ -5,10 +5,10 @@
 // source: health.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "grpc.health.v1";
+export const protobufPackage = 'grpc.health.v1';
 
 export interface HealthCheckRequest {
   service: string;
@@ -26,7 +26,7 @@ export enum HealthCheckResponse_ServingStatus {
   UNRECOGNIZED = -1,
 }
 
-export const GRPC_HEALTH_V1_PACKAGE_NAME = "grpc.health.v1";
+export const GRPC_HEALTH_V1_PACKAGE_NAME = 'grpc.health.v1';
 
 export interface HealthClient {
   check(request: HealthCheckRequest): Observable<HealthCheckResponse>;
@@ -40,17 +40,17 @@ export interface HealthController {
 
 export function HealthControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["check"];
+    const grpcMethods: string[] = ['check'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("Health", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('Health', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("Health", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('Health', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const HEALTH_SERVICE_NAME = "Health";
+export const HEALTH_SERVICE_NAME = 'Health';

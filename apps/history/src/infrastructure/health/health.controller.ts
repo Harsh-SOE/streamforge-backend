@@ -15,10 +15,7 @@ import {
 export class AppHealthController implements HealthController {
   check(
     healthCheckRequest: HealthCheckRequest,
-  ):
-    | Promise<HealthCheckResponse>
-    | Observable<HealthCheckResponse>
-    | HealthCheckResponse {
+  ): Promise<HealthCheckResponse> | Observable<HealthCheckResponse> | HealthCheckResponse {
     return { status: HealthCheckResponse_ServingStatus.SERVING };
   }
 }

@@ -7,8 +7,7 @@ export interface InvalidCategoriesExceptionOptions {
 
 export class InvalidCategoriesException extends DomainException {
   public constructor(options: InvalidCategoriesExceptionOptions) {
-    const { message = `Invalid categories were received`, meta } =
-      options || {};
+    const { message = `Invalid categories were received`, meta } = options || {};
     super({
       code: 'INVALID_INPUT_EXCEPTION',
       message: message,

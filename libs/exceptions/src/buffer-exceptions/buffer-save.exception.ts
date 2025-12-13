@@ -21,11 +21,7 @@ export type BufferSaveExceptionOptions = {
 
 export class BufferSaveException extends InfrastructureException {
   constructor(options: BufferSaveExceptionOptions) {
-    const {
-      message = 'Unable to write into buffer',
-      contextError,
-      meta,
-    } = options;
+    const { message = 'Unable to write into buffer', contextError, meta } = options;
 
     super({
       message,
