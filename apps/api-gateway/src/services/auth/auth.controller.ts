@@ -3,15 +3,15 @@ import { Controller, Get, Res, UseGuards, Version } from '@nestjs/common';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
-import { User } from '@gateway/services/auth/decorators';
-import { Auth0ProfileUser } from '@gateway/services/auth/types';
-import { Auth0OAuthGaurd } from '@gateway/services/auth/guards';
+import { User } from '@gateway/common/decorators';
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
+import { UserProfile } from '@gateway/infrastructure/oauth/types';
+import { Auth0OAuthGaurd } from '@gateway/infrastructure/oauth/guards';
+import { AUTH_API_ENDPOINTS, AUTH_API_VERSION } from '@gateway/common/endpoints';
 
 import { AuthService } from './auth.service';
-import { AUTH_API_VERSION, AUTH_API } from './api';
 
-@Controller('auth')
+@Controller(AUTH_API_ENDPOINTS.ROOT)
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -19,14 +19,14 @@ export class AuthController {
   ) {}
 
   @UseGuards(Auth0OAuthGaurd)
-  @Get(AUTH_API.AUTHENTICATE)
-  @Version(AUTH_API_VERSION.V1)
+  @Get(AUTH_API_ENDPOINTS.AUTHENTICATE)
+  @Version(AUTH_API_VERSION.VERSION_1)
   authenticate() {}
 
   @UseGuards(Auth0OAuthGaurd)
-  @Get(AUTH_API.AUTH0_REDIRECT)
-  @Version(AUTH_API_VERSION.V1)
-  onAuthRedirect(@User() auth0User: Auth0ProfileUser, @Res() response: Response): Promise<void> {
+  @Get(AUTH_API_ENDPOINTS.AUTH0_REDIRECT)
+  @Version(AUTH_API_VERSION.VERSION_1)
+  onAuthRedirect(@User() auth0User: UserProfile, @Res() response: Response): Promise<void> {
     this.counter.inc();
     return this.authService.onAuthRedirect(auth0User, response);
   }

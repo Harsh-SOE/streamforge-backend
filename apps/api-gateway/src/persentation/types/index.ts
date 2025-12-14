@@ -1,1 +1,1 @@
-export * from './grpc-application.exception.type';
+export * from './grpc-application-exception.type';

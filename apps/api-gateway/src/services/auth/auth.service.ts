@@ -10,7 +10,7 @@ import { QUERY_SERVICE_NAME, QueryServiceClient, UserProfileMessage } from '@app
 import { UserAuthPayload } from '@app/contracts/auth';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import { Auth0ProfileUser } from '@gateway/services/auth/types';
+import { UserProfile } from '@gateway/infrastructure/oauth/types';
 import { AppConfigService } from '@gateway/infrastructure/config';
 
 const ONBOARDING_INFO_COOKIE_NAME = 'onboarding_info';
@@ -35,10 +35,7 @@ export class AuthService implements OnModuleInit {
     this.queryService = this.queryClient.getService(QUERY_SERVICE_NAME);
   }
 
-  private prepareAndSendOnboardingCookie(
-    response: Response,
-    userAuthCredentials: Auth0ProfileUser,
-  ) {
+  private prepareAndSendOnboardingCookie(response: Response, userAuthCredentials: UserProfile) {
     const onBoardingCookie = {
       authId: userAuthCredentials.providerId,
       email: userAuthCredentials.email,
@@ -55,14 +52,14 @@ export class AuthService implements OnModuleInit {
   }
 
   private prepareAndSendAccessTokenCookie(response: Response, foundUser: UserProfileMessage) {
-    const loggedInUserPayload: UserAuthPayload = {
+    const signedUpUserPayload: UserAuthPayload = {
       id: foundUser.userId,
       authId: foundUser.userAuthId,
       email: foundUser.email,
       handle: foundUser.handle,
     };
 
-    const token = this.jwtService.sign(loggedInUserPayload);
+    const token = this.jwtService.sign(signedUpUserPayload);
 
     response.cookie(ACCESS_TOKEN_COOKIE_NAME, token, {
       httpOnly: true,
@@ -91,7 +88,7 @@ export class AuthService implements OnModuleInit {
     });
   }
 
-  async onAuthRedirect(userAuthCredentials: Auth0ProfileUser, response: Response): Promise<void> {
+  async onAuthRedirect(userAuthCredentials: UserProfile, response: Response): Promise<void> {
     this.logger.info('User from auth0', userAuthCredentials);
 
     const responseUserProjection$ = this.queryService.getUserProfileFromAuthId({

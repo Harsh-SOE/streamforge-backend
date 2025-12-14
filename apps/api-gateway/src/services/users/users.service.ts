@@ -56,7 +56,7 @@ export class UsersService implements OnModuleInit {
       authId: saveUserProfileDto.authId,
       handle: saveUserProfileDto.handle,
     };
-    // TODO: register Jwt module...
+    // TODO Correct the auth flow
     return { token: this.jwtService.sign(userPayload) };
   }
 
@@ -78,25 +78,13 @@ export class UsersService implements OnModuleInit {
     throw new NotImplementedException(`Delete user is not yet implemented!`);
   }
 
-  // TODO: fix this by creating a dedicated command in the user service, which will either return the response or return an error...
-  async getCurrentlyLoggedInUser(id: string): Promise<FindUserRequestResponse> {
-    this.logger.info(`GET_LOGGED_IN_USER, UserId:${id}`);
-
-    const response$ = this.userService.findOneUserById({ id });
-    const response = await firstValueFrom(response$);
-    const foundUser = response.user;
-    if (!foundUser) {
-      throw new Error();
-    }
-    return foundUser;
+  getCurrentlyLoggedInUser(id: string): Promise<FindUserRequestResponse> {
+    throw new NotImplementedException(
+      `Please implement 'getCurrentlyLoggedInUser' before using it`,
+    );
   }
 
-  async getAllRegisteredUser(): Promise<FindUserRequestResponse[]> {
-    this.logger.info(` All users will be fetched`);
-
-    const response$ = this.userService.findAllUsers({});
-    const users = await firstValueFrom(response$);
-    const foundUsers = users.userPayload;
-    return foundUsers;
+  getAllRegisteredUser(): Promise<FindUserRequestResponse[]> {
+    throw new NotImplementedException(`Please implement 'getAllRegisteredUser' before using it`);
   }
 }

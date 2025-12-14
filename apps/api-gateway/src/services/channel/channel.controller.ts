@@ -1,12 +1,12 @@
-import { Body, Controller, Param, Patch, Post, UseGuards, Version } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards, Version } from '@nestjs/common';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
 import { UserAuthPayload } from '@app/contracts/auth';
 
-import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
-import { User } from '@gateway/services/auth/decorators';
+import { User } from '@gateway/common/decorators';
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
+import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 
 import {
   CreateChannelRequestDto,
@@ -19,9 +19,9 @@ import {
   PreSignedUrlRequestResponse,
 } from './response';
 import { ChannelService } from './channel.service';
-import { CHANNEL_API_VERSION, CHANNEL_API } from './api';
+import { CHANNEL_API_ENDPOINT, CHANNEL_API_VERSION } from '@gateway/common/endpoints';
 
-@Controller('channel')
+@Controller(CHANNEL_API_ENDPOINT.ROOT)
 @UseGuards(GatewayJwtGuard)
 export class ChannelController {
   constructor(
@@ -29,8 +29,8 @@ export class ChannelController {
     @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
   ) {}
 
-  @Post(CHANNEL_API.UPLOAD_CHANNEL_COVER_IMAGE)
-  @Version(CHANNEL_API_VERSION.V1)
+  @Get(CHANNEL_API_ENDPOINT.UPLOAD_CHANNEL_COVER_IMAGE)
+  @Version(CHANNEL_API_VERSION.VERSION_1)
   getPresignedUrl(
     @Body() FileMetaDataDto: PreSignedUrlRequestDto,
     @User('id') userId: string,
@@ -39,8 +39,8 @@ export class ChannelController {
     return this.channelService.getPresignedUploadUrl(FileMetaDataDto, userId);
   }
 
-  @Post(CHANNEL_API.CREATE_CHANNEL)
-  @Version(CHANNEL_API_VERSION.V1)
+  @Post(CHANNEL_API_ENDPOINT.CREATE_CHANNEL)
+  @Version(CHANNEL_API_VERSION.VERSION_1)
   createChannel(
     @Body() createChannelDto: CreateChannelRequestDto,
     @User() user: UserAuthPayload,
@@ -49,8 +49,8 @@ export class ChannelController {
     return this.channelService.createChannel(createChannelDto, user);
   }
 
-  @Patch(CHANNEL_API.UPDATE_CHANNEL)
-  @Version(CHANNEL_API_VERSION.V1)
+  @Patch(CHANNEL_API_ENDPOINT.UPDATE_CHANNEL)
+  @Version(CHANNEL_API_VERSION.VERSION_1)
   updateChannel(
     @Body() channelUpdateDto: UpdateChannelRequestDto,
     @Param('id') channelId: string,

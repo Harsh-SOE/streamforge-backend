@@ -7,7 +7,7 @@ import { SERVICES } from '@app/clients';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { GetLikesCountForVideo, GetDislikesCountForVideo, VideoReactedResponse } from './response';
-import { ClientGrpcLikeStatusEnumMapper } from './mappers';
+import { ClientTransportLikeStatusEnumMapper } from './mappers/like-status';
 import { VideoReactionDto } from './request';
 
 @Injectable()
@@ -30,14 +30,8 @@ export class ReactionService implements OnModuleInit {
   ): Promise<VideoReactedResponse> {
     this.logger.info(`Request recieved:${userId}`);
 
-    const reactionStatusForService = ClientGrpcLikeStatusEnumMapper.get(
-      videoLikeStatusCreatedDto.reactionStatus,
-    );
-
-    // TODO: Rectify the undefined case...
-    if (reactionStatusForService === undefined) {
-      throw new Error(`Invalid reaction status`);
-    }
+    const reactionStatusForService =
+      ClientTransportLikeStatusEnumMapper[videoLikeStatusCreatedDto.reactionStatus];
 
     const response$ = this.reactionService.reactToVideo({
       userId,

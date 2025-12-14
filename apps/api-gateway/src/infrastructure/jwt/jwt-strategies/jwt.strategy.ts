@@ -2,7 +2,6 @@ import { Inject, Injectable, OnModuleInit, UnauthorizedException } from '@nestjs
 import { ClientGrpc } from '@nestjs/microservices';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/clients/constant';
@@ -27,12 +26,7 @@ export class JwtStrategy
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request): string | null => {
-          const data = request?.cookies as Record<string, string> | undefined;
-          return data?.access_token || null;
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       algorithms: ['HS256'],
       secretOrKey: configService.JWT_ACCESS_TOKEN_SECRET,
@@ -49,13 +43,9 @@ export class JwtStrategy
     const response$ = this.queryService.getUserProfileFromId({ userId: id });
     const user = await firstValueFrom(response$);
 
-    this.logger.info(`Guarded Route`);
-
     if (!user) {
       throw new UnauthorizedException(`Invalid token!`);
     }
-
-    this.logger.info(`Guarded Route`);
 
     const finalUser: UserJwtAuthPayload = {
       id,

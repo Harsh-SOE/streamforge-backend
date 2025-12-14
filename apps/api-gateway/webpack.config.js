@@ -9,51 +9,39 @@ module.exports = (options, webpack) => {
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: path.join(__dirname, 'proto/health.proto'),
+            from: path.join('libs/proto/health.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/aggregator.proto'),
+            from: path.join('libs/proto/authz.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/authz.proto'),
+            from: path.join('libs/proto/channel.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/channel.proto'),
+            from: path.join('libs/proto/comments.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/comments.proto'),
+            from: path.join('libs/proto/reaction.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/email.proto'),
+            from: path.join('libs/proto/users.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/reaction.proto'),
+            from: path.join('libs/proto/videos.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/saga.proto'),
+            from: path.join('libs/proto/views.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {
-            from: path.join(__dirname, 'proto/users.proto'),
-            to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
-          },
-          {
-            from: path.join(__dirname, 'proto/videos.proto'),
-            to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
-          },
-          {
-            from: path.join(__dirname, 'proto/views.proto'),
-            to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
-          },
-          {
-            from: path.join(__dirname, 'proto/query.proto'),
+            from: path.join('libs/proto/query.proto'),
             to: path.join(__dirname, '../../dist/apps/api-gateway/proto'),
           },
           {

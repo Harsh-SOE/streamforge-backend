@@ -9,6 +9,14 @@ import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/chann
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
+  ClientTransportVideoVisibilityEnumMapper,
+  TransportClientVideoVisibilityEnumMapper,
+} from './mappers/video-visibility-status';
+import {
+  ClientTransportVideoPublishEnumMapper,
+  TransportClientVideoPublishEnumMapper,
+} from './mappers/video-publish-status';
+import {
   CreateVideoRequestDto,
   ListVideosQueryDto,
   PreSignedUrlRequestDto,
@@ -20,12 +28,6 @@ import {
   PublishedVideoRequestResponse,
   UpdatedVideoRequestResponse,
 } from './response';
-import {
-  ClientTransportVideoPublishEnumMapper,
-  ClientTransportVideoVisibilityEnumMapper,
-  TransportClientVideoPublishEnumMapper,
-  TransportClientVideoVisibilityEnumMapper,
-} from './mappers';
 
 @Injectable()
 export class VideoService implements OnModuleInit {
@@ -53,7 +55,6 @@ export class VideoService implements OnModuleInit {
     });
 
     const result = await firstValueFrom(result$);
-    this.logger.info(`Gateway result is: `, result);
     return result;
   }
 
@@ -67,7 +68,6 @@ export class VideoService implements OnModuleInit {
     });
 
     const result = await firstValueFrom(result$);
-    this.logger.info(`Gateway result is: `, result);
     return result;
   }
 
@@ -75,32 +75,20 @@ export class VideoService implements OnModuleInit {
     video: CreateVideoRequestDto,
     user: UserAuthPayload,
   ): Promise<PublishedVideoRequestResponse> {
-    this.logger.info(`Request recieved:${JSON.stringify(video)}`);
-
-    // check if a channel exists with given userId or not...
     const channel$ = this.channelService.findChannelByUserId({
       userId: user.id,
     });
 
     const channel = await firstValueFrom(channel$);
-    this.logger.info(`Channel is`, channel);
     if (!channel || !channel.channel) {
       this.logger.info(`No channel was found`);
       throw new Error(`Channel not found`);
     }
 
-    const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper.get(
-      video.visibility,
-    );
+    const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper[video.visibility];
 
-    const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper.get(video.status);
+    const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper[video.status];
 
-    console.log(videoServicePublishStatus);
-    console.log(videoServiceVisibilityStatus);
-
-    if (videoServiceVisibilityStatus === undefined || videoServicePublishStatus === undefined) {
-      throw new Error(`Invalid Video visibility or publish status`);
-    }
     const response$ = this.videoService.save({
       ownerId: user.id,
       channelId: channel.channel.id,
@@ -111,22 +99,14 @@ export class VideoService implements OnModuleInit {
     return await firstValueFrom(response$);
   }
 
-  // TODO: Fix this type mismatch
   async findOneVideo(id: string): Promise<FoundVideoRequestResponse> {
-    this.logger.info(`Request recieved:${id}`);
-
     const response$ = this.videoService.findOne({ id });
     const response = await firstValueFrom(response$);
-    const videoPublishStatusResponse = TransportClientVideoPublishEnumMapper.get(
-      response.videoTransportPublishStatus,
-    );
-    const videoVisibilityStatusResponse = TransportClientVideoVisibilityEnumMapper.get(
-      response.videoTransportVisibilityStatus,
-    );
+    const videoPublishStatusResponse =
+      TransportClientVideoPublishEnumMapper[response.videoTransportPublishStatus];
+    const videoVisibilityStatusResponse =
+      TransportClientVideoVisibilityEnumMapper[response.videoTransportVisibilityStatus];
 
-    if (!videoPublishStatusResponse || !videoVisibilityStatusResponse) {
-      throw new Error(`Invalid Response from service: ${JSON.stringify(response)}`);
-    }
     return {
       id: response.id,
       title: response.title,
@@ -143,8 +123,6 @@ export class VideoService implements OnModuleInit {
     updateVideoDto: UpdateVideoRequestDto,
     videoId: string,
   ): Promise<UpdatedVideoRequestResponse> {
-    this.logger.info(`Request recieved:${JSON.stringify(updateVideoDto)}`);
-
     const response$ = this.videoService.update({
       id: videoId,
       categories: updateVideoDto.categories || [],
