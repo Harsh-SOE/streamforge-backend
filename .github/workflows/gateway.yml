@@ -1,4 +1,4 @@
-name: User Service CI/CD
+name: Gateway CI/CD
 
 on:
   push:
@@ -31,7 +31,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint all the changes made in the libraries and user service
+    name: Lint all the changes made in the libraries and gateway
 
     steps:
       - name: Checkout Code
@@ -49,8 +49,8 @@ jobs:
       - name: Run linter (Libraries)
         run: yarn lint:libs
 
-      - name: Run linter (api-gateway Service)
-        run: yarn lint:api-gateway
+      - name: Run linter (gateway)
+        run: yarn lint:gateway
 
   test-and-validate:
     runs-on: ubuntu-latest
