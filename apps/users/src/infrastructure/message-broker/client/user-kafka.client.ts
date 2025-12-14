@@ -1,8 +1,8 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, Kafka, Producer } from 'kafkajs';
 
 import { KafkaMessageBrokerHandler } from '@app/handlers/message-broker-handler';
-import { LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { AppConfigService } from '@users/infrastructure/config';
 
@@ -14,7 +14,7 @@ export class UserKafkaClient extends Kafka implements OnModuleInit, OnModuleDest
   public constructor(
     private readonly kafkaMessageHandler: KafkaMessageBrokerHandler,
     private readonly configService: AppConfigService,
-    private readonly loggerAdapter: LoggerPort,
+    @Inject(LOGGER_PORT) private readonly loggerAdapter: LoggerPort,
   ) {
     super({
       brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],

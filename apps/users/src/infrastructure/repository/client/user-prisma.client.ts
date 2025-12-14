@@ -1,7 +1,7 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
-import { LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { PrismaClient } from '@persistance/users';
 
@@ -9,7 +9,7 @@ import { PrismaClient } from '@persistance/users';
 export class UserPrismaClient extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   public constructor(
     private readonly prismaDatabaseHandler: PrismaDatabaseHandler,
-    private readonly logger: LoggerPort,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     super();
   }
