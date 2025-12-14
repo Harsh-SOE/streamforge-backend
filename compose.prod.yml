@@ -490,7 +490,7 @@ services:
       - message-broker
       - observer
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck/monitor"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 5
