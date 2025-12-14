@@ -6,17 +6,56 @@ on:
     paths:
       - "apps/users/**"
       - "libs/**"
+      - ".github/workflows/user-service.yml"
       - "package.json"
       - "yarn.lock"
+      - "jest.config.json"
+      - "eslint.config.js"
+      - "nest-cli.json"
+      - "tsconfig.json"
+      - "tsconfig.build.json"
   pull_request:
     branches: ["main"]
     paths:
       - "apps/users/**"
       - "libs/**"
+      - ".github/workflows/user-service.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "jest.config.json"
+      - "eslint.config.js"
+      - "nest-cli.json"
+      - "tsconfig.json"
+      - "tsconfig.build.json"
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint all the changes made in the libraries and user service
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install Dependencies (Root)
+        run: yarn install --frozen-lockfile
+
+      - name: Run linter (Libraries)
+        run: yarn lint:libs
+
+      - name: Run linter (Users Service)
+        run: yarn lint:user
+
   test-and-validate:
     runs-on: ubuntu-latest
+    needs: lint
+    name: Tests and validates all the changes before building and pushing the image
 
     steps:
       - name: Checkout Code
@@ -39,8 +78,6 @@ jobs:
 
       - name: Run Integration Tests (User Service)
         run: npx jest apps/users/test/integration
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/test"
 
   build-and-push:
     name: Build & Push to Docker Hub
