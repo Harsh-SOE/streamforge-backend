@@ -2,32 +2,49 @@ import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/do
 
 import {
   VideoDescription,
-  VideoOwnerId,
   VideoTitle,
   VideoFileIdentifier,
   VideoVisibilty,
   VideoPublish,
-  VideoId,
-  VideoChannelId,
   VideoCategories,
   VideoThumbnailFileIdentifier,
+  VideoId,
+  VideoChannelId,
+  VideoOwnerId,
 } from '../../value-objects';
 
-export interface VideoProps {
-  readonly id: VideoId;
-  readonly ownerId: VideoOwnerId;
-  readonly channelId: VideoChannelId;
-  title: VideoTitle;
-  videoThumbnailIdentifer: VideoThumbnailFileIdentifier;
-  categories: VideoCategories;
-  videoFileIdentifier: VideoFileIdentifier;
-  publishStatus: VideoPublish;
-  visibilityStatus: VideoVisibilty;
-  description?: VideoDescription;
-}
+import { CreateVideoEntityOptions, VideoProps, VideoSnapshot } from './options';
 
 export class VideoEntity {
-  public constructor(private videoProps: VideoProps) {}
+  private constructor(private videoProps: VideoProps) {}
+
+  public static create(data: CreateVideoEntityOptions) {
+    const {
+      id,
+      ownerId,
+      channelId,
+      categories,
+      publishStatus,
+      title,
+      videoFileIdentifier,
+      videoThumbnailIdentifier,
+      visibilityStatus,
+      description,
+    } = data;
+
+    return new VideoEntity({
+      id: VideoId.create(id),
+      channelId: VideoChannelId.create(channelId),
+      ownerId: VideoOwnerId.create(ownerId),
+      categories: VideoCategories.create(categories),
+      title: VideoTitle.create(title),
+      publishStatus: VideoPublish.create(publishStatus),
+      videoFileIdentifier: VideoFileIdentifier.create(videoFileIdentifier),
+      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(videoThumbnailIdentifier),
+      visibilityStatus: VideoVisibilty.create(visibilityStatus),
+      description: VideoDescription.create(description),
+    });
+  }
 
   public getId(): string {
     return this.videoProps.id.getValue();
@@ -69,7 +86,7 @@ export class VideoEntity {
     return this.videoProps.visibilityStatus.getValue();
   }
 
-  public getSnapShot() {
+  public getSnapShot(): VideoSnapshot {
     return {
       id: this.videoProps.id.getValue(),
       ownerId: this.videoProps.ownerId.getValue(),

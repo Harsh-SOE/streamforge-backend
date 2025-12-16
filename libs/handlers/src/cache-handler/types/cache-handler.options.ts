@@ -4,6 +4,14 @@ interface BaseRedisOptions {
   port?: number;
 }
 
+interface RedisConnectionOperationOptions extends BaseRedisOptions {
+  operationType: 'CONNECT_OR_DISCONNECT';
+  keys?: never;
+  key?: never;
+  values?: never;
+  value?: never;
+}
+
 interface RedisReadOperationOptions extends BaseRedisOptions {
   operationType: 'READ';
   keys?: never;
@@ -59,6 +67,7 @@ type ErrorHandlingOptions<TFallbackResult> =
   | ThrowErrorsOptions;
 
 export type RedisOptions<TFallbackResult = never> = (
+  | RedisConnectionOperationOptions
   | RedisReadOperationOptions
   | RedisReadManyOperationOptions
   | RedisWriteOperationOptions

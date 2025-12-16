@@ -1,9 +1,9 @@
-export interface TranscodeVideoMessage {
+export interface TranscodeVideoEventDto {
   fileIdentifier: string;
   videoId: string;
 }
 
-export interface VideoTranscodedUpdateIdentifierDto {
+export interface VideoTranscodedEventDto {
   videoId: string;
   newIdentifier: string;
 }

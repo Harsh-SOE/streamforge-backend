@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { GetPreSignedUrlResponse } from '@app/contracts/videos';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { GetPreSignedUrlResponse } from '@app/contracts/videos';
 
 import { STORAGE_PORT, VideosStoragePort } from '@videos/application/ports';
 
@@ -23,6 +23,7 @@ export class GeneratePreSignedUrlThumbnailHandler implements ICommandHandler<
   }: GeneratePreSignedUrlThumbnailCommand): Promise<GetPreSignedUrlResponse> {
     let fileName = generatePreSignedUrlDto.fileName;
     const userId = generatePreSignedUrlDto.userId;
+
     if (!fileName) {
       fileName = `video-${new Date().toISOString()}-${userId}.mp4`;
     }
@@ -34,8 +35,6 @@ export class GeneratePreSignedUrlThumbnailHandler implements ICommandHandler<
       presignedUrl: presignedUrlResponse.presignedUrl,
       fileIdentifier: presignedUrlResponse.fileIdentifier,
     };
-
-    this.loggerPort.info(`Response is: `, response);
 
     return response;
   }

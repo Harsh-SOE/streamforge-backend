@@ -1,26 +1,23 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { v4 as uuidv4 } from 'uuid';
 
 import { VideoPublishedResponse } from '@app/contracts/videos';
 
 import {
-  VIDEOS_COMMAND_RESPOSITORY_PORT,
-  VideoCommandRepositoryPort,
-} from '@videos/application/ports';
-import { VideoAggregate } from '@videos/domain/aggregates';
-import {
   TransportToDomainPublishEnumMapper,
   TransportToDomainVisibilityEnumMapper,
 } from '@videos/infrastructure/anti-corruption';
+import { VideoAggregate } from '@videos/domain/aggregates';
+import { VIDEOS_RESPOSITORY_PORT, VideoRepositoryPort } from '@videos/application/ports';
 
 import { PublishVideoCommand } from './publish-video.command';
 
 @CommandHandler(PublishVideoCommand)
 export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand> {
   constructor(
-    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
-    private readonly video: VideoCommandRepositoryPort,
+    @Inject(VIDEOS_RESPOSITORY_PORT)
+    private readonly video: VideoRepositoryPort,
     private readonly eventPublisher: EventPublisher,
   ) {}
 
@@ -38,17 +35,11 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
     } = videoCreateDto;
     const id = uuidv4();
 
-    const videoDomainPublishStatus = TransportToDomainPublishEnumMapper.get(
-      videoTransportPublishStatus,
-    );
+    const videoDomainPublishStatus =
+      TransportToDomainPublishEnumMapper[videoTransportPublishStatus];
 
-    const videoDomainVisibilityStatus = TransportToDomainVisibilityEnumMapper.get(
-      videoTransportVisibilityStatus,
-    );
-
-    if (!videoDomainPublishStatus || !videoDomainVisibilityStatus) {
-      throw Error();
-    }
+    const videoDomainVisibilityStatus =
+      TransportToDomainVisibilityEnumMapper[videoTransportVisibilityStatus];
 
     const videoAggregate = this.eventPublisher.mergeObjectContext(
       VideoAggregate.create({
@@ -65,10 +56,10 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
       }),
     );
 
-    await this.video.save(videoAggregate);
+    await this.video.saveVideo(videoAggregate);
 
-    videoAggregate.commit(); // publishes message to transcoder service...
+    videoAggregate.commit();
 
-    return { response: 'created', videoId: id };
+    return { response: 'video created successfully', videoId: id };
   }
 }

@@ -102,8 +102,9 @@ export class PrismaDatabaseHandler {
       filter,
     } = options || {};
     try {
-      return await databaseOperation();
+      return await this.operationPolicy.execute(async () => await databaseOperation());
     } catch (error) {
+      this.logger.error(`error`, error as Error);
       if (suppressErrors && fallbackValue) {
         return fallbackValue;
       }

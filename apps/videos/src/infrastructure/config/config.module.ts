@@ -1,5 +1,5 @@
-import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { Global, Module } from '@nestjs/common';
 import * as joi from 'joi';
 import { join } from 'path';
 

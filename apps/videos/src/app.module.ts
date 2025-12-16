@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 
-import { AppConfigModule } from '@videos/infrastructure/config';
-import { MeasureModule } from '@videos/infrastructure/measure';
-import { GrpcModule } from '@videos/presentation/grpc';
-
-import { AppHealthModule } from './infrastructure/health';
-import { MessageModule } from './presentation/message-broker';
+import { RpcModule } from './presentation/rpc';
+import { MessagesModule } from './presentation/messages';
+import { FrameworkModule } from './infrastructure/framework/framework.module';
 
 @Module({
-  imports: [GrpcModule, MessageModule, MeasureModule, AppConfigModule, AppHealthModule],
+  imports: [ScheduleModule.forRoot(), RpcModule, MessagesModule, FrameworkModule],
 })
 export class AppModule {}

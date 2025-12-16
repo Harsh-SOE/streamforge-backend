@@ -39,10 +39,6 @@ message VideoCreateDto {
   VideoTransportVisibilityStatus videoTransportVisibilityStatus = 9;
 }
 
-message VideoFindDto {
-  string id = 1;
-}
-
 message VideoUpdateDto {
   string id = 1;
   optional string title = 2;
@@ -52,16 +48,6 @@ message VideoUpdateDto {
   optional string description = 6;
   optional VideoTransportPublishStatus videoTransportPublishStatus = 7;
   optional VideoTransportVisibilityStatus videoTransportVisibilityStatus = 8;
-}
-
-message VideoFindQueryDto {
-  optional int32 limit = 1;
-  optional int32 skip = 2;
-  repeated string categories = 3;
-  optional string channelId = 4;
-  optional string userId = 5;
-  optional string search = 6;
-  optional VideoTransportSortOption videoTransportSortOption = 7;  
 }
 
 message GetPreSignedUrlResponse {
@@ -75,23 +61,6 @@ message VideoPublishedResponse {
   string videoId = 2;
 }
 
-message VideoFoundResponse {
-  string id = 1;
-  string ownerId = 2;
-  string channelId = 3;
-  string title = 4;
-  string videoFileIdentifier = 5;
-  string videoThumbnailIdentifier = 6;
-  repeated string categories = 7;
-  optional string description = 8;
-  VideoTransportPublishStatus videoTransportPublishStatus = 9;
-  VideoTransportVisibilityStatus videoTransportVisibilityStatus = 10;
-}
-
-message VideosFoundResponse {
-  repeated VideoFindDto videoFindDto = 1;
-}
-
 message VideoUpdatedResponse {
   string response = 1;
   string videoId = 2;
@@ -99,27 +68,9 @@ message VideoUpdatedResponse {
 
 message Empty {}
 
-message VideosHealthCheckRequest {
-  string service = 1;
-}
-
-message VideosHealthCheckResponse {
-  enum ServingStatus {
-    UNKNOWN = 0;
-    SERVING = 1;
-    NOT_SERVING = 2;
-    SERVICE_UNKNOWN = 3;
-  }
-  ServingStatus status = 1;
-}
-
 service VideoService {
   rpc getPresignedUrlForVideoFileUpload(GetPresignedUrlDto) returns (GetPreSignedUrlResponse) {}
   rpc getPresignedUrlForThumbnailFileUpload(GetPresignedUrlDto) returns (GetPreSignedUrlResponse) {}
   rpc save(VideoCreateDto) returns (VideoPublishedResponse) {}
-  rpc findOne(VideoFindDto) returns (VideoFoundResponse) {}
-  rpc findAll(Empty) returns (VideosFoundResponse) {}
   rpc update(VideoUpdateDto) returns (VideoUpdatedResponse) {}
-  rpc findVideos(VideoFindQueryDto) returns (VideosFoundResponse) {}
-  rpc Check(VideosHealthCheckRequest) returns (VideosHealthCheckResponse) {}
 }

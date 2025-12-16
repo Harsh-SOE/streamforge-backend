@@ -85,8 +85,8 @@ export class RedisCacheHandler implements OnModuleInit {
     this.operationPolicy = wrap(this.retryPolicy, this.circuitBreakerPolicy);
   }
 
-  async filter<TResult, TFallback = never>(
-    cacheOperation: () => Promise<TResult>,
+  async execute<TResult, TFallback = never>(
+    cacheOperation: () => Promise<TResult> | TResult,
     options: RedisOptions<TFallback>,
   ): Promise<TResult | NonNullable<TFallback>> {
     const {

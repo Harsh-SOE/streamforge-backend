@@ -1,25 +1,30 @@
 import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-import { VIDEOS_COMMAND_RESPOSITORY_PORT } from '@videos/application/ports';
-import { VideoCommandRepositoryAdapter } from '@videos/infrastructure/repository/adapters';
+import { VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
+import { VideoNotFoundException } from '@videos/application/exceptions';
+import { VideoRepositoryAdapter } from '@videos/infrastructure/repository/adapters';
 
 import { VideoTranscodedEvent } from './video-transcoded.event';
 
 @EventsHandler(VideoTranscodedEvent)
 export class VideoTranscodedEventHandler implements IEventHandler<VideoTranscodedEvent> {
   constructor(
-    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
-    private videoRepoAdapter: VideoCommandRepositoryAdapter,
+    @Inject(VIDEOS_RESPOSITORY_PORT)
+    private readonly videoRepoAdapter: VideoRepositoryAdapter,
   ) {}
 
   public async handle({ videoTranscodedMessage }: VideoTranscodedEvent) {
     const { videoId, newIdentifier } = videoTranscodedMessage;
 
-    const videoAggregate = await this.videoRepoAdapter.findOneById(videoId);
+    const videoAggregate = await this.videoRepoAdapter.findOneVideoById(videoId);
+
+    if (!videoAggregate) {
+      throw new VideoNotFoundException({ message: `Video with id:${videoId} was not found` });
+    }
 
     videoAggregate.updateVideo({ newFileIdentifier: newIdentifier });
 
-    await this.videoRepoAdapter.updateOneById(videoId, videoAggregate);
+    await this.videoRepoAdapter.updateOneVideoById(videoId, videoAggregate);
   }
 }

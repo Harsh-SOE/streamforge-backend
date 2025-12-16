@@ -1,47 +1,24 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
-import { VideoCreatedEvent } from '@videos/application/events';
-import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
-import {
-  VideoDescription,
-  VideoOwnerId,
-  VideoPublish,
-  VideoTitle,
-  VideoFileIdentifier,
-  VideoVisibilty,
-  VideoChannelId,
-  VideoThumbnailFileIdentifier,
-  VideoId,
-  VideoCategories,
-} from '@videos/domain/value-objects';
+import { VideoCreatedEvent } from '@videos/application/events/video-created-event';
 
-import { TranscodeVideoMessage } from '@app/contracts/video-transcoder';
+import { TranscodeVideoEventDto } from '@app/contracts/video-transcoder';
 
-import { VideoEntity } from '../../entities/video/video.entity';
+import { VideoAggregateOptions } from './options';
+import { VideoEntity } from '../../entities';
 
 export class VideoAggregate extends AggregateRoot {
-  public constructor(public videoEntity: VideoEntity) {
+  private constructor(public videoEntity: VideoEntity) {
     super();
   }
 
-  public static create(aggregateProps: {
-    id: string;
-    ownerId: string;
-    channelId: string;
-    title: string;
-    videoThumbnailIdentifier: string;
-    videoFileIdentifier: string;
-    categories: string[];
-    description?: string;
-    publishStatus: VideoDomainPublishStatus;
-    visibilityStatus: VideoDomainVisibiltyStatus;
-  }) {
+  public static create(aggregateProps: VideoAggregateOptions) {
     const {
       id,
       ownerId,
       channelId,
       title,
-      videoThumbnailIdentifier: videoThumbnailFileIdentifier,
+      videoThumbnailIdentifier,
       videoFileIdentifier,
       categories,
       publishStatus,
@@ -49,27 +26,28 @@ export class VideoAggregate extends AggregateRoot {
       description,
     } = aggregateProps;
 
-    const videoEntity = new VideoEntity({
-      id: VideoId.create(id),
-      ownerId: VideoOwnerId.create(ownerId),
-      channelId: VideoChannelId.create(channelId),
-      title: VideoTitle.create(title),
-      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(videoThumbnailFileIdentifier),
-      videoFileIdentifier: VideoFileIdentifier.create(videoFileIdentifier),
-      categories: VideoCategories.create(categories),
-      publishStatus: VideoPublish.create(publishStatus),
-      visibilityStatus: VideoVisibilty.create(visibilityStatus),
-      description: VideoDescription.create(description),
+    const videoEntity = VideoEntity.create({
+      id,
+      ownerId,
+      channelId,
+      title,
+      videoThumbnailIdentifier: videoThumbnailIdentifier,
+      videoFileIdentifier,
+      categories,
+      publishStatus,
+      visibilityStatus,
+      description,
     });
 
     const videoAggregate = new VideoAggregate(videoEntity);
 
-    const transcodeVideoMessage: TranscodeVideoMessage = {
-      fileIdentifier: videoAggregate.getVideo().getVideoFileIdentifier(),
-      videoId: videoAggregate.getVideo().getId(),
+    const transcodeVideoMessage: TranscodeVideoEventDto = {
+      fileIdentifier: videoAggregate.getVideoEntity().getVideoFileIdentifier(),
+      videoId: videoAggregate.getVideoEntity().getId(),
     };
 
     videoAggregate.apply(new VideoCreatedEvent(transcodeVideoMessage));
+
     return videoAggregate;
   }
 
@@ -77,11 +55,11 @@ export class VideoAggregate extends AggregateRoot {
     return this.videoEntity.getSnapShot();
   }
 
-  public getVideo() {
+  public getVideoEntity() {
     return this.videoEntity;
   }
 
-  public updateVideo(updateProps: {
+  public updateVideo(data: {
     newTitle?: string;
     newFileIdentifier?: string;
     newVisibilityStatus?: string;
@@ -90,17 +68,66 @@ export class VideoAggregate extends AggregateRoot {
     newPublishStatus?: string;
     newThumbnailIdentifier?: string;
   }) {
-    if (updateProps.newTitle) this.videoEntity.updateTitle(updateProps.newTitle);
-    if (updateProps.newDescription) this.videoEntity.updateDescription(updateProps.newDescription);
-    if (updateProps.newPublishStatus)
-      this.videoEntity.updatePublishStatus(updateProps.newPublishStatus);
-    if (updateProps.newVisibilityStatus)
-      this.videoEntity.updateVisibiltyStatus(updateProps.newVisibilityStatus);
-    if (updateProps.newFileIdentifier)
-      this.videoEntity.updateVideoFileIdentifier(updateProps.newFileIdentifier);
-    if (updateProps.newThumbnailIdentifier)
-      this.videoEntity.updateVideoFileIdentifier(updateProps.newThumbnailIdentifier);
-    if (updateProps.newCategories) this.videoEntity.updateCategories(updateProps.newCategories);
-    return this.videoEntity;
+    const videoEntity = this.getVideoEntity();
+
+    if (data.newTitle) videoEntity.updateTitle(data.newTitle);
+    if (data.newDescription) videoEntity.updateDescription(data.newDescription);
+    if (data.newPublishStatus) videoEntity.updatePublishStatus(data.newPublishStatus);
+    if (data.newVisibilityStatus) videoEntity.updateVisibiltyStatus(data.newVisibilityStatus);
+    if (data.newFileIdentifier) videoEntity.updateVideoFileIdentifier(data.newFileIdentifier);
+    if (data.newThumbnailIdentifier)
+      videoEntity.updateVideoFileIdentifier(data.newThumbnailIdentifier);
+    if (data.newCategories) videoEntity.updateCategories(data.newCategories);
+
+    return videoEntity;
+  }
+
+  public updateVideoVisibilityStatus(newStatus: string) {
+    this.getVideoEntity().updateVisibiltyStatus(newStatus);
+  }
+
+  public updateVideoPublishStatus(newStatus: string) {
+    this.getVideoEntity().updatePublishStatus(newStatus);
+  }
+
+  public updateVideoDetails(data: {
+    newTitle?: string;
+    newDescription?: string;
+    newThumbnailIdentifier?: string;
+    categories?: Array<string>;
+  }) {
+    const videoEntity = this.getVideoEntity();
+
+    if (data.newTitle) videoEntity.updateTitle(data.newTitle);
+    if (data.newDescription) videoEntity.updateDescription(data.newDescription);
+    if (data.newThumbnailIdentifier)
+      videoEntity.updateVideoFileIdentifier(data.newThumbnailIdentifier);
+    if (data.categories) videoEntity.updateCategories(data.categories);
+
+    return videoEntity;
+  }
+
+  public addCategoriesToVideo(addedCategories: Array<string>) {
+    const videoEntity = this.getVideoEntity();
+
+    const currentCategories = videoEntity.getCategories();
+
+    currentCategories.push(
+      ...addedCategories.filter((category) => !currentCategories.includes(category)),
+    );
+
+    videoEntity.updateCategories(currentCategories);
+  }
+
+  public removeCategoriesFromVideo(removedCategories: Array<string>) {
+    const videoEntity = this.getVideoEntity();
+
+    const currentCategories = videoEntity.getCategories();
+
+    const catergories = currentCategories.filter(
+      (category) => !removedCategories.includes(category),
+    );
+
+    videoEntity.updateCategories(catergories);
   }
 }

@@ -1,4 +1,4 @@
-import { ApplicationException } from './application.exception';
+import { ApplicationException } from './video-application.exception';
 
 export interface VideoNotFoundExceptionOptions {
   message?: string;

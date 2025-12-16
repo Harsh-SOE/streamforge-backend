@@ -1,44 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import Redis from 'ioredis';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { RedisCacheHandler } from '@app/handlers/cache-handler';
 
 import { VideoCachePort } from '@videos/application/ports';
-import { AppConfigService } from '@videos/infrastructure/config';
+import { VideoRedisClient } from '@videos/infrastructure/clients/redis';
 
 @Injectable()
-export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, VideoCachePort {
-  private readonly SHARDS: number = 64;
-  private redisClient: Redis;
-
+export class RedisCacheAdapter implements VideoCachePort {
   public constructor(
-    private readonly configService: AppConfigService,
     private readonly redisCacheHandler: RedisCacheHandler,
+    private readonly videosRedisClient: VideoRedisClient,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-  ) {
-    this.redisClient = new Redis({
-      host: configService.CACHE_HOST,
-      port: configService.CACHE_PORT,
-    });
-
-    this.redisClient.on('connecting', () => {
-      this.logger.info('⏳ Redis cache connecting...');
-    });
-    this.redisClient.on('connect', () => {
-      this.logger.info('✅ Redis cache connected');
-    });
-    this.redisClient.on('error', (error) => {
-      this.logger.error('❌ An Error occured in redis cache', error);
-    });
-  }
-
-  public async onModuleInit() {}
-
-  public onModuleDestroy() {
-    this.redisClient.disconnect();
-  }
+  ) {}
 
   cacheVideo(videoId: string, userId: string): Promise<number> {
     throw new Error('Method not implemented.');

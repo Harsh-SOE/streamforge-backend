@@ -1,70 +1,31 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import Redis from 'ioredis';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import {
   VideosBufferPort,
-  VIDEOS_COMMAND_RESPOSITORY_PORT,
-  VideoCommandRepositoryPort,
+  VIDEOS_RESPOSITORY_PORT,
+  VideoRepositoryPort,
 } from '@videos/application/ports';
 import { VideoAggregate } from '@videos/domain/aggregates';
 import { AppConfigService } from '@videos/infrastructure/config';
+import { VideoRedisClient } from '@videos/infrastructure/clients/redis';
 
 import { VideoMessage, StreamData } from '../types';
 
 @Injectable()
-export class RedisStreamBufferAdapter implements OnModuleInit, VideosBufferPort {
-  private redisClient: Redis;
-
+export class RedisStreamBufferAdapter implements VideosBufferPort {
   public constructor(
     private readonly configService: AppConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    @Inject(VIDEOS_COMMAND_RESPOSITORY_PORT)
-    private readonly videosRepository: VideoCommandRepositoryPort,
-  ) {
-    this.redisClient = new Redis({
-      host: configService.CACHE_HOST,
-      port: configService.CACHE_PORT,
-    });
-
-    this.redisClient.on('connecting', () => {
-      this.logger.info(`⏳ Redis buffer connecting...`);
-    });
-
-    this.redisClient.on('connect', () => {
-      this.logger.info('✅ Redis buffer connected');
-    });
-
-    this.redisClient.on('error', (error) => {
-      this.logger.info('❌ Error buffer occured while connecting to redis', error);
-    });
-  }
-
-  public async onModuleInit() {
-    try {
-      await this.redisClient.xgroup(
-        'CREATE',
-        this.configService.BUFFER_KEY,
-        this.configService.BUFFER_GROUPNAME,
-        '0',
-        'MKSTREAM',
-      );
-    } catch (error) {
-      const err = error as Error;
-      if (err.message.includes('BUSYGROUP')) {
-        console.warn(
-          `Stream with key: ${this.configService.BUFFER_KEY} already exists, skipping creation`,
-        );
-      } else {
-        throw err;
-      }
-    }
-  }
+    @Inject(VIDEOS_RESPOSITORY_PORT)
+    private readonly videosRepository: VideoRepositoryPort,
+    private readonly redisBufferClient: VideoRedisClient,
+  ) {}
 
   public async bufferVideo(video: VideoAggregate): Promise<void> {
-    await this.redisClient.xadd(
+    await this.redisBufferClient.redisClient.xadd(
       this.configService.BUFFER_KEY,
       '*',
       'like-message',
@@ -74,7 +35,9 @@ export class RedisStreamBufferAdapter implements OnModuleInit, VideosBufferPort 
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   public async processVideosBatch() {
-    const streamData = (await this.redisClient.xreadgroup(
+    this.logger.alert(`Processing videos in batches now`);
+
+    const streamData = (await this.redisBufferClient.redisClient.xreadgroup(
       'GROUP',
       this.configService.BUFFER_GROUPNAME,
       this.configService.BUFFER_REDIS_CONSUMER_ID,
@@ -126,9 +89,9 @@ export class RedisStreamBufferAdapter implements OnModuleInit, VideosBufferPort 
       });
     });
 
-    const processedMessagesNumber = await this.videosRepository.saveMany(models);
+    const processedMessagesNumber = await this.videosRepository.saveManyVideos(models);
 
-    await this.redisClient.xack(
+    await this.redisBufferClient.redisClient.xack(
       this.configService.BUFFER_KEY,
       this.configService.BUFFER_GROUPNAME,
       ...ids,

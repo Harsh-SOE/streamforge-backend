@@ -4,7 +4,7 @@ interface BaseDatabaseOptions {
 }
 
 interface DatabaseConnectionOperationOptions extends BaseDatabaseOptions {
-  operationType: 'CONNECT';
+  operationType: 'CONNECT_OR_DISCONNECT';
   filter?: never;
   entry?: never;
 }

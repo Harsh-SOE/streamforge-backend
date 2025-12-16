@@ -5,7 +5,7 @@ interface BaseMessageBrokerOptions {
 }
 
 interface MessageBrokerConnectionOperationOptions extends BaseMessageBrokerOptions {
-  operationType: 'CONNECT';
+  operationType: 'CONNECT_OR_DISCONNECT';
   topic?: never;
   message?: never;
 }
