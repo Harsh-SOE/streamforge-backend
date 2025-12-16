@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { VideoTranscodedUpdateIdentifierDto } from '@app/contracts/video-transcoder';
+import { VideoTranscodedEventDto } from '@app/contracts/video-transcoder';
 import { MESSAGE_BROKER, MessageBrokerPort } from '@app/ports/message-broker';
 
 import {
@@ -33,7 +33,7 @@ export class TranscodeVideoHandler implements ICommandHandler<TranscodeVideoComm
 
     const newFileIdentifier = this.storagePortAdapter.getTranscodedFileIdentifier(videoId);
 
-    const messagePayload: VideoTranscodedUpdateIdentifierDto = {
+    const messagePayload: VideoTranscodedEventDto = {
       videoId,
       newIdentifier: newFileIdentifier,
     };

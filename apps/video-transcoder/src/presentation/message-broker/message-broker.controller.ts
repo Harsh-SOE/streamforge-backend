@@ -3,7 +3,7 @@ import { EventPattern, Payload } from '@nestjs/microservices';
 
 import { VIDEO_TRANSCODER_EVENTS } from '@app/clients';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { TranscodeVideoMessage } from '@app/contracts/video-transcoder';
+import { TranscodeVideoEventDto } from '@app/contracts/video-transcoder';
 
 import { VideoTranscoderService } from './message-broker.service';
 
@@ -15,7 +15,7 @@ export class VideoTranscoderController {
   ) {}
 
   @EventPattern(VIDEO_TRANSCODER_EVENTS.VIDEO_TRANSCODE_EVENT)
-  transcodeVideo(@Payload() transcodeVideoMessage: TranscodeVideoMessage) {
+  transcodeVideo(@Payload() transcodeVideoMessage: TranscodeVideoEventDto) {
     this.logger.info(`Transcoding video with info: `, transcodeVideoMessage);
 
     return this.videoTranscoderService.transcodeVideo(transcodeVideoMessage);

@@ -71,7 +71,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
     const operation = async () =>
       await this.redisClient.commentVideo(userCommentSetKey, userCommentCounterKey, userId);
 
-    return await this.redisHandler.filter(operation, {
+    return await this.redisHandler.execute(operation, {
       key: userCommentCounterKey,
       value: '+1',
       operationType: 'WRITE',
@@ -87,7 +87,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
 
     const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisHandler.filter(getValuesOperations, {
+    const values = await this.redisHandler.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,

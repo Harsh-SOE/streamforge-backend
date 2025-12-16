@@ -1,5 +1,5 @@
-import { TranscodeVideoMessage } from '@app/contracts/video-transcoder';
+import { TranscodeVideoEventDto } from '@app/contracts/video-transcoder';
 
 export class TranscodeVideoCommand {
-  public constructor(public readonly transcodeVideoDto: TranscodeVideoMessage) {}
+  public constructor(public readonly transcodeVideoDto: TranscodeVideoEventDto) {}
 }
