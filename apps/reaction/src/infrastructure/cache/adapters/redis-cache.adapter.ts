@@ -101,7 +101,7 @@ export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, Reactio
 
     const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisCacheHandler.filter(getValuesOperations, {
+    const values = await this.redisCacheHandler.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,
@@ -123,7 +123,7 @@ export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, Reactio
 
     const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisCacheHandler.filter(getValuesOperations, {
+    const values = await this.redisCacheHandler.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,

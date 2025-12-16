@@ -54,7 +54,7 @@ export class WinstonLoggerAdapter implements LoggerPort {
       format.colorize(),
       format.printf((info: MyConsoleLogCompleteInfo) => {
         const { level, message, timestamp, stack, ...meta } = info;
-        return `[${timestamp}] [${level}] ${message} ${JSON.stringify(meta || {})} ${stack || ''}`;
+        return `[${timestamp}] [${level}] ${message} ${meta ? JSON.stringify(meta) : ''} ${stack || ''}`;
       }),
     );
     return new transports.Console({

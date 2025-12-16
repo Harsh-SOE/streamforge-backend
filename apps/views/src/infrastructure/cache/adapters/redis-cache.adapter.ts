@@ -72,7 +72,7 @@ export class ViewCacheAdapter implements OnModuleInit, OnModuleDestroy, ViewCach
 
     const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
 
-    const values = await this.redisfilter.filter(getValuesOperations, {
+    const values = await this.redisfilter.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
       logErrors: true,
