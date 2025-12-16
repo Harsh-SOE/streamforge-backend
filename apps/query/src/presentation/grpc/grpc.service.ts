@@ -2,12 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 
 import {
+  GetChannelFromIdDto,
+  GetChannelResponse,
   GetUserProfileFromAuthIdDto,
   GetUserProfileFromIdDto,
   GetUserProfileResponse,
 } from '@app/contracts/query';
 
-import { GetUserProfileFromAuthIdQuery, GetUserProfileFromIdQuery } from '@query/queries';
+import {
+  GetUserProfileFromAuthIdQuery,
+  GetUserProfileFromIdQuery,
+  GetChannelFromIdQuery,
+} from '@query/queries';
 
 @Injectable()
 export class GrpcService {
@@ -22,6 +28,12 @@ export class GrpcService {
   getUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto: GetUserProfileFromAuthIdDto) {
     return this.queryBus.execute<GetUserProfileFromAuthIdQuery, GetUserProfileResponse>(
       new GetUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto),
+    );
+  }
+
+  getChannelFromId(getChannelFromIdDto: GetChannelFromIdDto) {
+    return this.queryBus.execute<GetChannelFromIdQuery, GetChannelResponse>(
+      new GetChannelFromIdQuery(getChannelFromIdDto),
     );
   }
 }

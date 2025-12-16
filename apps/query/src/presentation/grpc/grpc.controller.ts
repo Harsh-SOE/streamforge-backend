@@ -2,6 +2,8 @@ import { Controller, UseFilters } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 import {
+  GetChannelFromIdDto,
+  GetChannelResponse,
   GetUserProfileFromAuthIdDto,
   GetUserProfileFromIdDto,
   GetUserProfileResponse,
@@ -28,5 +30,11 @@ export class GrpcController implements QueryServiceController {
     getUserProfileFromAuthIdDto: GetUserProfileFromAuthIdDto,
   ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse {
     return this.grpcService.getUserProfileFromAuthIdQuery(getUserProfileFromAuthIdDto);
+  }
+
+  getChannelFromId(
+    getChannelFromIdDto: GetChannelFromIdDto,
+  ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse {
+    return this.grpcService.getChannelFromId(getChannelFromIdDto);
   }
 }

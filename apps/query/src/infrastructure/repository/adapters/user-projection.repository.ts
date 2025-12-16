@@ -1,10 +1,10 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 
-import { UserQueryACL } from '@query/infrastructure/anti-corruption';
-import { UserQueryRepositoryPort } from '@query/application/ports';
 import { UserQueryModel } from '@query/queries/models';
+import { UserQueryRepositoryPort } from '@query/application/ports';
+import { UserQueryACL } from '@query/infrastructure/anti-corruption';
 
 import { ProjectedUserQueryModel } from '../models';
 

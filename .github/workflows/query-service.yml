@@ -1,0 +1,106 @@
+name: Query Service CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/query/**"
+      - "libs/**"
+      - ".github/workflows/query-service.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "jest.config.json"
+      - "eslint.config.js"
+      - "nest-cli.json"
+      - "tsconfig.json"
+      - "tsconfig.build.json"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "apps/query/**"
+      - "libs/**"
+      - ".github/workflows/query-service.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "jest.config.json"
+      - "eslint.config.js"
+      - "nest-cli.json"
+      - "tsconfig.json"
+      - "tsconfig.build.json"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint all the changes made in the libraries and Query service
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install Dependencies (Root)
+        run: yarn install --frozen-lockfile
+
+      - name: Run linter (Libraries)
+        run: yarn lint:libs
+
+      - name: Run linter (Query Service)
+        run: yarn lint:query
+
+  test-and-validate:
+    runs-on: ubuntu-latest
+    needs: lint
+    name: Tests and validates all the changes before building and pushing the image
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install Dependencies (Root)
+        run: yarn install --frozen-lockfile
+
+      - name: Run Unit Tests (Query Service)
+        run: npx jest apps/query/test/unit
+
+      - name: Run Integration Tests (Query Service)
+        run: npx jest apps/query/test/integration
+
+  build-and-push:
+    name: Build & Push to Docker Hub
+    needs: test-and-validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/query/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/query-service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/query-service:${{ github.sha }}

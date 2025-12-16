@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class ProjectedChannelCard extends Document {
+export class ProjectedChannelQueryModel extends Document {
   @Prop({ type: String, unique: true, required: true, index: true })
   channelId: string;
 
@@ -25,4 +25,4 @@ export class ProjectedChannelCard extends Document {
   videoCount: number;
 }
 
-export const ProjectedChannelCardSchema = SchemaFactory.createForClass(ProjectedChannelCard);
+export const ProjectedChannelQuerySchema = SchemaFactory.createForClass(ProjectedChannelQueryModel);

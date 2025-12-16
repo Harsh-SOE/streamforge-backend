@@ -5,10 +5,10 @@
 // source: query.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
-export const protobufPackage = 'Query';
+export const protobufPackage = "Query";
 
 export interface GetUserProfileFromIdDto {
   userId: string;
@@ -31,19 +31,39 @@ export interface UserProfileMessage {
   dob?: string | undefined;
 }
 
+export interface GetChannelFromIdDto {
+  channelId: string;
+}
+
+export interface GetChannelFromUserIdDto {
+  userId: string;
+}
+
+export interface ChannelMessage {
+  channelId: string;
+  userId: string;
+  coverImage: string;
+  bio: string;
+}
+
 export interface GetUserProfileResponse {
   found: boolean;
   user?: UserProfileMessage | undefined;
 }
 
-export const QUERY_PACKAGE_NAME = 'Query';
+export interface GetChannelResponse {
+  found: boolean;
+  channel?: ChannelMessage | undefined;
+}
+
+export const QUERY_PACKAGE_NAME = "Query";
 
 export interface QueryServiceClient {
   getUserProfileFromId(request: GetUserProfileFromIdDto): Observable<GetUserProfileResponse>;
 
-  getUserProfileFromAuthId(
-    request: GetUserProfileFromAuthIdDto,
-  ): Observable<GetUserProfileResponse>;
+  getUserProfileFromAuthId(request: GetUserProfileFromAuthIdDto): Observable<GetUserProfileResponse>;
+
+  getChannelFromId(request: GetChannelFromIdDto): Observable<GetChannelResponse>;
 }
 
 export interface QueryServiceController {
@@ -54,21 +74,25 @@ export interface QueryServiceController {
   getUserProfileFromAuthId(
     request: GetUserProfileFromAuthIdDto,
   ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse;
+
+  getChannelFromId(
+    request: GetChannelFromIdDto,
+  ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse;
 }
 
 export function QueryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['getUserProfileFromId', 'getUserProfileFromAuthId'];
+    const grpcMethods: string[] = ["getUserProfileFromId", "getUserProfileFromAuthId", "getChannelFromId"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod('QueryService', method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("QueryService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod('QueryService', method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("QueryService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const QUERY_SERVICE_NAME = 'QueryService';
+export const QUERY_SERVICE_NAME = "QueryService";

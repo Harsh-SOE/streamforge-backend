@@ -23,12 +23,33 @@ message UserProfileMessage {
   optional string dob = 10;
 }
 
+message GetChannelFromIdDto {
+  string channelId = 1;
+}
+
+message GetChannelFromUserIdDto {
+  string userId = 1;
+}
+
+message ChannelMessage {
+  string channelId = 1;
+  string userId = 2;
+  string coverImage = 3;
+  string bio = 4;
+}
+
 message GetUserProfileResponse {
   bool found = 1;
   optional UserProfileMessage user = 2;
 }
 
+message GetChannelResponse {
+  bool found = 1;
+  optional ChannelMessage channel = 2;
+}
+
 service QueryService {
   rpc GetUserProfileFromId(GetUserProfileFromIdDto) returns (GetUserProfileResponse) {}
   rpc GetUserProfileFromAuthId(GetUserProfileFromAuthIdDto) returns (GetUserProfileResponse) {}
+  rpc GetChannelFromId(GetChannelFromIdDto) returns (GetChannelResponse) {}
 }
