@@ -7,6 +7,7 @@ import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
 import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { QUERY_SERVICE_NAME, QueryServiceClient } from '@app/contracts/query';
 
 import { ClientTransportVideoVisibilityEnumMapper } from './mappers/video-visibility-status';
 import { ClientTransportVideoPublishEnumMapper } from './mappers/video-publish-status';
@@ -21,16 +22,19 @@ import {
 export class VideoService implements OnModuleInit {
   private videoService: VideoServiceClient;
   private channelService: ChannelServiceClient;
+  private queryService: QueryServiceClient;
 
   constructor(
     @Inject(SERVICES.VIDEO) private readonly videoClient: ClientGrpc,
     @Inject(SERVICES.CHANNEL) private readonly channelClient: ClientGrpc,
+    @Inject(SERVICES.QUERY) private readonly queryClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
   onModuleInit() {
     this.videoService = this.videoClient.getService(VIDEO_SERVICE_NAME);
     this.channelService = this.channelClient.getService(CHANNEL_SERVICE_NAME);
+    this.queryService = this.queryClient.getService(QUERY_SERVICE_NAME);
   }
 
   async getPresignedUploadVideoUrl(
@@ -63,15 +67,15 @@ export class VideoService implements OnModuleInit {
     video: CreateVideoRequestDto,
     user: UserAuthPayload,
   ): Promise<PublishedVideoRequestResponse> {
-    const channel$ = this.channelService.findChannelByUserId({
-      userId: user.id,
-    });
+    // const channel$ = this.queryService.({
+    //   userId: user.id,
+    // });
 
-    const channel = await firstValueFrom(channel$);
-    if (!channel || !channel.channel) {
-      this.logger.info(`No channel was found`);
-      throw new Error(`Channel not found`);
-    }
+    // const channel = await firstValueFrom(channel$);
+    // if (!channel || !channel.channel) {
+    //   this.logger.info(`No channel was found`);
+    //   throw new Error(`Channel not found`);
+    // }
 
     const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper[video.visibility];
 
@@ -79,7 +83,7 @@ export class VideoService implements OnModuleInit {
 
     const response$ = this.videoService.save({
       ownerId: user.id,
-      channelId: channel.channel.id,
+      channelId: '',
       videoTransportPublishStatus: videoServicePublishStatus,
       videoTransportVisibilityStatus: videoServiceVisibilityStatus,
       ...video,
