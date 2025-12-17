@@ -4,6 +4,7 @@ export interface ChannelCreatedEventDto {
   handle: string;
   coverImage: string;
   bio: string;
+  avatar: string;
 }
 
 // channel updated, deleted...

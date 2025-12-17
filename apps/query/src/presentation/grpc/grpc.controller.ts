@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 import {
   GetChannelFromIdDto,
+  GetChannelFromUserIdDto,
   GetChannelResponse,
   GetUserProfileFromAuthIdDto,
   GetUserProfileFromIdDto,
@@ -36,5 +37,11 @@ export class GrpcController implements QueryServiceController {
     getChannelFromIdDto: GetChannelFromIdDto,
   ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse {
     return this.grpcService.getChannelFromId(getChannelFromIdDto);
+  }
+
+  getChannelFromUserId(
+    getChannelFromUserIdDto: GetChannelFromUserIdDto,
+  ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse {
+    return this.grpcService.getChannelFromUserId(getChannelFromUserIdDto);
   }
 }

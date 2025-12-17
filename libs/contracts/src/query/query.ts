@@ -64,6 +64,8 @@ export interface QueryServiceClient {
   getUserProfileFromAuthId(request: GetUserProfileFromAuthIdDto): Observable<GetUserProfileResponse>;
 
   getChannelFromId(request: GetChannelFromIdDto): Observable<GetChannelResponse>;
+
+  getChannelFromUserId(request: GetChannelFromUserIdDto): Observable<GetChannelResponse>;
 }
 
 export interface QueryServiceController {
@@ -78,11 +80,20 @@ export interface QueryServiceController {
   getChannelFromId(
     request: GetChannelFromIdDto,
   ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse;
+
+  getChannelFromUserId(
+    request: GetChannelFromUserIdDto,
+  ): Promise<GetChannelResponse> | Observable<GetChannelResponse> | GetChannelResponse;
 }
 
 export function QueryServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getUserProfileFromId", "getUserProfileFromAuthId", "getChannelFromId"];
+    const grpcMethods: string[] = [
+      "getUserProfileFromId",
+      "getUserProfileFromAuthId",
+      "getChannelFromId",
+      "getChannelFromUserId",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("QueryService", method)(constructor.prototype[method], method, descriptor);

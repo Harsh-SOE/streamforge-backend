@@ -3,6 +3,7 @@ import { QueryBus } from '@nestjs/cqrs';
 
 import {
   GetChannelFromIdDto,
+  GetChannelFromUserIdDto,
   GetChannelResponse,
   GetUserProfileFromAuthIdDto,
   GetUserProfileFromIdDto,
@@ -13,6 +14,7 @@ import {
   GetUserProfileFromAuthIdQuery,
   GetUserProfileFromIdQuery,
   GetChannelFromIdQuery,
+  GetChannelFromUserIdQuery,
 } from '@query/queries';
 
 @Injectable()
@@ -34,6 +36,12 @@ export class GrpcService {
   getChannelFromId(getChannelFromIdDto: GetChannelFromIdDto) {
     return this.queryBus.execute<GetChannelFromIdQuery, GetChannelResponse>(
       new GetChannelFromIdQuery(getChannelFromIdDto),
+    );
+  }
+
+  getChannelFromUserId(getChannelFromUserIdDto: GetChannelFromUserIdDto) {
+    return this.queryBus.execute<GetChannelFromUserIdQuery, GetChannelResponse>(
+      new GetChannelFromUserIdQuery(getChannelFromUserIdDto),
     );
   }
 }

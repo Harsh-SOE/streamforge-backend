@@ -1,11 +1,11 @@
+import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-
-import { USER_QUERY_REPOSITORY_PORT, UserQueryRepositoryPort } from '@query/application/ports';
 
 import { GetUserProfileResponse } from '@app/contracts/query';
 
+import { USER_QUERY_REPOSITORY_PORT, UserQueryRepositoryPort } from '@query/application/ports';
+
 import { GetUserProfileFromIdQuery } from './get-user-profile-id.query';
-import { Inject } from '@nestjs/common';
 
 @QueryHandler(GetUserProfileFromIdQuery)
 export class GetUserProfileFromIdHandler implements IQueryHandler<GetUserProfileFromIdQuery> {

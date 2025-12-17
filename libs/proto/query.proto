@@ -52,4 +52,5 @@ service QueryService {
   rpc GetUserProfileFromId(GetUserProfileFromIdDto) returns (GetUserProfileResponse) {}
   rpc GetUserProfileFromAuthId(GetUserProfileFromAuthIdDto) returns (GetUserProfileResponse) {}
   rpc GetChannelFromId(GetChannelFromIdDto) returns (GetChannelResponse) {}
+  rpc GetChannelFromUserId(GetChannelFromUserIdDto) returns (GetChannelResponse) {}
 }

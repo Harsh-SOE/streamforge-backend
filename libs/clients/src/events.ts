@@ -12,6 +12,10 @@ export enum VIDEO_EVENTS {
   VIDEO_PUBLISHED_EVENT = 'video.published',
 }
 
+export enum CHANNEL_EVENTS {
+  CHANNEEL_CREATED = 'channel.created',
+}
+
 export enum VIDEO_TRANSCODER_EVENTS {
   VIDEO_TRANSCODE_EVENT = 'video.transcode',
   VIDEO_TRANSCODED_EVENT = 'video.transcoded',
