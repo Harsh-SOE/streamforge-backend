@@ -1,5 +1,5 @@
-import { ChannelAggregate } from 'apps/channel/src/domain/aggregates';
+import { ChannelCreatedEventDto } from '@app/contracts/channel';
 
 export class ChannelCreatedEvent {
-  public constructor(public readonly channelCreatedEventDto: ChannelAggregate) {}
+  public constructor(public readonly channelCreatedEventDto: ChannelCreatedEventDto) {}
 }

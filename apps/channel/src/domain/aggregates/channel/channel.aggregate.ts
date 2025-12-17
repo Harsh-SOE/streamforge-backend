@@ -2,11 +2,7 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 
 import { ChannelEntity } from '@channel/domain/entities';
-import {
-  ChannelCreatedEvent,
-  ChannelMonitizedEvent,
-  ChannelUpdatedEvent,
-} from '@channel/application/events';
+import { ChannelMonitizedEvent, ChannelUpdatedEvent } from '@channel/application/events';
 
 import { ChannelAggregateCreateOptions, ChannelUpdateOptions } from './options';
 
@@ -40,7 +36,6 @@ export class ChannelAggregate extends AggregateRoot {
     });
     const channelAggregate = new ChannelAggregate(channelEntity);
 
-    channelAggregate.apply(new ChannelCreatedEvent(channelAggregate));
     return channelAggregate;
   }
 

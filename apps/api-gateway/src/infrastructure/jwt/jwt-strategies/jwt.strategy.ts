@@ -38,7 +38,7 @@ export class JwtStrategy
   }
 
   async validate(payload: UserJwtAuthPayload): Promise<UserJwtAuthPayload> {
-    const { id, email, authId, handle } = payload;
+    const { id, email, authId, handle, avatar } = payload;
 
     const response$ = this.queryService.getUserProfileFromId({ userId: id });
     const user = await firstValueFrom(response$);
@@ -52,6 +52,7 @@ export class JwtStrategy
       authId,
       email,
       handle,
+      avatar,
     };
 
     return finalUser;

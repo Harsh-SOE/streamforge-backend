@@ -17,6 +17,8 @@ export interface GetPresignedUrlDto {
 
 export interface ChannelCreateDto {
   userId: string;
+  handle: string;
+  avatar: string;
   channelBio?: string | undefined;
   channelCoverImage?: string | undefined;
   isChannelMonitized?: boolean | undefined;

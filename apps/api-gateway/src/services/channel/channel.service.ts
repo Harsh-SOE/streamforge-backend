@@ -2,11 +2,10 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
 import { SERVICES } from '@app/clients/constant';
 import { UserAuthPayload } from '@app/contracts/auth';
-
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
 
 import {
   CreateChannelRequestDto,
@@ -50,6 +49,8 @@ export class ChannelService implements OnModuleInit {
     this.logger.info(`Request recieved:${JSON.stringify(channel)}`);
     const response$ = this.channelService.createChannel({
       userId: user.id,
+      avatar: user.avatar,
+      handle: user.handle,
       ...channel,
     });
     return await firstValueFrom(response$);

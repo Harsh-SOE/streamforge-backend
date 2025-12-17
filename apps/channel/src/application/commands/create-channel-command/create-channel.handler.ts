@@ -4,6 +4,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { ChannelCreatedResponse } from '@app/contracts/channel';
 
 import { ChannelAggregate } from '@channel/domain/aggregates';
+import { ChannelCreatedEvent } from '@channel/application/events';
 import { CHANNEL_REPOSITORY, ChannelCommandRepositoryPort } from '@channel/application/ports';
 
 import { CreateChannelCommand } from './create-channel.command';
@@ -20,13 +21,24 @@ export class CreateChannelCommandHandler implements ICommandHandler<CreateChanne
     const { userId, channelBio, isChannelMonitized, channelCoverImage, isChannelVerified } =
       channelCreateDto;
 
-    const channelAggregate = this.eventPublisher.mergeObjectContext(
-      ChannelAggregate.create({
-        userId,
-        isChannelVerified,
-        isChannelMonitized,
-        bio: channelBio,
-        coverImage: channelCoverImage,
+    const channelAggregate = ChannelAggregate.create({
+      userId,
+      isChannelVerified,
+      isChannelMonitized,
+      bio: channelBio,
+      coverImage: channelCoverImage,
+    });
+
+    this.eventPublisher.mergeObjectContext(channelAggregate);
+
+    channelAggregate.apply(
+      new ChannelCreatedEvent({
+        id: channelAggregate.getChannelSnapshot().id,
+        bio: channelAggregate.getChannelSnapshot().bio,
+        coverImage: channelAggregate.getChannelSnapshot().coverImage,
+        userId: channelAggregate.getChannelSnapshot().userId,
+        avatar: channelCreateDto.avatar,
+        handle: channelCreateDto.handle,
       }),
     );
 

@@ -55,6 +55,7 @@ export class UsersService implements OnModuleInit {
       email: saveUserProfileDto.email,
       authId: saveUserProfileDto.authId,
       handle: saveUserProfileDto.handle,
+      avatar: saveUserProfileDto.avatar,
     };
     // TODO Correct the auth flow
     return { token: this.jwtService.sign(userPayload) };

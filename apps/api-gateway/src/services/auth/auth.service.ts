@@ -57,6 +57,7 @@ export class AuthService implements OnModuleInit {
       authId: foundUser.userAuthId,
       email: foundUser.email,
       handle: foundUser.handle,
+      avatar: foundUser.avatar,
     };
 
     const token = this.jwtService.sign(signedUpUserPayload);

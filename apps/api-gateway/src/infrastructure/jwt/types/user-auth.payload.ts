@@ -3,4 +3,5 @@ export interface UserJwtAuthPayload {
   email: string;
   authId: string;
   handle: string;
+  avatar: string;
 }

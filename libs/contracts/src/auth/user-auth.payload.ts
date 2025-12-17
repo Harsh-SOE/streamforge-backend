@@ -3,4 +3,5 @@ export interface UserAuthPayload {
   email: string;
   authId: string;
   handle: string;
+  avatar: string;
 }
