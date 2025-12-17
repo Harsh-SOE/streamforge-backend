@@ -3,7 +3,8 @@ import { EventPattern, Payload } from '@nestjs/microservices';
 
 import { VideoUploadedEventDto } from '@app/contracts/videos';
 import { UserProfileCreatedEventDto } from '@app/contracts/users';
-import { USERS_EVENTS, VIDEO_EVENTS } from '@app/clients';
+import { ChannelCreatedEventDto } from '@app/contracts/channel';
+import { CHANNEL_EVENTS, USERS_EVENTS, VIDEO_EVENTS } from '@app/clients';
 
 import { KafkaService } from './kafka.service';
 
@@ -19,5 +20,10 @@ export class KafkaController {
   @EventPattern(USERS_EVENTS.USER_ONBOARDED_EVENT)
   public onUserProfileCreatedProjectionEvent(@Payload() message: UserProfileCreatedEventDto) {
     this.kafkaService.onUserProfileCreatedProjectionEvent(message);
+  }
+
+  @EventPattern(CHANNEL_EVENTS.CHANNEEL_CREATED)
+  public onChannelCreatedProjectionEvent(@Payload() message: ChannelCreatedEventDto) {
+    this.kafkaService.onChannelCreatedProjectionEvent(message);
   }
 }

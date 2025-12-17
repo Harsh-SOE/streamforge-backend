@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LOGGER_PORT } from '@app/ports/logger';
 
 import {
+  ProjectedChannelModel,
+  ProjectedChannelSchema,
   ProjectedUserQueryModel,
   ProjectedVideoCardModel,
   ProjectedVideoCardSchema,
@@ -21,9 +23,13 @@ import {
   UserCardRepository,
   VideoCardRepository,
 } from '@projection/infrastructure/repository/adapters';
-import { UserCardACL, VideoCardACL } from '@projection/infrastructure/anti-corruption';
+import {
+  ChannelCardACL,
+  UserCardACL,
+  VideoCardACL,
+} from '@projection/infrastructure/anti-corruption';
 import { AppConfigModule, AppConfigService } from '@projection/infrastructure/config';
-import { EventHandler } from '@projection/application/events';
+import { EventHandler } from '@projection/application/events/handlers';
 
 import { KafkaService } from './kafka.service';
 import { KafkaController } from './kafka.controller';
@@ -47,12 +53,17 @@ import { KafkaController } from './kafka.controller';
         name: ProjectedUserQueryModel.name,
         schema: ProjectUserQuerySchema,
       },
+      {
+        name: ProjectedChannelModel.name,
+        schema: ProjectedChannelSchema,
+      },
     ]),
   ],
   providers: [
     AppConfigService,
     KafkaService,
     VideoCardACL,
+    ChannelCardACL,
     UserCardACL,
     ...EventHandler,
     {
