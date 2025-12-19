@@ -52,7 +52,7 @@ describe('UserRepositoryAdapter', () => {
 
       expect(userACLMock.toPersistance).toHaveBeenCalledWith(UserAggregateStub);
       expect(databaseHandlerMock.execute).toHaveBeenCalled();
-      expect(prismaClientMock.user.create).toHaveBeenCalledWith({
+      expect(prismaClientMock.client.user.create).toHaveBeenCalledWith({
         data: persistedUserStub,
       });
       expect(result).toBe(UserAggregateStub);
@@ -66,7 +66,7 @@ describe('UserRepositoryAdapter', () => {
       expect(userACLMock.toPersistance).toHaveBeenCalledTimes(2);
       expect(userACLMock.toPersistance).toHaveBeenCalledWith(UserAggregateStub);
       expect(databaseHandlerMock.execute).toHaveBeenCalledTimes(1);
-      expect(prismaClientMock.user.createMany).toHaveBeenCalledWith({
+      expect(prismaClientMock.client.user.createMany).toHaveBeenCalledWith({
         data: [persistedUserStub],
       });
       expect(result).toBe(1);
