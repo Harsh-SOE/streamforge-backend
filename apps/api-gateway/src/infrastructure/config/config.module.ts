@@ -18,8 +18,8 @@ import { AppConfigService } from './config.service';
         JWT_ACCESS_TOKEN_SECRET: joi.string().required(),
         JWT_ACCESS_TOKEN_EXPIRY: joi.string().required(),
 
-        CACHE_HOST: joi.string().required(),
-        CACHE_PORT: joi.number().required(),
+        REDIS_HOST: joi.string().required(),
+        REDIS_PORT: joi.number().required(),
 
         AUTH0_CLIENT_ID: joi.string().required(),
         AUTH0_CLIENT_SECRET: joi.string().required(),

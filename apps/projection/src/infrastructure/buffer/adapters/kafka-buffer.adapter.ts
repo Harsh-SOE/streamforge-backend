@@ -1,6 +1,8 @@
-import { EachBatchPayload } from 'kafkajs';
+import { EachBatchPayload, KafkaMessage } from 'kafkajs';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
+import { KafkaClient } from '@app/clients/kafka';
+import { PROJECTION_EVENTS } from '@app/clients';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { VideoUploadedEventDto } from '@app/contracts/videos';
 import { UserProfileCreatedEventDto } from '@app/contracts/users';
@@ -14,10 +16,6 @@ import {
   VideoProjectionRepositoryPort,
 } from '@projection/application/ports';
 import { AppConfigService } from '@projection/infrastructure/config';
-import { KafkaClient } from '@app/clients/kafka';
-
-export const USER_PROFILE_PROJECTION_BUFFER_TOPIC = 'user.profile-created-projection-topic';
-export const VIDEO_PROJECTION_BUFFER_TOPIC = 'video.projection-event';
 
 @Injectable()
 export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
@@ -33,20 +31,15 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
   ) {}
 
   public async onModuleInit() {
-    await this.kafkaClient.consumer.subscribe({
-      topic: USER_PROFILE_PROJECTION_BUFFER_TOPIC,
-      fromBeginning: false,
-    });
-
     const userSubscribeOperation = async () =>
       await this.kafkaClient.consumer.subscribe({
-        topic: USER_PROFILE_PROJECTION_BUFFER_TOPIC,
+        topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
         fromBeginning: false,
       });
 
     const videosubscribeOperation = async () =>
       await this.kafkaClient.consumer.subscribe({
-        topic: VIDEO_PROJECTION_BUFFER_TOPIC,
+        topic: PROJECTION_EVENTS.SAVE_VIDEO_EVENT,
         fromBeginning: false,
       });
 
@@ -57,53 +50,61 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
     await this.kafkaHandler.handle(videosubscribeOperation, {
       operationType: 'CONNECT_OR_DISCONNECT',
     });
+
+    await this.kafkaClient.consumer.run({
+      eachBatch: async (payload: EachBatchPayload) => {
+        const { batch } = payload;
+
+        const topic = batch.topic;
+        switch (topic) {
+          case PROJECTION_EVENTS.SAVE_USER_EVENT.toString():
+            await this.handleUserBatch(batch.messages);
+            break;
+
+          case PROJECTION_EVENTS.SAVE_VIDEO_EVENT.toString():
+            await this.handleVideoBatch(batch.messages);
+            break;
+
+          default:
+            this.logger.alert(`Received batch for unknown topic: ${batch.topic}`);
+        }
+      },
+    });
   }
 
   async bufferUser(event: UserProfileCreatedEventDto): Promise<void> {
     await this.kafkaClient.producer.send({
-      topic: USER_PROFILE_PROJECTION_BUFFER_TOPIC,
+      topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
       messages: [{ value: JSON.stringify(event) }],
     });
   }
 
-  async processUser(): Promise<number | void> {
-    await this.kafkaClient.consumer.run({
-      eachBatch: async (payload: EachBatchPayload) => {
-        const { batch } = payload;
-        const messages = batch.messages
-          .filter((message) => message.value)
-          .map((message) => JSON.parse(message.value!.toString()) as UserProfileCreatedEventDto);
+  private async handleUserBatch(messages: KafkaMessage[]) {
+    const userEvents = messages
+      .filter((msg) => msg.value)
+      .map((msg) => JSON.parse(msg.value!.toString()) as UserProfileCreatedEventDto);
 
-        this.logger.info(`Saving ${messages.length} profiles in projection database`);
+    if (userEvents.length > 0) {
+      this.logger.info(`Saving ${userEvents.length} users to projection`);
+      await this.userProjectionRepo.saveManyUser(userEvents);
+    }
+  }
 
-        await this.userProjectionRepo.saveManyUser(messages);
+  private async handleVideoBatch(messages: KafkaMessage[]) {
+    const videoEvents = messages
+      .filter((msg) => msg.value)
+      .map((msg) => JSON.parse(msg.value!.toString()) as VideoUploadedEventDto);
 
-        this.logger.info(`${messages.length} profiles in projection database`);
-      },
-    });
+    if (videoEvents.length > 0) {
+      this.logger.info(`Saving ${videoEvents.length} videos to projection`);
+      await this.videoProjectionRepo.saveManyVideos(videoEvents);
+    }
   }
 
   async bufferVideo(event: VideoUploadedEventDto): Promise<void> {
     await this.kafkaClient.producer.send({
-      topic: VIDEO_PROJECTION_BUFFER_TOPIC,
+      topic: PROJECTION_EVENTS.SAVE_VIDEO_EVENT,
       messages: [{ value: JSON.stringify(event) }],
-    });
-  }
-
-  async processVideos(): Promise<number | void> {
-    await this.kafkaClient.consumer.run({
-      eachBatch: async (payload: EachBatchPayload) => {
-        const { batch } = payload;
-        const messages = batch.messages
-          .filter((message) => message.value)
-          .map((message) => JSON.parse(message.value!.toString()) as VideoUploadedEventDto);
-
-        this.logger.info(`Saving ${messages.length} profiles in projection database`);
-
-        await this.videoProjectionRepo.saveManyVideos(messages);
-
-        this.logger.info(`${messages.length} profiles in projection database`);
-      },
     });
   }
 }

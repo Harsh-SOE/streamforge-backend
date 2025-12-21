@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { join } from 'path';
 import * as grpc from '@grpc/grpc-js';
 import { Injectable } from '@nestjs/common';
@@ -34,6 +35,18 @@ export class AppConfigService {
 
   get KAFKA_CLIENT_ID() {
     return this.configService.getOrThrow<string>('KAFKA_CLIENT_ID');
+  }
+
+  get KAFKA_CA_CERT() {
+    return fs.readFileSync('secrets/ca.pem', 'utf-8');
+  }
+
+  get ACCESS_KEY() {
+    return fs.readFileSync('secrets/access.key', 'utf-8');
+  }
+
+  get ACCESS_CERT() {
+    return fs.readFileSync('secrets/access.cert', 'utf-8');
   }
 
   get KAFKA_CONSUMER_ID() {

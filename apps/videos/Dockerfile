@@ -64,6 +64,7 @@ COPY --from=builder /@streamforge/dist/apps/videos/proto ./proto
 COPY --from=builder /@streamforge/apps/videos/prisma ./prisma
 COPY --from=builder /@streamforge/dist/apps/videos/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/videos/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
+COPY --from=builder /@streamforge/dist/apps/videos/secrets ./secrets
 
 USER root
 

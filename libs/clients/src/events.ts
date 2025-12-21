@@ -20,3 +20,16 @@ export enum VIDEO_TRANSCODER_EVENTS {
   VIDEO_TRANSCODE_EVENT = 'video.transcode',
   VIDEO_TRANSCODED_EVENT = 'video.transcoded',
 }
+
+export enum PROJECTION_EVENTS {
+  SAVE_USER_EVENT = 'user.save-user-event',
+  SAVE_VIDEO_EVENT = 'video.save-video-event',
+}
+
+export enum BUFFER_EVENTS {
+  COMMENT_BUFFER_EVENT = 'comments.buffer',
+  REACTION_BUFFER_EVENT = 'reactions.buffer',
+  USER_BUFFER_EVENT = 'users.buffer',
+  VIDEOS_BUFFER_EVENT = 'videos.buffer',
+  VIEWS_BUFFER_EVENT = 'views.buffer',
+}

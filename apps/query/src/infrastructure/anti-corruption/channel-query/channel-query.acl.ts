@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { ChannelQueryModel } from '@query/queries/models';
-import { ProjectedChannelQueryModel } from '@query/infrastructure/repository/models';
+import { ChannelProjectionModel } from '@query/infrastructure/repository/models';
 
 @Injectable()
 export class ChannelQueryACL {
   public channelProjectionSchemaToQueryModel(
-    projectionModel: ProjectedChannelQueryModel,
+    projectionModel: ChannelProjectionModel,
   ): ChannelQueryModel {
     return {
       channelId: projectionModel.channelId,

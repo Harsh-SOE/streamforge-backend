@@ -20,6 +20,9 @@ import {
 } from '@app/clients/redis';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 import {
+  KAFKA_ACCESS_CERT,
+  KAFKA_ACCESS_KEY,
+  KAFKA_CA_CERT,
   KAFKA_CLIENT,
   KAFKA_CONSUMER,
   KAFKA_HOST,
@@ -70,6 +73,21 @@ import { PrismaClient as ViewPrismaClient } from '@persistance/views';
       provide: KAFKA_CLIENT,
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
+    },
+    {
+      provide: KAFKA_CA_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_KEY,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
     },
     {
       provide: KAFKA_CONSUMER,
@@ -128,6 +146,9 @@ import { PrismaClient as ViewPrismaClient } from '@persistance/views';
     KAFKA_CONSUMER,
     KAFKA_HOST,
     KAFKA_PORT,
+    KAFKA_ACCESS_CERT,
+    KAFKA_ACCESS_KEY,
+    KAFKA_CA_CERT,
     REDIS_HOST,
     REDIS_PORT,
     REDIS_STREAM_GROUPNAME,

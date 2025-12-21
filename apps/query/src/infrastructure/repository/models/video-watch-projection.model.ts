@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class ProjectedVideoCardModel extends Document {
+export class VideoWatchProjectionModel extends Document {
   @Prop({ required: true, unique: true, index: true })
   videoId: string;
 
@@ -57,4 +57,4 @@ export class ProjectedVideoCardModel extends Document {
   updatedAt: Date;
 }
 
-export const ProjectedVideoCardSchema = SchemaFactory.createForClass(ProjectedVideoCardModel);
+export const VideoWatchProjectionSchema = SchemaFactory.createForClass(VideoWatchProjectionModel);

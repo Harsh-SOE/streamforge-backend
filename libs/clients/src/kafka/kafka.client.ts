@@ -6,6 +6,9 @@ import { KafkaMessageBusHandler } from '@app/handlers/message-bus-handler';
 
 export const KAFKA_HOST = Symbol('KAFKA_HOST');
 export const KAFKA_PORT = Symbol('KAFKA_PORT');
+export const KAFKA_ACCESS_KEY = Symbol('KAFKA_ACCESS_KEY');
+export const KAFKA_ACCESS_CERT = Symbol('KAFKA_ACCESS_CERT');
+export const KAFKA_CA_CERT = Symbol('KAFKA_CA_CERT');
 export const KAFKA_CLIENT = Symbol('KAFKA_CLIENT');
 export const KAFKA_CONSUMER = Symbol('KAFKA_CONSUMER');
 
@@ -16,8 +19,11 @@ export class KafkaClient implements OnModuleInit, OnModuleDestroy {
   public consumer: Consumer;
 
   public constructor(
-    @Inject(KAFKA_HOST) private readonly kafkaHost: string,
-    @Inject(KAFKA_PORT) private readonly kafkaPort: number,
+    @Inject(KAFKA_HOST) private readonly host: string,
+    @Inject(KAFKA_PORT) private readonly port: number,
+    @Inject(KAFKA_CA_CERT) private readonly ca: string,
+    @Inject(KAFKA_ACCESS_CERT) private readonly accessCert: string,
+    @Inject(KAFKA_ACCESS_KEY) private readonly accessKey: string,
     @Inject(KAFKA_CLIENT) private readonly kafkaClient: string,
     @Inject(KAFKA_CONSUMER) private readonly kafkaConsumer: string,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
@@ -29,8 +35,14 @@ export class KafkaClient implements OnModuleInit, OnModuleDestroy {
   public async onModuleInit() {
     const kafkaInitializationOperation = () => {
       this.client = new Kafka({
-        brokers: [`${this.kafkaHost}:${this.kafkaPort}`],
+        brokers: [`${this.host}:${this.port}`],
         clientId: this.kafkaClient,
+        ssl: {
+          rejectUnauthorized: true,
+          ca: [this.ca],
+          key: this.accessKey,
+          cert: this.accessCert,
+        },
       });
 
       this.producer = this.client.producer({ allowAutoTopicCreation: true });

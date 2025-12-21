@@ -2,6 +2,9 @@ import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import {
+  KAFKA_ACCESS_CERT,
+  KAFKA_ACCESS_KEY,
+  KAFKA_CA_CERT,
   KAFKA_CLIENT,
   KAFKA_CONSUMER,
   KAFKA_HOST,
@@ -22,8 +25,8 @@ import {
   ChannelProjectionModel,
   ChannelProjectionSchema,
   UserProjectionModel,
-  VideoProjectionModel,
-  VideoProjectionSchema,
+  VideoWatchProjectionModel,
+  VideoWatchProjectionSchema,
   UserProjectionSchema,
 } from '../repository/models';
 import {
@@ -49,8 +52,8 @@ import { ChannelProjectionACL, UserProjectionACL, VideoProjectionACL } from '../
     }),
     MongooseModule.forFeature([
       {
-        name: VideoProjectionModel.name,
-        schema: VideoProjectionSchema,
+        name: VideoWatchProjectionModel.name,
+        schema: VideoWatchProjectionSchema,
       },
       {
         name: UserProjectionModel.name,
@@ -100,6 +103,21 @@ import { ChannelProjectionACL, UserProjectionACL, VideoProjectionACL } from '../
       useFactory: (configService: AppConfigService) => configService.KAFKA_PORT,
     },
     {
+      provide: KAFKA_CA_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_KEY,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+    },
+    {
       provide: KAFKA_CLIENT,
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
@@ -122,6 +140,13 @@ import { ChannelProjectionACL, UserProjectionACL, VideoProjectionACL } from '../
     USER_PROJECTION_REPOSITORY_PORT,
     PROJECTION_BUFFER_PORT,
     CHANNEL_PROJECTION_REPOSITORY_PORT,
+    KAFKA_CLIENT,
+    KAFKA_CONSUMER,
+    KAFKA_HOST,
+    KAFKA_PORT,
+    KAFKA_CA_CERT,
+    KAFKA_ACCESS_CERT,
+    KAFKA_ACCESS_KEY,
   ],
 })
 export class FrameworkModule {}

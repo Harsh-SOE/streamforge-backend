@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class ProjectedUserQueryModel extends Document {
+export class UserProjectionModel extends Document {
   @Prop({ required: true, index: true })
   userId: string;
 
@@ -34,4 +34,4 @@ export class ProjectedUserQueryModel extends Document {
   dob?: string;
 }
 
-export const ProjectUserQuerySchema = SchemaFactory.createForClass(ProjectedUserQueryModel);
+export const UserProjectionSchema = SchemaFactory.createForClass(UserProjectionModel);

@@ -9,6 +9,18 @@ module.exports = (options, webpack) => {
       new CopyWebpackPlugin({
         patterns: [
           {
+            from: path.join(__dirname, 'secrets/access.cert'),
+            to: path.join(__dirname, '../../dist/apps/reaction/secrets'),
+          },
+          {
+            from: path.join(__dirname, 'secrets/access.key'),
+            to: path.join(__dirname, '../../dist/apps/reaction/secrets'),
+          },
+          {
+            from: path.join(__dirname, 'secrets/ca.pem'),
+            to: path.join(__dirname, '../../dist/apps/reaction/secrets'),
+          },
+          {
             from: path.join('libs/proto/reaction.proto'),
             to: path.join(__dirname, '../../dist/apps/reaction/proto'),
           },

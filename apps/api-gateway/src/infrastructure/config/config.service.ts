@@ -80,12 +80,12 @@ export class AppConfigService {
     return this.configService.getOrThrow<string>('COMMENT_SERVICE_HOST');
   }
 
-  get CACHE_PORT() {
-    return this.configService.getOrThrow<number>('CACHE_PORT');
+  get REDIS_HOST() {
+    return this.configService.getOrThrow<string>('REDIS_HOST');
   }
 
-  get CACHE_HOST() {
-    return this.configService.getOrThrow<string>('CACHE_HOST');
+  get REDIS_PORT() {
+    return this.configService.getOrThrow<number>('REDIS_PORT');
   }
 
   get WATCH_SERVICE_HOST() {

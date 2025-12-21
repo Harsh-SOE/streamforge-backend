@@ -65,6 +65,7 @@ COPY --from=builder /@streamforge/dist/apps/comments/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/comments/proto ./proto
 COPY --from=builder /@streamforge/dist/apps/comments/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
 COPY --from=builder /@streamforge/dist/apps/comments/scripts/comments.lua ./scripts/comments.lua
+COPY --from=builder /@streamforge/dist/apps/comments/secrets ./secrets
 
 USER root
 

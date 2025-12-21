@@ -6,13 +6,13 @@ import { ChannelQueryModel } from '@query/queries/models';
 import { ChannelQueryRepositoryPort } from '@query/application/ports';
 import { ChannelQueryACL } from '@query/infrastructure/anti-corruption';
 
-import { ProjectedChannelQueryModel } from '../models';
+import { ChannelProjectionModel } from '../models';
 
 @Injectable()
-export class ChannelQueryRepository implements ChannelQueryRepositoryPort {
+export class ChannelProjectionRepository implements ChannelQueryRepositoryPort {
   constructor(
-    @InjectModel(ProjectedChannelQueryModel.name)
-    private readonly projectedChannelModel: Model<ProjectedChannelQueryModel>,
+    @InjectModel(ChannelProjectionModel.name)
+    private readonly projectedChannelModel: Model<ChannelProjectionModel>,
     private readonly channelQueryACL: ChannelQueryACL,
   ) {}
 

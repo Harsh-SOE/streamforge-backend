@@ -55,6 +55,7 @@ COPY --from=base /@streamforge/package.json /@streamforge/yarn.lock ./
 COPY --from=production-dependencies /@streamforge/node_modules ./node_modules
 COPY --from=builder /@streamforge/dist/apps/video-transcoder/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/video-transcoder/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
+COPY --from=builder /@streamforge/dist/apps/video-transcoder/secrets ./secrets
 
 USER root
 

@@ -1,6 +1,7 @@
-import { KafkaOptions, Transport } from '@nestjs/microservices';
+import fs from 'fs';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { KafkaOptions, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class AppConfigService {
@@ -16,6 +17,18 @@ export class AppConfigService {
 
   get KAFKA_PORT() {
     return this.configService.getOrThrow<number>('KAFKA_PORT');
+  }
+
+  get KAFKA_CA_CERT() {
+    return fs.readFileSync('secrets/ca.pem', 'utf-8');
+  }
+
+  get ACCESS_KEY() {
+    return fs.readFileSync('secrets/access.key', 'utf-8');
+  }
+
+  get ACCESS_CERT() {
+    return fs.readFileSync('secrets/access.cert', 'utf-8');
   }
 
   get KAFKA_CLIENT_ID() {
@@ -59,17 +72,28 @@ export class AppConfigService {
   }
 
   get KAFKA_OPTIONS(): KafkaOptions {
-    return {
+    const options: KafkaOptions = {
       transport: Transport.KAFKA,
       options: {
         client: {
           clientId: this.KAFKA_CLIENT_ID,
           brokers: [`${this.KAFKA_HOST}:${this.KAFKA_PORT}`],
+          ssl: {
+            rejectUnauthorized: true,
+            ca: [this.KAFKA_CA_CERT],
+            key: this.ACCESS_KEY,
+            cert: this.ACCESS_CERT,
+          },
+          retry: {
+            initialRetryTime: 300,
+            retries: 10,
+          },
         },
         consumer: {
           groupId: this.KAFKA_CONSUMER_ID,
         },
       },
     };
+    return options;
   }
 }

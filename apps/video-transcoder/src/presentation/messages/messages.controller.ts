@@ -5,7 +5,7 @@ import { VIDEO_TRANSCODER_EVENTS } from '@app/clients';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { TranscodeVideoEventDto } from '@app/contracts/video-transcoder';
 
-import { VideoTranscoderService } from './message-broker.service';
+import { VideoTranscoderService } from './messages.service';
 
 @Controller()
 export class VideoTranscoderController {

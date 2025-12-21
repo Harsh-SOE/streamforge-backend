@@ -14,8 +14,14 @@ export class AppHealthService implements OnModuleInit, OnModuleDestroy {
     private readonly configService: AppConfigService,
   ) {
     this.kafka = new Kafka({
-      brokers: [`${configService.MESSAGE_BROKER_HOST}:${configService.MESSAGE_BROKER_PORT}`],
-      clientId: this.configService.VIDEO_TRANSCODER_CLIENT_ID,
+      brokers: [`${configService.KAFKA_HOST}:${configService.KAFKA_PORT}`],
+      ssl: {
+        rejectUnauthorized: true,
+        ca: [this.configService.KAFKA_CA_CERT],
+        key: this.configService.ACCESS_KEY,
+        cert: this.configService.ACCESS_CERT,
+      },
+      clientId: this.configService.KAFKA_CLIENT_ID,
       logLevel: logLevel.WARN,
     });
     this.admin = this.kafka.admin();

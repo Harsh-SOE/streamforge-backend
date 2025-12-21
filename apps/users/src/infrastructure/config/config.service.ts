@@ -1,9 +1,10 @@
 import { join } from 'path';
+import fs from 'fs';
 import * as grpc from '@grpc/grpc-js';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as protoLoader from '@grpc/proto-loader';
-import { GrpcOptions, KafkaOptions, Transport } from '@nestjs/microservices';
+import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
@@ -36,6 +37,18 @@ export class AppConfigService {
     return this.configService.getOrThrow<number>('KAFKA_PORT');
   }
 
+  get KAFKA_CA_CERT() {
+    return fs.readFileSync('secrets/ca.pem', 'utf-8');
+  }
+
+  get ACCESS_KEY() {
+    return fs.readFileSync('secrets/access.key', 'utf-8');
+  }
+
+  get ACCESS_CERT() {
+    return fs.readFileSync('secrets/access.cert', 'utf-8');
+  }
+
   get KAFKA_CLIENT_ID() {
     return this.configService.getOrThrow<string>('KAFKA_CLIENT_ID');
   }
@@ -66,22 +79,6 @@ export class AppConfigService {
 
   get REDIS_STREAM_CONSUMER_ID() {
     return this.configService.getOrThrow<string>('REDIS_STREAM_CONSUMER_ID');
-  }
-
-  get WATCH_SERVICE_OPTIONS() {
-    const options: KafkaOptions = {
-      transport: Transport.KAFKA,
-      options: {
-        client: {
-          brokers: [`${this.KAFKA_HOST}:${this.KAFKA_PORT}`],
-          clientId: this.KAFKA_CLIENT_ID,
-        },
-        consumer: {
-          groupId: this.KAFKA_CONSUMER_ID,
-        },
-      },
-    };
-    return options;
   }
 
   get MAX_DB_CONNECTIONS() {

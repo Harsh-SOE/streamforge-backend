@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { HealthIndicatorResult, HealthIndicatorService } from '@nestjs/terminus';
 import { Admin, Kafka, logLevel } from 'kafkajs';
@@ -14,8 +15,14 @@ export class AppHealthService implements OnModuleInit, OnModuleDestroy {
     private readonly configService: AppConfigService,
   ) {
     this.kafka = new Kafka({
-      brokers: [`${configService.KAFKA_SERVICE_HOST}:${configService.KAFKA_SERVICE_PORT}`],
-      clientId: this.configService.EMAIL_CLIENT_ID,
+      brokers: [`${configService.KAFKA_HOST}:${configService.KAFKA_PORT}`],
+      ssl: {
+        rejectUnauthorized: true,
+        ca: [fs.readFileSync('secrets/ca.pem')],
+        key: fs.readFileSync('secrets/access.key'),
+        cert: fs.readFileSync('secrets/access.cert'),
+      },
+      clientId: this.configService.KAFKA_CLIENT_ID,
       logLevel: logLevel.WARN,
     });
     this.admin = this.kafka.admin();

@@ -63,6 +63,7 @@ COPY --from=builder /@streamforge/apps/channel/generated/prisma/libquery_engine-
 COPY --from=builder /@streamforge/dist/apps/channel/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/channel/proto ./proto
 COPY --from=builder /@streamforge/dist/apps/channel/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
+COPY --from=builder /@streamforge/dist/apps/channel/secrets ./secrets
 
 USER root
 

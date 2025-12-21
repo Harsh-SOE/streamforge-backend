@@ -64,6 +64,7 @@ COPY --from=builder /@streamforge/apps/reaction/generated/prisma/libquery_engine
 COPY --from=builder /@streamforge/dist/apps/reaction/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/reaction/proto ./proto
 COPY --from=builder /@streamforge/dist/apps/reaction/scripts ./scripts
+COPY --from=builder /@streamforge/dist/apps/reaction/secrets ./secrets
 
 USER root
 

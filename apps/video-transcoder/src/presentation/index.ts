@@ -1,1 +1,1 @@
-export * from './message-broker';
+export * from './messages';

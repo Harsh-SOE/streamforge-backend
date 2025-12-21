@@ -14,8 +14,8 @@ export class RedisClient implements OnModuleInit {
   public client: Redis;
 
   public constructor(
-    @Inject(REDIS_HOST) private readonly redisHost: string,
-    @Inject(REDIS_PORT) private readonly redisPort: number,
+    @Inject(REDIS_HOST) private readonly host: string,
+    @Inject(REDIS_PORT) private readonly port: number,
     @Inject(REDIS_STREAM_KEY) private readonly redisStreamKey: string,
     @Inject(REDIS_STREAM_GROUPNAME) private readonly redisStreamGroupname: string,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
@@ -24,10 +24,7 @@ export class RedisClient implements OnModuleInit {
 
   public async onModuleInit() {
     const redisConnectionOperation = () => {
-      this.client = new Redis({
-        host: this.redisHost,
-        port: this.redisPort,
-      });
+      this.client = new Redis(`${this.host}:${this.port}`);
     };
 
     await this.redisHandler.execute(redisConnectionOperation, {

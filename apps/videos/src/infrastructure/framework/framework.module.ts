@@ -1,6 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 
 import {
+  KAFKA_ACCESS_CERT,
+  KAFKA_ACCESS_KEY,
+  KAFKA_CA_CERT,
   KAFKA_CLIENT,
   KAFKA_CONSUMER,
   KAFKA_HOST,
@@ -74,6 +77,21 @@ import { PrismaClient as VideoPrismaClient } from '@peristance/videos';
       useFactory: (configService: AppConfigService) => configService.KAFKA_PORT,
     },
     {
+      provide: KAFKA_CA_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_KEY,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+    },
+    {
       provide: KAFKA_CLIENT,
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
@@ -109,7 +127,7 @@ import { PrismaClient as VideoPrismaClient } from '@peristance/videos';
     },
     {
       provide: PRISMA_CLIENT_NAME,
-      useValue: 'users',
+      useValue: 'videos',
     },
   ],
   exports: [
@@ -141,6 +159,9 @@ import { PrismaClient as VideoPrismaClient } from '@peristance/videos';
     KAFKA_CONSUMER,
     KAFKA_HOST,
     KAFKA_PORT,
+    KAFKA_ACCESS_CERT,
+    KAFKA_ACCESS_KEY,
+    KAFKA_CA_CERT,
   ],
 })
 export class FrameworkModule {}

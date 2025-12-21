@@ -58,6 +58,7 @@ COPY --from=production-dependencies /@streamforge/node_modules ./node_modules
 COPY --from=builder /@streamforge/dist/apps/query/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/query/scripts ./scripts
 COPY --from=builder /@streamforge/dist/apps/query/proto ./proto
+COPY --from=builder /@streamforge/dist/apps/query/secrets ./secrets
 
 USER root
 

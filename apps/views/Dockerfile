@@ -66,6 +66,7 @@ COPY --from=builder /@streamforge/apps/views/generated/prisma/libquery_engine-li
 COPY --from=builder /@streamforge/dist/apps/views/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/views/proto ./proto
 COPY --from=builder /@streamforge/dist/apps/views/scripts ./scripts
+COPY --from=builder /@streamforge/dist/apps/views/secrets ./secrets
 
 USER root
 

@@ -2,17 +2,17 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
-import { VideoProjectionModel } from '@projection/infrastructure/repository/models';
+import { VideoWatchProjectionModel } from '@projection/infrastructure/repository/models';
 import { VideoUpatedEventDto, VideoUploadedEventDto } from '@app/contracts/videos';
 
 @Injectable()
 export class VideoProjectionACL {
   public constructor(
-    @InjectModel(VideoProjectionModel.name)
-    private readonly videoCard: Model<VideoProjectionModel>,
+    @InjectModel(VideoWatchProjectionModel.name)
+    private readonly videoCard: Model<VideoWatchProjectionModel>,
   ) {}
 
-  public videoUploadedEventToPersistance(event: VideoUploadedEventDto): VideoProjectionModel {
+  public videoUploadedEventToPersistance(event: VideoUploadedEventDto): VideoWatchProjectionModel {
     const videoCard = {
       videoId: event.videoId,
       channelId: event.channelId,
@@ -35,7 +35,9 @@ export class VideoProjectionACL {
     return new this.videoCard(videoCard);
   }
 
-  public videoUpdatedEventToPersistance(event: VideoUpatedEventDto): Partial<VideoProjectionModel> {
+  public videoUpdatedEventToPersistance(
+    event: VideoUpatedEventDto,
+  ): Partial<VideoWatchProjectionModel> {
     const videoCard = {
       videoId: event.videoId,
       title: event.title,

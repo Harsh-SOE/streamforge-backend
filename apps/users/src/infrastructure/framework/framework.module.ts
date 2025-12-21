@@ -4,6 +4,9 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 
 import {
+  KAFKA_ACCESS_CERT,
+  KAFKA_ACCESS_KEY,
+  KAFKA_CA_CERT,
   KAFKA_CLIENT,
   KAFKA_CONSUMER,
   KAFKA_HOST,
@@ -100,6 +103,21 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
       useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
     },
     {
+      provide: KAFKA_CA_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_KEY,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+    },
+    {
       provide: KAFKA_CONSUMER,
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => configService.KAFKA_CONSUMER_ID,
@@ -159,6 +177,9 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
     PRISMA_CLIENT_NAME,
     KAFKA_CLIENT,
     KAFKA_CONSUMER,
+    KAFKA_CA_CERT,
+    KAFKA_ACCESS_CERT,
+    KAFKA_ACCESS_KEY,
     KAFKA_HOST,
     KAFKA_PORT,
     REDIS_HOST,

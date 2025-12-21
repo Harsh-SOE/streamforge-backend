@@ -56,6 +56,7 @@ COPY --from=base /@streamforge/package.json /@streamforge/yarn.lock ./
 COPY --from=production-dependencies /@streamforge/node_modules ./node_modules
 COPY --from=builder /@streamforge/dist/apps/email/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/email/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
+COPY --from=builder /@streamforge/dist/apps/email/secrets ./secrets
 
 USER root
 

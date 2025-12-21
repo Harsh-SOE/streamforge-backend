@@ -12,6 +12,7 @@ import { AppConfigService } from './config.service';
       validationSchema: joi.object({
         HTTP_PORT: joi.string().required(),
         GRPC_PORT: joi.string().required(),
+        DATABASE_URL: joi.string().required(),
       }),
     }),
   ],

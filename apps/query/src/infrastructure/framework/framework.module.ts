@@ -10,13 +10,13 @@ import {
 
 import { AppConfigModule, AppConfigService } from '../config';
 import { ChannelQueryACL, UserQueryACL } from '../anti-corruption';
-import { ChannelQueryRepository, UserQueryRepository } from '../repository/adapters';
+import { ChannelProjectionRepository, UserQueryRepository } from '../repository/adapters';
 import { WinstonLoggerAdapter } from '../logger';
 import {
-  ProjectedChannelQueryModel,
-  ProjectedChannelQuerySchema,
-  ProjectedUserQueryModel,
-  ProjectUserQuerySchema,
+  ChannelProjectionModel,
+  ChannelProjectionSchema,
+  UserProjectionModel,
+  UserProjectionSchema,
 } from '../repository/models';
 
 @Global()
@@ -32,14 +32,14 @@ import {
     }),
     MongooseModule.forFeature([
       {
-        name: ProjectedUserQueryModel.name,
-        schema: ProjectUserQuerySchema,
+        name: UserProjectionModel.name,
+        schema: UserProjectionSchema,
       },
     ]),
     MongooseModule.forFeature([
       {
-        name: ProjectedChannelQueryModel.name,
-        schema: ProjectedChannelQuerySchema,
+        name: ChannelProjectionModel.name,
+        schema: ChannelProjectionSchema,
       },
     ]),
   ],
@@ -53,7 +53,7 @@ import {
     },
     {
       provide: CHANNEL_QUERY_REPOSITORY_PORT,
-      useClass: ChannelQueryRepository,
+      useClass: ChannelProjectionRepository,
     },
     {
       provide: LOGGER_PORT,

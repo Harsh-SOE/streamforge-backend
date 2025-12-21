@@ -9,6 +9,18 @@ module.exports = (options, webpack) => {
       new CopyWebpackPlugin({
         patterns: [
           {
+            from: path.join(__dirname, 'secrets/access.cert'),
+            to: path.join(__dirname, '../../dist/apps/videos/secrets'),
+          },
+          {
+            from: path.join(__dirname, 'secrets/access.key'),
+            to: path.join(__dirname, '../../dist/apps/videos/secrets'),
+          },
+          {
+            from: path.join(__dirname, 'secrets/ca.pem'),
+            to: path.join(__dirname, '../../dist/apps/videos/secrets'),
+          },
+          {
             from: path.join('libs/proto/videos.proto'),
             to: path.join(__dirname, '../../dist/apps/videos/proto'),
           },

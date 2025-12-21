@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { KafkaOptions, Transport } from '@nestjs/microservices';
@@ -10,20 +11,36 @@ export class AppConfigService {
     return this.configService.getOrThrow<number>('HTTP_PORT');
   }
 
-  get KAFKA_SERVICE_HOST() {
-    return this.configService.getOrThrow<string>('KAFKA_SERVICE_HOST');
+  get KAFKA_HOST() {
+    return this.configService.getOrThrow<string>('KAFKA_HOST');
   }
 
-  get KAFKA_SERVICE_PORT() {
-    return this.configService.getOrThrow<number>('KAFKA_SERVICE_PORT');
+  get KAFKA_PORT() {
+    return this.configService.getOrThrow<number>('KAFKA_PORT');
   }
 
-  get EMAIL_CLIENT_ID() {
-    return this.configService.getOrThrow<string>('EMAIL_CLIENT_ID');
+  get KAFKA_CA_CERT() {
+    return fs.readFileSync('secrets/ca.pem', 'utf-8');
   }
 
-  get EMAIL_CONSUMER_ID() {
-    return this.configService.getOrThrow<string>('EMAIL_CONSUMER_ID');
+  get ACCESS_KEY() {
+    return fs.readFileSync('secrets/access.key', 'utf-8');
+  }
+
+  get ACCESS_CERT() {
+    return fs.readFileSync('secrets/access.cert', 'utf-8');
+  }
+
+  get KAFKA_CLIENT_ID() {
+    return this.configService.getOrThrow<string>('KAFKA_CLIENT_ID');
+  }
+
+  get KAFKA_CONSUMER_ID() {
+    return this.configService.getOrThrow<string>('KAFKA_CONSUMER_ID');
+  }
+
+  get KAFKA_FLUSH_MAX_WAIT_TIME_MS() {
+    return this.configService.getOrThrow<number>('KAFKA_FLUSH_MAX_WAIT_TIME_MS');
   }
 
   get EMAIL_API_KEY() {
@@ -43,11 +60,22 @@ export class AppConfigService {
       transport: Transport.KAFKA,
       options: {
         client: {
-          clientId: this.EMAIL_CLIENT_ID,
-          brokers: [`${this.KAFKA_SERVICE_HOST}:${this.KAFKA_SERVICE_PORT}`],
+          clientId: this.KAFKA_CLIENT_ID,
+          brokers: [`${this.KAFKA_HOST}:${this.KAFKA_PORT}`],
+          ssl: {
+            rejectUnauthorized: true,
+            ca: [this.KAFKA_CA_CERT],
+            key: this.ACCESS_KEY,
+            cert: this.ACCESS_CERT,
+          },
+          retry: {
+            initialRetryTime: 300,
+            retries: 10,
+          },
         },
+
         consumer: {
-          groupId: this.EMAIL_CONSUMER_ID,
+          groupId: this.KAFKA_CONSUMER_ID,
         },
       },
     };

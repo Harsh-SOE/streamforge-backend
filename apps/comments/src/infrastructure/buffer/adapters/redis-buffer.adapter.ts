@@ -33,7 +33,7 @@ export class RedisStreamBufferAdapter implements CommentBufferPort {
   }
 
   @Cron(CronExpression.EVERY_10_SECONDS)
-  public async processCommentsBatch() {
+  public async processCommentsMessages() {
     this.logger.info(`Processing batches of comments now...`);
 
     const streamData = (await this.redis.client.xreadgroup(

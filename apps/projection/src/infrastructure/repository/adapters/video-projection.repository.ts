@@ -7,13 +7,13 @@ import { VideoUploadedEventDto } from '@app/contracts/videos';
 import { VideoProjectionRepositoryPort } from '@projection/application/ports';
 import { VideoProjectionACL } from '@projection/infrastructure/anti-corruption';
 
-import { VideoProjectionModel } from '../models';
+import { VideoWatchProjectionModel } from '../models';
 
 @Injectable()
 export class VideoProjectionRepository implements VideoProjectionRepositoryPort {
   constructor(
-    @InjectModel(VideoProjectionModel.name)
-    private readonly projectedVideoCard: Model<VideoProjectionModel>,
+    @InjectModel(VideoWatchProjectionModel.name)
+    private readonly projectedVideoCard: Model<VideoWatchProjectionModel>,
     private readonly videoCardACL: VideoProjectionACL,
   ) {}
 

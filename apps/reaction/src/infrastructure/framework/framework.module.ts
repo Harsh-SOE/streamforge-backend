@@ -2,6 +2,9 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Global, Module } from '@nestjs/common';
 
 import {
+  KAFKA_ACCESS_CERT,
+  KAFKA_ACCESS_KEY,
+  KAFKA_CA_CERT,
   KAFKA_CLIENT,
   KAFKA_CONSUMER,
   KAFKA_HOST,
@@ -72,6 +75,21 @@ import { PrismaClient as ReactionPrismaClient } from '@peristance/reaction';
       useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
     },
     {
+      provide: KAFKA_CA_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_CERT,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+    },
+    {
+      provide: KAFKA_ACCESS_KEY,
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+    },
+    {
       provide: KAFKA_CONSUMER,
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => configService.KAFKA_CONSUMER_ID,
@@ -129,6 +147,9 @@ import { PrismaClient as ReactionPrismaClient } from '@peristance/reaction';
     KAFKA_CONSUMER,
     KAFKA_HOST,
     KAFKA_PORT,
+    KAFKA_ACCESS_CERT,
+    KAFKA_CA_CERT,
+    KAFKA_ACCESS_KEY,
     REDIS_HOST,
     REDIS_PORT,
     REDIS_STREAM_GROUPNAME,
