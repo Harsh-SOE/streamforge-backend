@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { GrpcService } from './grpc.service';
-import { GrpcController } from './grpc.controller';
-import { FrameworkModule } from '../../infrastructure/framework';
+import { FrameworkModule } from '@users/infrastructure/framework';
+
+import { GrpcService } from './rpc.service';
+import { GrpcController } from './rpc.controller';
 
 @Module({
   imports: [FrameworkModule],

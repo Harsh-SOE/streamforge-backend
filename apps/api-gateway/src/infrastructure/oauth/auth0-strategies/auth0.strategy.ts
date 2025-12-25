@@ -4,14 +4,14 @@ import { ExtraVerificationParams, Strategy } from 'passport-auth0';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
-import { AppConfigService } from '@gateway/infrastructure/config';
+import { GatewayConfigService } from '@gateway/infrastructure/config';
 
 import { Auth0Profile, GATEWAY_AUTH0_GAURD_STRATEGY, UserProfile } from '../types';
 
 @Injectable()
 export class GatewayAuth0Strategy extends PassportStrategy(Strategy, GATEWAY_AUTH0_GAURD_STRATEGY) {
   constructor(
-    private readonly configService: AppConfigService,
+    private readonly configService: GatewayConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     super({

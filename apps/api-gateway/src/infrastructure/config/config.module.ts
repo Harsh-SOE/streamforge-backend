@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import * as joi from 'joi';
 
-import { AppConfigService } from './config.service';
+import { GatewayConfigService } from './config.service';
 
 @Module({
   imports: [
@@ -14,6 +14,8 @@ import { AppConfigService } from './config.service';
         PORT: joi.number().required(),
 
         NODE_ENVIRONMENT: joi.string().required(),
+
+        COOKIE_MAX_AGE: joi.number().required(),
 
         JWT_ACCESS_TOKEN_SECRET: joi.string().required(),
         JWT_ACCESS_TOKEN_EXPIRY: joi.string().required(),
@@ -48,7 +50,7 @@ import { AppConfigService } from './config.service';
       }),
     }),
   ],
-  providers: [AppConfigService],
-  exports: [AppConfigService],
+  providers: [GatewayConfigService],
+  exports: [GatewayConfigService],
 })
-export class AppConfigModule {}
+export class GatwayConfigModule {}

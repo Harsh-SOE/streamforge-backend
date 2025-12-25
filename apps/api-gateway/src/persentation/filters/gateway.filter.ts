@@ -1,8 +1,8 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
 import { Response } from 'express';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException } from '@nestjs/common';
 
-import { isGrpcApplicationError } from '../gaurds';
 import { getErrorPayload } from '../types';
+import { isGrpcApplicationError } from '../gaurds';
 
 @Catch()
 export class GatewayExceptionFilter implements ExceptionFilter {

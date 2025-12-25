@@ -22,8 +22,13 @@ import {
 } from '@app/clients/redis';
 import { LOGGER_PORT } from '@app/ports/logger';
 import { MESSAGE_BROKER } from '@app/ports/message-broker';
-import { PrismaDatabaseHandler } from '@app/handlers/database-handler';
+import {
+  DATABASE_CONFIG,
+  DatabaseResillienceConfig,
+  PrismaDatabaseHandler,
+} from '@app/handlers/database-handler';
 import { KafkaMessageBusHandler } from '@app/handlers/message-bus-handler';
+import { LOKI_URL, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 
 import {
@@ -35,12 +40,11 @@ import {
 import { MeasureModule } from '@users/infrastructure/measure';
 import { UserEventHandlers } from '@users/application/events';
 import { RedisCacheHandler } from '@app/handlers/cache-handler';
-import { WinstonLoggerAdapter } from '@users/infrastructure/logger';
 import { RedisCacheAdapter } from '@users/infrastructure/cache/adapters';
 import { UsersRedisBuffer } from '@users/infrastructure/buffer/adapters';
 import { UserCommandHandlers } from '@users/application/use-cases/commands';
 import { AwsS3StorageAdapter } from '@users/infrastructure/storage/adapters';
-import { AppConfigModule, AppConfigService } from '@users/infrastructure/config';
+import { UserConfigModule, UserConfigService } from '@users/infrastructure/config';
 import { UserRepositoryAdapter } from '@users/infrastructure/repository/adapters';
 import { KafkaMessageBrokerAdapter } from '@users/infrastructure/message-bus/adapters';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption/aggregate-persistance-acl';
@@ -53,10 +57,10 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
     MeasureModule,
     CqrsModule,
     CacheModule.registerAsync({
-      imports: [AppConfigModule],
-      inject: [AppConfigService],
+      imports: [UserConfigModule],
+      inject: [UserConfigService],
       isGlobal: true,
-      useFactory: (configService: AppConfigService) => ({
+      useFactory: (configService: UserConfigService) => ({
         isGlobal: true,
         store: redisStore,
         host: configService.REDIS_HOST,
@@ -73,6 +77,14 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
     KafkaClient,
     RedisClient,
     {
+      provide: DATABASE_CONFIG,
+      useValue: {
+        maxRetries: 3,
+        circuitBreakerThreshold: 10,
+        halfOpenAfterMs: 1500,
+      } satisfies DatabaseResillienceConfig,
+    },
+    {
       provide: USER_REROSITORY_PORT,
       useClass: UserRepositoryAdapter,
     },
@@ -84,63 +96,68 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
       provide: USER_CACHE_PORT,
       useClass: RedisCacheAdapter,
     },
-    { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
+    {
+      provide: LOKI_URL,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.GRAFANA_LOKI_URL,
+    },
+    { provide: LOGGER_PORT, useClass: LokiConsoleLogger },
     { provide: USERS_STORAGE_PORT, useClass: AwsS3StorageAdapter },
     { provide: USERS_BUFFER_PORT, useClass: UsersRedisBuffer },
     {
       provide: KAFKA_HOST,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_HOST,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.KAFKA_HOST,
     },
     {
       provide: KAFKA_PORT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_PORT,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.KAFKA_PORT,
     },
     {
       provide: KAFKA_CLIENT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.KAFKA_CLIENT_ID,
     },
     {
       provide: KAFKA_CA_CERT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.KAFKA_CA_CERT,
     },
     {
       provide: KAFKA_ACCESS_CERT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.ACCESS_CERT,
     },
     {
       provide: KAFKA_ACCESS_KEY,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.ACCESS_KEY,
     },
     {
       provide: KAFKA_CONSUMER,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CONSUMER_ID,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.KAFKA_CONSUMER_ID,
     },
     {
       provide: REDIS_HOST,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_HOST,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.REDIS_HOST,
     },
     {
       provide: REDIS_PORT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_PORT,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.REDIS_PORT,
     },
     {
       provide: REDIS_STREAM_KEY,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_STREAM_KEY,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.REDIS_STREAM_KEY,
     },
     {
       provide: REDIS_STREAM_GROUPNAME,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_STREAM_GROUPNAME,
+      inject: [UserConfigService],
+      useFactory: (configService: UserConfigService) => configService.REDIS_STREAM_GROUPNAME,
     },
     {
       provide: PRISMA_CLIENT,
@@ -170,6 +187,7 @@ import { PrismaClient as UserPrismaClient } from '@persistance/users';
     USER_REROSITORY_PORT,
     MESSAGE_BROKER,
     USER_CACHE_PORT,
+    LOKI_URL,
     LOGGER_PORT,
     USERS_STORAGE_PORT,
     USERS_BUFFER_PORT,

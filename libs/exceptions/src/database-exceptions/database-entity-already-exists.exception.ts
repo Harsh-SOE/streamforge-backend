@@ -6,21 +6,21 @@ import {
   InfrastructureOperationFailureLevel,
 } from '../infrastructure-exceptions';
 
-export type DatabaseEntryAlreadyExistsExceptionMetaData = {
+export type DatabaseEntityAlreadyExistsExceptionMetaData = {
   host?: string;
   port?: number;
   retryAttempt?: number;
   entityToCreate?: any;
 };
 
-export type DatabaseEntryAlreadyExistsExceptionOptions = {
+export type DatabaseEntityAlreadyExistsExceptionOptions = {
   message?: string;
-  meta?: DatabaseEntryAlreadyExistsExceptionMetaData;
+  meta?: DatabaseEntityAlreadyExistsExceptionMetaData;
   contextError?: Error;
 };
 
-export class DatabaseEntryAlreadyExistsException extends InfrastructureException {
-  constructor(options: DatabaseEntryAlreadyExistsExceptionOptions) {
+export class DatabaseEntityAlreadyExistsException extends InfrastructureException {
+  constructor(options: DatabaseEntityAlreadyExistsExceptionOptions) {
     const { message = `Entry already exists`, contextError, meta } = options;
 
     super({

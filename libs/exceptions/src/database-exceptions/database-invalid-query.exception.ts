@@ -12,7 +12,7 @@ export type DatabaseInvalidExceptionExceptionMetaData = {
   retryAttempt?: number;
   query?: Record<string, any> | string;
   operationType?: string;
-  entry?: Record<string, any>;
+  entity?: Record<string, any>;
   filter?: Record<string, any>;
 };
 

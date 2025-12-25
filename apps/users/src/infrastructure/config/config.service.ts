@@ -9,7 +9,7 @@ import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
 
 @Injectable()
-export class AppConfigService {
+export class UserConfigService {
   constructor(private configService: ConfigService) {}
 
   get HTTP_PORT() {

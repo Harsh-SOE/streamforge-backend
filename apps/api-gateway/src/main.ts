@@ -1,16 +1,17 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import session from 'express-session';
 import passport from 'passport';
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 
-import { AppModule } from './app.module';
-import { AppConfigService } from './infrastructure/config';
+import { RootModule } from './root.module';
 import { GatewayExceptionFilter } from './persentation/filters';
+import { ENVIRONMENT, GatewayConfigService } from './infrastructure/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.get<AppConfigService>(AppConfigService);
+  const app = await NestFactory.create(RootModule);
+  const configService = app.get<GatewayConfigService>(GatewayConfigService);
+
   app.use(cookieParser());
 
   app.useGlobalFilters(new GatewayExceptionFilter());
@@ -38,15 +39,16 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60,
+        maxAge: configService.COOKIE_MAX_AGE,
         httpOnly: true,
-        secure: false,
+        secure: configService.NODE_ENVIRONMENT === ENVIRONMENT.PRODUCTION,
         sameSite: 'lax',
       },
     }),
   );
 
   app.use(passport.initialize());
+
   app.use(passport.session());
 
   await app.listen(configService.PORT, '0.0.0.0');

@@ -1,6 +1,6 @@
 import { Metadata } from '@grpc/grpc-js';
-import { Status } from '@grpc/grpc-js/build/src/constants';
 import { RpcException } from '@nestjs/microservices';
+import { Status } from '@grpc/grpc-js/build/src/constants';
 
 import { ErrorPayload } from '../types';
 

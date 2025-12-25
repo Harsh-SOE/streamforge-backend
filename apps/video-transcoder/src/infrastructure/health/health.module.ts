@@ -4,10 +4,10 @@ import { Module } from '@nestjs/common';
 import { AppHealthController } from './health.controller';
 import { AppHealthService } from './health.service';
 
-import { AppConfigModule } from '../config';
+import { TranscoderConfigModule } from '../config';
 
 @Module({
-  imports: [TerminusModule, AppConfigModule],
+  imports: [TerminusModule, TranscoderConfigModule],
   controllers: [AppHealthController],
   providers: [AppHealthService],
 })

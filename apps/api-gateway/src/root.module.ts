@@ -1,20 +1,20 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { AppConfigModule } from './infrastructure/config';
-import { VideoModule } from './services/videos/video.module';
-import { UsersModule } from './services/users/users.module';
 import { AuthModule } from './services/auth/auth.module';
+import { UsersModule } from './services/users/users.module';
 import { WatchModule } from './services/views/views.module';
+import { GatwayConfigModule } from './infrastructure/config';
+import { VideoModule } from './services/videos/video.module';
+import { ChannelModule } from './services/channel/channel.module';
 import { ResponseTimeMiddleware } from './persentation/middlewares';
 import { CommentsModule } from './services/comments/comments.module';
 import { ReactionModule } from './services/reactions/reaction.module';
-import { ChannelModule } from './services/channel/channel.module';
 import { AppHealthModule } from './infrastructure/health/health.module';
-import { GlobalEnvironmentModule } from './persentation/global-environment.module';
+import { FrameworkModule } from './infrastructure/framework/framework.module';
 
 @Module({
   imports: [
-    AppConfigModule,
+    GatwayConfigModule,
     AppHealthModule,
     VideoModule,
     UsersModule,
@@ -23,10 +23,10 @@ import { GlobalEnvironmentModule } from './persentation/global-environment.modul
     WatchModule,
     CommentsModule,
     ChannelModule,
-    GlobalEnvironmentModule,
+    FrameworkModule,
   ],
 })
-export class AppModule implements NestModule {
+export class RootModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(ResponseTimeMiddleware).forRoutes('*');
   }

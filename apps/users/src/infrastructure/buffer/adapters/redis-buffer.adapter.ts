@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { RedisClient } from '@app/clients/redis';
+import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { UserAggregate } from '@users/domain/aggregates';
-import { AppConfigService } from '@users/infrastructure/config';
+import { UserConfigService } from '@users/infrastructure/config';
 import { USER_REROSITORY_PORT, UsersBufferPort } from '@users/application/ports';
 import { UserRepositoryAdapter } from '@users/infrastructure/repository/adapters';
 
@@ -14,7 +14,7 @@ import { UserMessage, StreamData } from '../types';
 @Injectable()
 export class UsersRedisBuffer implements UsersBufferPort {
   public constructor(
-    private readonly configService: AppConfigService,
+    private readonly configService: UserConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     @Inject(USER_REROSITORY_PORT)
     private readonly usersRepository: UserRepositoryAdapter,

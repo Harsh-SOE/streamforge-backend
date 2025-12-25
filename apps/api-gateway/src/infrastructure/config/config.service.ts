@@ -1,23 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { GrpcOptions, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
-import { JwtModuleOptions } from '@nestjs/jwt';
 import { join } from 'path';
+import { Injectable } from '@nestjs/common';
+import { JwtModuleOptions } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { GrpcOptions, Transport } from '@nestjs/microservices';
 
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
-import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
-import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
-import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
-import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
-import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
 import { QUERY_PACKAGE_NAME } from '@app/contracts/query';
+import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
+import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
+import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
+import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
+import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
+
+export enum ENVIRONMENT {
+  DEVELOPMENT = 'DEVELOPMENT',
+  PRODUCTION = 'PRODUCTION',
+}
 
 @Injectable()
-export class AppConfigService {
+export class GatewayConfigService {
   constructor(private readonly configService: ConfigService) {}
 
   get NODE_ENVIRONMENT() {
-    return this.configService.getOrThrow<string>('NODE_ENVIRONMENT');
+    return this.configService.getOrThrow<ENVIRONMENT>('NODE_ENVIRONMENT');
   }
 
   get PORT() {
@@ -126,6 +131,10 @@ export class AppConfigService {
 
   get EXPRESS_SESSION_SECRET() {
     return this.configService.getOrThrow<string>('EXPRESS_SESSION_SECRET');
+  }
+
+  get COOKIE_MAX_AGE() {
+    return this.configService.getOrThrow<number>('COOKIE_MAX_AGE');
   }
 
   get JWT_TOKEN_OPTIONS() {

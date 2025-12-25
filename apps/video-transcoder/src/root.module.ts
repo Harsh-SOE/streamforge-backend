@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
 import { VideoTranscoderModule } from '@transcoder/presentation';
-import { AppConfigModule } from '@transcoder/infrastructure/config';
+import { TranscoderConfigModule } from '@transcoder/infrastructure/config';
 
 import { AppHealthModule } from './infrastructure/health';
 
 @Module({
-  imports: [AppConfigModule, VideoTranscoderModule, AppHealthModule],
+  imports: [TranscoderConfigModule, VideoTranscoderModule, AppHealthModule],
 })
-export class AppModule {}
+export class RootModule {}

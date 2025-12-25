@@ -1,4 +1,4 @@
-import { Consumer, Kafka, Producer } from 'kafkajs';
+import { Admin, Consumer, Kafka, Producer } from 'kafkajs';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
@@ -15,6 +15,7 @@ export const KAFKA_CONSUMER = Symbol('KAFKA_CONSUMER');
 @Injectable()
 export class KafkaClient implements OnModuleInit, OnModuleDestroy {
   private client: Kafka;
+  public admin: Admin;
   public producer: Producer;
   public consumer: Consumer;
 
@@ -50,10 +51,13 @@ export class KafkaClient implements OnModuleInit, OnModuleDestroy {
       this.consumer = this.client.consumer({
         groupId: this.kafkaConsumer,
       });
+
+      this.admin = this.client.admin();
     };
 
     const producerConnectOperation = async () => await this.producer.connect();
     const consumerConnectOperation = async () => await this.consumer.connect();
+    const adminConnectOperation = async () => await this.admin.connect();
 
     await this.kafkaMessageHandler.handle(kafkaInitializationOperation, {
       operationType: 'CONNECT_OR_DISCONNECT',
@@ -67,18 +71,27 @@ export class KafkaClient implements OnModuleInit, OnModuleDestroy {
       operationType: 'CONNECT_OR_DISCONNECT',
     });
 
+    await this.kafkaMessageHandler.handle(adminConnectOperation, {
+      operationType: 'CONNECT_OR_DISCONNECT',
+    });
+
     this.logger.alert(`Kafka client connected successfully`);
   }
 
   public async onModuleDestroy() {
     const producerDisconnectOperation = async () => await this.producer.disconnect();
     const consumerDisconnectOperation = async () => await this.consumer.disconnect();
+    const adminDisconnectOperation = async () => await this.consumer.disconnect();
 
     await this.kafkaMessageHandler.handle(producerDisconnectOperation, {
       operationType: 'CONNECT_OR_DISCONNECT',
     });
 
     await this.kafkaMessageHandler.handle(consumerDisconnectOperation, {
+      operationType: 'CONNECT_OR_DISCONNECT',
+    });
+
+    await this.kafkaMessageHandler.handle(adminDisconnectOperation, {
       operationType: 'CONNECT_OR_DISCONNECT',
     });
 

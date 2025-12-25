@@ -1,14 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { KafkaOptions } from '@nestjs/microservices';
 
-import { AppConfigService } from '@transcoder/infrastructure/config';
+import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 
-import { AppModule } from './app.module';
+import { RootModule } from './root.module';
 
-/* Make use of kafka transport here */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.get(AppConfigService);
+  const app = await NestFactory.create(RootModule);
+  const configService = app.get(TranscoderConfigService);
   await app.listen(configService.HTTP_PORT, '0.0.0.0');
 
   app.connectMicroservice<KafkaOptions>(configService.KAFKA_OPTIONS);

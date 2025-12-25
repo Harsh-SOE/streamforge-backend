@@ -5,7 +5,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { UsersStoragePort } from '@users/application/ports';
-import { AppConfigService } from '@users/infrastructure/config';
+import { UserConfigService } from '@users/infrastructure/config';
 
 @Injectable()
 export class AwsS3StorageAdapter implements OnModuleInit, UsersStoragePort {
@@ -13,7 +13,7 @@ export class AwsS3StorageAdapter implements OnModuleInit, UsersStoragePort {
   private s3Client: S3Client;
 
   public constructor(
-    private readonly configService: AppConfigService,
+    private readonly configService: UserConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 

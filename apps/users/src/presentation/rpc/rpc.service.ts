@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { Injectable } from '@nestjs/common';
 
 import {
   GetPresignedUrlDto,
@@ -19,13 +19,15 @@ import {
   UserVerifyPhoneNumberDto,
 } from '@app/contracts/users';
 
-import { GeneratePreSignedUrlCommand } from '@users/application/use-cases/commands/generate-presigned-url-command';
-import { UpdateProfileCommand } from '@users/application/use-cases/commands/update-profile-command';
-import { ChangeNotificationCommand } from '@users/application/use-cases/commands/change-notification-status-command';
-import { ChangeLanguageCommand } from '@users/application/use-cases/commands/change-language-command';
-import { ChangeThemeCommand } from '@users/application/use-cases/commands/change-theme-command';
-import { VerifyPhoneNumberCommand } from '@users/application/use-cases/commands/verify-phone-number-command';
-import { CreateProfileCommand } from '@users/application/use-cases/commands/create-profile-command';
+import {
+  ChangeLanguageCommand,
+  ChangeNotificationCommand,
+  ChangeThemeCommand,
+  CreateProfileCommand,
+  GeneratePreSignedUrlCommand,
+  UpdateProfileCommand,
+  VerifyPhoneNumberCommand,
+} from '@users/application/use-cases/commands';
 
 @Injectable()
 export class GrpcService {

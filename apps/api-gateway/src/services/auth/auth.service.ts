@@ -1,17 +1,17 @@
 import { Response } from 'express';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
-import { JwtService } from '@nestjs/jwt';
 import { firstValueFrom } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
+import { ClientGrpc } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { SERVICES } from '@app/clients/constant';
-import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
-import { QUERY_SERVICE_NAME, QueryServiceClient, UserProfileMessage } from '@app/contracts/query';
 import { UserAuthPayload } from '@app/contracts/auth';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
+import { QUERY_SERVICE_NAME, QueryServiceClient, UserProfileMessage } from '@app/contracts/query';
 
 import { UserProfile } from '@gateway/infrastructure/oauth/types';
-import { AppConfigService } from '@gateway/infrastructure/config';
+import { ENVIRONMENT, GatewayConfigService } from '@gateway/infrastructure/config';
 
 const ONBOARDING_INFO_COOKIE_NAME = 'onboarding_info';
 const ACCESS_TOKEN_COOKIE_NAME = 'access_info';
@@ -27,7 +27,7 @@ export class AuthService implements OnModuleInit {
     @Inject(SERVICES.QUERY) private readonly queryClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly jwtService: JwtService,
-    private readonly configService: AppConfigService,
+    private readonly configService: GatewayConfigService,
   ) {}
 
   onModuleInit() {
@@ -44,7 +44,7 @@ export class AuthService implements OnModuleInit {
 
     response.cookie(ONBOARDING_INFO_COOKIE_NAME, JSON.stringify(onBoardingCookie), {
       httpOnly: false,
-      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      secure: this.configService.NODE_ENVIRONMENT === ENVIRONMENT.PRODUCTION,
       sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 5,
@@ -64,7 +64,7 @@ export class AuthService implements OnModuleInit {
 
     response.cookie(ACCESS_TOKEN_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      secure: this.configService.NODE_ENVIRONMENT === ENVIRONMENT.PRODUCTION,
       sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 24,
       path: '/',
@@ -82,7 +82,7 @@ export class AuthService implements OnModuleInit {
 
     response.cookie(USER_METADATA_COOKIE_NAME, JSON.stringify(userMetaData), {
       httpOnly: false,
-      secure: this.configService.NODE_ENVIRONMENT === 'production' ? true : false,
+      secure: this.configService.NODE_ENVIRONMENT === ENVIRONMENT.PRODUCTION,
       sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 5,

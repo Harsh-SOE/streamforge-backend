@@ -3,7 +3,7 @@ import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 
-import { AppConfigService } from './config.service';
+import { UserConfigService } from './config.service';
 
 @Global()
 @Module({
@@ -44,7 +44,7 @@ import { AppConfigService } from './config.service';
       }),
     }),
   ],
-  providers: [AppConfigService],
-  exports: [AppConfigService],
+  providers: [UserConfigService],
+  exports: [UserConfigService],
 })
-export class AppConfigModule {}
+export class UserConfigModule {}

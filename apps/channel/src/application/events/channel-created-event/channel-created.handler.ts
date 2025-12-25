@@ -16,7 +16,7 @@ export class ChannelCreatedEventHandler implements IEventHandler<ChannelCreatedE
 
   async handle({ channelCreatedEventDto }: ChannelCreatedEvent) {
     await this.messageBus.publishMessage(
-      CHANNEL_EVENTS.CHANNEEL_CREATED,
+      CHANNEL_EVENTS.CHANNEL_CREATED,
       JSON.stringify(channelCreatedEventDto),
     );
   }

@@ -8,7 +8,7 @@ import { SERVICES } from '@app/clients/constant';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 import { QUERY_SERVICE_NAME, QueryServiceClient } from '@app/contracts/query';
 
-import { AppConfigService } from '@gateway/infrastructure/config';
+import { GatewayConfigService } from '@gateway/infrastructure/config';
 
 import { GATEWAY_GAURD_STRATEGY, UserJwtAuthPayload } from '../types';
 
@@ -20,7 +20,7 @@ export class JwtStrategy
   private queryService: QueryServiceClient;
 
   constructor(
-    readonly configService: AppConfigService,
+    readonly configService: GatewayConfigService,
     @Inject(SERVICES.USER) private readonly userClient: ClientGrpc,
     @Inject(SERVICES.QUERY) private readonly queryClient: ClientGrpc,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,

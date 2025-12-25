@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
 import { join } from 'path';
 
-import { AppConfigService } from './config.service';
+import { TranscoderConfigService } from './config.service';
 
 @Module({
-  providers: [AppConfigService],
+  providers: [TranscoderConfigService],
   imports: [
     ConfigModule.forRoot({
       envFilePath: join(__dirname, '../../.env'),
@@ -33,6 +33,6 @@ import { AppConfigService } from './config.service';
       }),
     }),
   ],
-  exports: [AppConfigService],
+  exports: [TranscoderConfigService],
 })
-export class AppConfigModule {}
+export class TranscoderConfigModule {}

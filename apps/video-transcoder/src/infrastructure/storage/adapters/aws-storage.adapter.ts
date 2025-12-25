@@ -7,7 +7,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 import { UploadResult, UploadOptions, TranscoderStoragePort } from '@transcoder/application/ports';
-import { AppConfigService } from '@transcoder/infrastructure/config';
+import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 
 @Injectable()
 export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort {
@@ -17,7 +17,7 @@ export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort 
   private s3Client: S3Client;
 
   public constructor(
-    private readonly configService: AppConfigService,
+    private readonly configService: TranscoderConfigService,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 

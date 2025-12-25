@@ -13,7 +13,7 @@ export enum VIDEO_EVENTS {
 }
 
 export enum CHANNEL_EVENTS {
-  CHANNEEL_CREATED = 'channel.created',
+  CHANNEL_CREATED = 'channel.created',
 }
 
 export enum VIDEO_TRANSCODER_EVENTS {

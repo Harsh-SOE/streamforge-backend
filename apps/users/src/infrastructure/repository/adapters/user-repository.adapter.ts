@@ -29,7 +29,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
       });
     const createdUser = await this.prismaDatabaseHandler.execute(saveUserOperation, {
       operationType: 'CREATE',
-      entry: this.userPersistanceACL.toPersistance(userAggregate),
+      entity: this.userPersistanceACL.toPersistance(userAggregate),
     });
     return this.userPersistanceACL.toAggregate(createdUser);
   }
@@ -50,7 +50,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
 
     const createdEntities = await this.prismaDatabaseHandler.execute(saveManyUsersOperations, {
       operationType: 'CREATE',
-      entry: usersToCreate,
+      entity: usersToCreate,
     });
     return createdEntities.count;
   }
@@ -64,7 +64,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
 
     const updatedUser = await this.prismaDatabaseHandler.execute(updateUserByIdOperation, {
       operationType: 'UPDATE',
-      entry: this.userPersistanceACL.toPersistance(updatedUserModel),
+      entity: this.userPersistanceACL.toPersistance(updatedUserModel),
       filter: { id },
     });
 
@@ -83,7 +83,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
 
     const updatedUser = await this.prismaDatabaseHandler.execute(updateUserOperation, {
       operationType: 'UPDATE',
-      entry: this.userPersistanceACL.toPersistance(updatedUserAggregate),
+      entity: this.userPersistanceACL.toPersistance(updatedUserAggregate),
       filter: { authUserId: userAuthId },
     });
 
@@ -102,7 +102,7 @@ export class UserRepositoryAdapter implements UserRepositoryPort {
 
     const updatedUser = await this.prismaDatabaseHandler.execute(updateUserOperation, {
       operationType: 'UPDATE',
-      entry: this.userPersistanceACL.toPersistance(updatedUserAggregate),
+      entity: this.userPersistanceACL.toPersistance(updatedUserAggregate),
       filter: { handle },
     });
 

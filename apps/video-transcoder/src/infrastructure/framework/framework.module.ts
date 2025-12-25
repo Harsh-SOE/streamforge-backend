@@ -23,6 +23,7 @@ import { LOGGER_PORT } from '@app/ports/logger';
 import { MESSAGE_BROKER } from '@app/ports/message-broker';
 import { RedisCacheHandler } from '@app/handlers/cache-handler';
 import { KafkaMessageBusHandler } from '@app/handlers/message-bus-handler';
+import { LOKI_URL, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 
 import {
   SEGMENT_DELETE_QUEUE,
@@ -32,13 +33,12 @@ import {
 import { TRANSCODER_PORT, TRANSCODER_STORAGE_PORT } from '@transcoder/application/ports';
 
 import { MeasureModule } from '../measure';
-import { AppConfigModule, AppConfigService } from '../config';
-import { WinstonLoggerAdapter } from '../logger';
 import { AwsS3StorageAdapter } from '../storage/adapters';
+import { TranscoderConfigModule, TranscoderConfigService } from '../config';
 import { SegmentWatcher } from '../transcoder/segment-watcher';
 import { KafkaMessageBrokerAdapter } from '../message-bus/adapters';
-import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
 import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
+import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
 
 @Global()
 @Module({
@@ -46,9 +46,9 @@ import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
     MeasureModule,
     CqrsModule,
     BullModule.forRootAsync({
-      imports: [AppConfigModule],
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => ({
+      imports: [TranscoderConfigModule],
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => ({
         connection: {
           url: `${configService.REDIS_HOST}:${configService.REDIS_PORT}`,
         },
@@ -67,12 +67,17 @@ import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
     SegmentWatcher,
     BullTranscodeJobsWorker,
     BullSegmentUploadWorker,
-    AppConfigService,
+    TranscoderConfigService,
     KafkaMessageBusHandler,
     RedisCacheHandler,
     SegmentWatcher,
+    {
+      provide: LOKI_URL,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.GRAFANA_LOKI_URL,
+    },
     { provide: MESSAGE_BROKER, useClass: KafkaMessageBrokerAdapter },
-    { provide: LOGGER_PORT, useClass: WinstonLoggerAdapter },
+    { provide: LOGGER_PORT, useClass: LokiConsoleLogger },
     { provide: TRANSCODER_STORAGE_PORT, useClass: AwsS3StorageAdapter },
     {
       provide: TRANSCODER_PORT,
@@ -80,64 +85,64 @@ import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
     },
     {
       provide: KAFKA_HOST,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_HOST,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.KAFKA_HOST,
     },
     {
       provide: KAFKA_PORT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_PORT,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.KAFKA_PORT,
     },
     {
       provide: KAFKA_CLIENT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CLIENT_ID,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.KAFKA_CLIENT_ID,
     },
     {
       provide: KAFKA_CA_CERT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CA_CERT,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.KAFKA_CA_CERT,
     },
     {
       provide: KAFKA_ACCESS_CERT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.ACCESS_CERT,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.ACCESS_CERT,
     },
     {
       provide: KAFKA_ACCESS_KEY,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.ACCESS_KEY,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.ACCESS_KEY,
     },
     {
       provide: KAFKA_CONSUMER,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.KAFKA_CONSUMER_ID,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.KAFKA_CONSUMER_ID,
     },
     {
       provide: REDIS_HOST,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_HOST,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.REDIS_HOST,
     },
     {
       provide: REDIS_PORT,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_PORT,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.REDIS_PORT,
     },
     {
       provide: REDIS_STREAM_KEY,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_STREAM_KEY,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.REDIS_STREAM_KEY,
     },
     {
       provide: REDIS_STREAM_GROUPNAME,
-      inject: [AppConfigService],
-      useFactory: (configService: AppConfigService) => configService.REDIS_STREAM_GROUPNAME,
+      inject: [TranscoderConfigService],
+      useFactory: (configService: TranscoderConfigService) => configService.REDIS_STREAM_GROUPNAME,
     },
   ],
   exports: [
     MeasureModule,
     CqrsModule,
-    AppConfigService,
+    TranscoderConfigService,
 
     KafkaClient,
     RedisClient,

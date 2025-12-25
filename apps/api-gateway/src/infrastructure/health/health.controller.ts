@@ -1,10 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheckService,
   HealthCheck,
   MemoryHealthIndicator,
   DiskHealthIndicator,
 } from '@nestjs/terminus';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller('health')
 export class AppHealthController {

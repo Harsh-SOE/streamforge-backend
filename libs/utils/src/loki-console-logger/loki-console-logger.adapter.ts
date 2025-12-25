@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import LokiTransport from 'winston-loki';
+import { Inject, Injectable } from '@nestjs/common';
 import winston, { createLogger, format, Logger, transport, Logform, transports } from 'winston';
 
 import { LoggerPort } from '@app/ports/logger';
-
-import { AppConfigService } from '@transcoder/infrastructure/config';
 
 const levels = {
   fatal: 0,
@@ -31,11 +29,13 @@ export interface MyConsoleLogCompleteInfo extends Logform.TransformableInfo {
   [key: string]: any;
 }
 
+export const LOKI_URL = Symbol('LOKI_URL');
+
 @Injectable()
-export class WinstonLoggerAdapter implements LoggerPort {
+export class LokiConsoleLogger implements LoggerPort {
   private logger: Logger;
 
-  public constructor(private readonly configService: AppConfigService) {
+  public constructor(@Inject(LOKI_URL) private readonly url: string) {
     winston.addColors(colors);
     const loggerTransports: transport[] = [this.consoleTransport(), this.lokiTransport()];
 
@@ -49,14 +49,16 @@ export class WinstonLoggerAdapter implements LoggerPort {
 
   private consoleTransport() {
     const consoleFormatPipeline = format.combine(
-      format.timestamp(),
+      format.timestamp({ format: 'MM/DD/YYYY, h:mm:ss A' }),
       format.errors({ stack: true }),
-      format.colorize(),
+      format.colorize({ all: true }),
       format.printf((info: MyConsoleLogCompleteInfo) => {
         const { level, message, timestamp, stack, ...meta } = info;
-        return `[${timestamp}] [${level}] ${message} ${JSON.stringify(meta || {})} ${stack || ''}`;
+        const metaString = Object.keys(meta).length ? JSON.stringify(meta) : '';
+        return `[${timestamp}] [${level}] ${message} ${metaString} ${stack || ''}`;
       }),
     );
+
     return new transports.Console({
       level: 'debug',
       format: consoleFormatPipeline,
@@ -70,7 +72,7 @@ export class WinstonLoggerAdapter implements LoggerPort {
       format.json({ maximumDepth: 3 }),
     );
     return new LokiTransport({
-      host: this.configService.GRAFANA_LOKI_URL,
+      host: this.url,
       level: 'debug',
       format: lokiFormatPipeline,
     });

@@ -1,5 +1,5 @@
-import { Controller, UseFilters } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { Controller, UseFilters } from '@nestjs/common';
 
 import {
   UserServiceController,
@@ -21,8 +21,8 @@ import {
   GetPreSignedUrlResponse,
 } from '@app/contracts/users';
 
-import { GrpcService } from './grpc.service';
 import { GrpcFilter } from '../filters';
+import { GrpcService } from './rpc.service';
 
 @Controller()
 @UseFilters(GrpcFilter)

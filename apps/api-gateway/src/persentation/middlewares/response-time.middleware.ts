@@ -1,8 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
-import { NextFunction, Request, Response } from 'express';
-import responseTime from 'response-time';
 import { Histogram } from 'prom-client';
+import responseTime from 'response-time';
+import { NextFunction, Request, Response } from 'express';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 
 import { REQUEST_PROCESSING_TIME } from '../../infrastructure/measure';
 
