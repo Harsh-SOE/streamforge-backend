@@ -1,8 +1,7 @@
-name: Authz CI/CD
+name: Authz CI
 
 on:
   push:
-    branches: ["main"]
     paths:
       - "apps/authz/**"
       - "libs/**"
@@ -15,7 +14,6 @@ on:
       - "tsconfig.json"
       - "tsconfig.build.json"
   pull_request:
-    branches: ["main"]
     paths:
       - "apps/authz/**"
       - "libs/**"
@@ -29,78 +27,10 @@ on:
       - "tsconfig.build.json"
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    name: Lint all the changes made in the libraries and authz
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "yarn"
-
-      - name: Install Dependencies (Root)
-        run: yarn install --frozen-lockfile
-
-      - name: Run linter (libraries)
-        run: yarn lint:libs
-
-      - name: Run linter (authz)
-        run: yarn lint:authz
-
-  test-and-validate:
-    runs-on: ubuntu-latest
-    needs: lint
-    name: Tests and validates all the changes before building and pushing the image
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "yarn"
-
-      - name: Install Dependencies (Root)
-        run: yarn install --frozen-lockfile
-
-      - name: Run Unit Tests (authz)
-        run: npx jest apps/authz/test/unit
-
-      - name: Run Integration Tests (authz)
-        run: npx jest apps/authz/test/integration
-
-  build-and-push:
-    name: Build & Push to Docker Hub
-    needs: test-and-validate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and Push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/authz/Dockerfile
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-authz:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-authz:${{ github.sha }}
+  authz-pipeline:
+    uses: ./.github/workflows/template-ci.yml
+    with:
+      service-name: "authz"
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
