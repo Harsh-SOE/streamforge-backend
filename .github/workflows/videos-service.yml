@@ -3,34 +3,36 @@ name: Videos CI
 on:
   push:
     paths:
-      - "apps/videos/**"
-      - "libs/**"
-      - ".github/workflows/videos-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/videos-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/videos/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/videos/**"
-      - "libs/**"
-      - ".github/workflows/videos-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/videos-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/videos/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   videos-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "videos"
+      service-name: 'videos'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

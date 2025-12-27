@@ -3,34 +3,36 @@ name: Users CI
 on:
   push:
     paths:
-      - "apps/users/**"
-      - "libs/**"
-      - ".github/workflows/users-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/users-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/users/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/users/**"
-      - "libs/**"
-      - ".github/workflows/users-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/users-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/users/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   users-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "users"
+      service-name: 'users'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

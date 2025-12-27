@@ -3,34 +3,36 @@ name: Reaction CI
 on:
   push:
     paths:
-      - "apps/reaction/**"
-      - "libs/**"
-      - ".github/workflows/reaction-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/reaction-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/reaction/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/reaction/**"
-      - "libs/**"
-      - ".github/workflows/reaction-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/reaction-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/reaction/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   reaction-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "reaction"
+      service-name: 'reaction'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

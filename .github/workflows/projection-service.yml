@@ -3,34 +3,36 @@ name: Projection CI
 on:
   push:
     paths:
-      - "apps/projection/**"
-      - "libs/**"
-      - ".github/workflows/projection-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/projection-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/projection/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/projection/**"
-      - "libs/**"
-      - ".github/workflows/projection-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/projection-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/projection/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   projection-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "projection"
+      service-name: 'projection'
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
