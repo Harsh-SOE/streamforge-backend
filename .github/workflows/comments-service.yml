@@ -3,34 +3,36 @@ name: Comments CI
 on:
   push:
     paths:
-      - "apps/comments/**"
-      - "libs/**"
-      - ".github/workflows/comments-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/comments-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/comments/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/comments/**"
-      - "libs/**"
-      - ".github/workflows/comments-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/comments-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/comments/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   comments-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "comments"
+      service-name: 'comments'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

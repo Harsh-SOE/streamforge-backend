@@ -3,34 +3,36 @@ name: Views CI
 on:
   push:
     paths:
-      - "apps/views/**"
-      - "libs/**"
-      - ".github/workflows/views-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/views-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/views/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/views/**"
-      - "libs/**"
-      - ".github/workflows/views-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/views-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/views/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   views-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "views"
+      service-name: 'views'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

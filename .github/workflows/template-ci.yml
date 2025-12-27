@@ -27,11 +27,15 @@ jobs:
     steps:
       - name: Get the latest code
         uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'yarn'
+          node-version: '24'
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Install all dependencies
         run: yarn install --frozen-lockfile
 
@@ -40,7 +44,10 @@ jobs:
         run: npx prisma generate --schema=apps/${{ inputs.service-name }}/prisma/schema.prisma
 
       - name: Lint the application
-        run: yarn lint
+        run: yarn lint apps/${{ inputs.service-name }}
+
+      - name: Lint all the libraries
+        run: yarn lint libs
 
       - name: Test the application
         run: yarn test apps/${{ inputs.service-name }}
@@ -49,18 +56,19 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to docker hub
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push to docker hub
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./apps/${{ inputs.service-name }}/Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-${{ inputs.service-name }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-${{ inputs.service-name }}:${{ github.sha }}

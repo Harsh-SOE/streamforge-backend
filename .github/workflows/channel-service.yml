@@ -3,34 +3,36 @@ name: Channel CI
 on:
   push:
     paths:
-      - "apps/channel/**"
-      - "libs/**"
-      - ".github/workflows/channel-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/channel-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/channel/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/channel/**"
-      - "libs/**"
-      - ".github/workflows/channel-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/channel-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/channel/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   channel-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "channel"
+      service-name: 'channel'
       generate-prisma: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

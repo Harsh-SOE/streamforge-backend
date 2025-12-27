@@ -3,34 +3,36 @@ name: Subscribe CI
 on:
   push:
     paths:
-      - "apps/subscribe/**"
-      - "libs/**"
-      - ".github/workflows/subscribe-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/subscribe-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/subscribe/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
   pull_request:
     paths:
-      - "apps/subscribe/**"
-      - "libs/**"
-      - ".github/workflows/subscribe-service.yml"
-      - "package.json"
-      - "yarn.lock"
-      - "jest.config.json"
-      - "eslint.config.js"
-      - "nest-cli.json"
-      - "tsconfig.json"
-      - "tsconfig.build.json"
+      - '.github/workflows/subscribe-service.yml'
+      - '.github/workflows/template-ci.yml'
+      - 'apps/subscribe/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'jest.config.json'
+      - 'eslint.config.js'
+      - 'nest-cli.json'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 jobs:
   subscribe-pipeline:
     uses: ./.github/workflows/template-ci.yml
     with:
-      service-name: "subscribe"
+      service-name: 'subscribe'
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
