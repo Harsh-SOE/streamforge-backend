@@ -8,7 +8,7 @@ import { ChannelAggregate } from '@channel/domain/aggregates';
 import { ChannelCommandRepositoryPort } from '@channel/application/ports';
 import { ChannelAggregatePersistanceACL } from '@channel/infrastructure/anti-corruption';
 import { PrismaDBClient } from '@app/clients/prisma';
-import { PrismaClient as ChannelPrismaClient } from '@peristance/channel';
+import { PrismaClient as ChannelPrismaClient } from '@persistance/channel';
 
 @Injectable()
 export class ChannelRepositoryAdapter implements ChannelCommandRepositoryPort {

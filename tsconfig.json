@@ -45,7 +45,7 @@
       "@email/*": ["apps/email/src/*"],
       "@gateway/*": ["apps/api-gateway/src/*"],
       "@history/*": ["apps/history/src/*"],
-      "@peristance/channel": ["apps/channel/generated/prisma"],
+      "@persistance/channel": ["apps/channel/generated/prisma"],
       "@peristance/comments": ["apps/comments/generated/prisma"],
       "@peristance/reaction": ["apps/reaction/generated/prisma"],
       "@persistance/users": ["apps/users/generated/prisma"],

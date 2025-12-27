@@ -39,7 +39,7 @@ import { KafkaMessageBusAdapter } from '../message-bus/adapters';
 import { ChannelAggregatePersistanceACL } from '../anti-corruption';
 import { ChannelRepositoryAdapter } from '../repository/adapters';
 
-import { PrismaClient } from '@peristance/channel';
+import { PrismaClient } from '@persistance/channel';
 
 @Global()
 @Module({
