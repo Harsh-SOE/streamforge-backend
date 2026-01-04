@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { Injectable } from '@nestjs/common';
 
 import { ViewsVideoDto, ViewsVideoResponse } from '@app/contracts/views';
 
-import { WatchVideoCommand } from '@views/application/use-cases';
+import { WatchVideoCommand } from '@views/application/commands';
 
 @Injectable()
-export class GrpcService {
+export class RpcService {
   public constructor(public readonly commandBus: CommandBus) {}
 
   public async watchVideo(watchVideoDto: ViewsVideoDto): Promise<ViewsVideoResponse> {
