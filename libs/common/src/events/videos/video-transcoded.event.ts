@@ -5,7 +5,7 @@ export interface VideoTranscodedIntegrationEventPayload {
   newIdentifier: string;
 }
 
-export class VideoTranscodedIntegratedEvent implements IntegrationEvent<VideoTranscodedIntegrationEventPayload> {
+export class VideoTranscodedIntegrationEvent implements IntegrationEvent<VideoTranscodedIntegrationEventPayload> {
   public readonly eventId: string;
   public readonly occurredAt: string;
   public readonly eventVersion: number = 1;

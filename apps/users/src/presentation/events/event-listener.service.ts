@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { IntegrationEvent, USERS_EVENTS } from '@app/common/events';
+import { OnboardedIntegrationEvent } from '@app/common/events/users';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
 import { EventsService } from './events.service';
@@ -18,7 +19,7 @@ export class EventsListener implements OnModuleInit {
       // react to all relevant messages here...
       switch (event.eventName) {
         case USERS_EVENTS.USER_ONBOARDED_EVENT.toString(): {
-          await this.eventsService.OnUserOnboardedEvent(event);
+          await this.eventsService.OnUserOnboardedEvent(event as OnboardedIntegrationEvent);
           break;
         }
       }

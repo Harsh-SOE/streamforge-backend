@@ -1,9 +1,10 @@
 import { Producer } from 'kafkajs';
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { KafkaClient } from '@app/clients/kafka';
 import { IntegrationEvent } from '@app/common/events';
 import { EventsPublisherPort } from '@app/common/ports/events';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { KafkaEventPublisherHandler } from '@app/handlers/events-publisher/kafka';
 
 @Injectable()
@@ -15,16 +16,19 @@ export class UsersKafkaPublisherAdapter
   public constructor(
     private readonly handler: KafkaEventPublisherHandler,
     private readonly kafka: KafkaClient,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
   }
 
   public async connect(): Promise<void> {
     await this.producer.connect();
+    this.logger.alert('Kafka Producer connected successfully');
   }
 
   public async disconnect(): Promise<void> {
     await this.producer.disconnect();
+    this.logger.alert('Kafka Producer disconnected successfully');
   }
 
   public async onModuleInit() {

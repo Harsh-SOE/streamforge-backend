@@ -38,11 +38,12 @@ export class ViewsKafkaConsumerAdapter
 
   public async connect(): Promise<void> {
     await this.consumer.connect();
+    this.logger.alert('Kafka consumer connected successfully');
 
     const eventsToSubscribe = [];
     await this.subscribe(eventsToSubscribe);
 
-    this.logger.alert('Kafka consumer connected successfully');
+    this.logger.alert(`Kafka consumer subscribed to events: [${eventsToSubscribe.join(', ')}]`);
   }
 
   public async disconnect(): Promise<void> {
