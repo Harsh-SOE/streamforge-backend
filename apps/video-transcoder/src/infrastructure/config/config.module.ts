@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
 import { join } from 'path';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
+import { ENVIRONMENT } from '@app/utils/enums';
 
 import { TranscoderConfigService } from './config.service';
 
@@ -12,7 +14,12 @@ import { TranscoderConfigService } from './config.service';
       envFilePath: join(__dirname, '../../.env'),
       isGlobal: true,
       validationSchema: joi.object({
-        NODE_ENVIRONMENT: joi.string().required(),
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
+
         HTTP_PORT: joi.number().required(),
         AWS_REGION: joi.string().required(),
         AWS_BUCKET: joi.string().required(),

@@ -11,4 +11,4 @@ import { EventsListenerService } from './events-listener.service';
   imports: [CqrsModule, VideosConfigModule],
   providers: [EventsService, EventsListenerService, ...VideoEventHandler],
 })
-export class MessagesModule {}
+export class EventsModule {}

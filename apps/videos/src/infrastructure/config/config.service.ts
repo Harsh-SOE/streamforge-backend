@@ -6,6 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, KafkaOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class VideosConfigService {
   constructor(private readonly configService: ConfigService) {}
 
   get NODE_ENVIRONMENT() {
-    return this.configService.getOrThrow<string>('NODE_ENVIRONMENT');
+    return this.configService.getOrThrow<ENVIRONMENT>('NODE_ENVIRONMENT');
   }
 
   get HTTP_PORT() {

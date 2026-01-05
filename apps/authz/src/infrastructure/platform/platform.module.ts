@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 
 import { LOGGER_PORT } from '@app/common/ports/logger';
 import { AUTHORIZE_PORT } from '@authz/application/ports/auth';
-import { LOKI_CONFIG, LokiConsoleLogger } from '@app/utils/loki-console-logger';
+import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 
 import { AuthzConfigService } from '../config';
 import { OpenFGAAuthAdapter } from '../auth/adapters';
@@ -14,7 +14,8 @@ import { OpenFGAAuthAdapter } from '../auth/adapters';
     {
       provide: LOKI_CONFIG,
       inject: [AuthzConfigService],
-      useFactory: (configService: AuthzConfigService) => configService.GRAFANA_LOKI_URL,
+      useFactory: (configService: AuthzConfigService) =>
+        ({ url: configService.GRAFANA_LOKI_URL }) satisfies LokiConfig,
     },
     AuthzConfigService,
     { provide: AUTHORIZE_PORT, useClass: OpenFGAAuthAdapter },

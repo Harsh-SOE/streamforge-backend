@@ -2,8 +2,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
+import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+
 import { VideoWatchProjectionModel } from '@projection/infrastructure/repository/models';
-import { VideoUpatedEventDto, VideoUploadedEventDto } from '@app/contracts/videos';
 
 @Injectable()
 export class VideoProjectionACL {
@@ -12,29 +13,39 @@ export class VideoProjectionACL {
     private readonly videoCard: Model<VideoWatchProjectionModel>,
   ) {}
 
-  public videoUploadedEventToPersistance(event: VideoUploadedEventDto): VideoWatchProjectionModel {
+  public videoUploadedEventToPersistance(
+    event: VideoPublishedIntegrationEvent,
+  ): VideoWatchProjectionModel {
+    const {
+      videoId,
+      userId,
+      channelId,
+      title,
+      fileIdentifier,
+      thumbnailIdentifier,
+      categories,
+      visibility,
+      description,
+    } = event.payload;
+
     const videoCard = {
-      videoId: event.videoId,
-      channelId: event.channelId,
-      ownerId: event.ownerId,
-      ownerAvatar: event.ownerAvatar,
-      ownerHandle: event.ownerHandle,
-      title: event.title,
-      thumbnailUrl: event.thumbnailUrl,
-      videoUrl: event.videoUrl,
-      categories: event.categories,
-      views: event.views,
-      commentsCount: event.commentsCount,
-      durationSeconds: event.durationSeconds,
-      likes: event.likes,
-      visibility: event.visibility,
-      searchTitle: event.searchTitle,
-      publishedAt: event.publishedAt,
+      videoId,
+      userId,
+      channelId,
+      title,
+      thumbnailUrl: thumbnailIdentifier,
+      videoUrl: fileIdentifier,
+      durationSeconds: 500,
+      publishedAt: new Date(),
+      categories,
+      visibility,
+      description,
     };
 
     return new this.videoCard(videoCard);
   }
 
+  /*
   public videoUpdatedEventToPersistance(
     event: VideoUpatedEventDto,
   ): Partial<VideoWatchProjectionModel> {
@@ -53,4 +64,5 @@ export class VideoProjectionACL {
 
     return new this.videoCard(videoCard);
   }
+  */
 }

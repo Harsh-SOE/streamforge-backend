@@ -1,8 +1,12 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { UserProfileCreatedEventDto } from '@app/contracts/users';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import {
+  OnboardedIntegrationEvent,
+  ProfileUpdatedIntegrationEvent,
+} from '@app/common/events/users';
 
 import { UserProjectionRepositoryPort } from '@projection/application/ports';
 import { UserProjectionACL } from '@projection/infrastructure/anti-corruption';
@@ -15,9 +19,12 @@ export class UserProjectionRepository implements UserProjectionRepositoryPort {
     @InjectModel(UserProjectionModel.name)
     private readonly projectedVideoCard: Model<UserProjectionModel>,
     private readonly userCardACL: UserProjectionACL,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async saveUser(data: UserProfileCreatedEventDto): Promise<boolean> {
+  public async saveUser(data: OnboardedIntegrationEvent): Promise<boolean> {
+    this.logger.info(`User will be saved as`, data);
+
     await this.projectedVideoCard.create(
       this.userCardACL.userProfileCreatedEventToPersistance(data),
     );
@@ -25,14 +32,17 @@ export class UserProjectionRepository implements UserProjectionRepositoryPort {
     return true;
   }
 
-  async saveManyUser(event: UserProfileCreatedEventDto[]): Promise<number> {
+  async saveManyUser(event: OnboardedIntegrationEvent[]): Promise<number> {
     const data = event.map((data) => this.userCardACL.userProfileCreatedEventToPersistance(data));
     const savedCards = await this.projectedVideoCard.insertMany(data);
 
     return savedCards.length;
   }
 
-  public async updateUser(videoId: string, event: UserProfileCreatedEventDto): Promise<boolean> {
+  public async updateUser(
+    videoId: string,
+    event: ProfileUpdatedIntegrationEvent,
+  ): Promise<boolean> {
     const updated = await this.projectedVideoCard.findOneAndUpdate(
       { videoId },
       { $set: this.userCardACL.userProfileUpdatedEventToPersistance(event) },

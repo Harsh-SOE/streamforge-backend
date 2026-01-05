@@ -1,6 +1,7 @@
 import { Consumer } from 'kafkajs';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
 import { EventsConsumerPort } from '@app/common/ports/events';
 import { IntegrationEvent, USERS_EVENTS } from '@app/common/events';
@@ -55,7 +56,7 @@ export class EmailKafkaEventsConsumerAdapter
       async () =>
         await this.consumer.subscribe({
           topics: eventNames,
-          fromBeginning: this.configService.NODE_ENVIRONMENT === 'development',
+          fromBeginning: this.configService.NODE_ENVIRONMENT === ENVIRONMENT.DEVELOPMENT,
         }),
       {
         operationType: 'CONNECT',

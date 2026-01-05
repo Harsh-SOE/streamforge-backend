@@ -1,7 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 
-import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/clients/kafka';
-import { REDIS_CLIENT_CONFIG, RedisClientConfig, RedisClient } from '@app/clients/redis';
 import {
   REDIS_CACHE_HANDLER_CONFIG,
   RedisCacheHandler,
@@ -12,9 +10,11 @@ import {
   RedisBufferHandler,
   RedisBufferHandlerConfig,
 } from '@app/handlers/buffer/redis';
-import { LOGGER_PORT } from '@app/common/ports/logger';
-import { LOKI_CONFIG, LokiConsoleLogger } from '@app/utils/loki-console-logger';
-import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
+import {
+  DATABASE_HANDLER_CONFIG,
+  DatabaseConfig,
+  PrismaHandler,
+} from '@app/handlers/database/prisma';
 import {
   KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
   KafkaEventConsumerHandler,
@@ -25,12 +25,13 @@ import {
   KafkaEventPublisherHandler,
   KafkaEventPublisherHandlerConfig,
 } from '@app/handlers/events-publisher/kafka';
+import { LOGGER_PORT } from '@app/common/ports/logger';
 import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
-import {
-  DATABASE_HANDLER_CONFIG,
-  DatabaseConfig,
-  PrismaHandler,
-} from '@app/handlers/database/prisma';
+import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
+import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/clients/kafka';
+import { REDIS_CLIENT_CONFIG, RedisClientConfig, RedisClient } from '@app/clients/redis';
+import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
+import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/handlers/buffer/kafka';
 
 import {
   STORAGE_PORT,
@@ -54,7 +55,6 @@ import { PrismaClient as VideoPrismaClient } from '@persistance/videos';
 
 import { VideosKafkaPublisherAdapter } from '../events-publisher/adapters';
 import { VideosKafkaConsumerAdapter } from '../events-consumers/adapters';
-import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/handlers/buffer/kafka';
 
 @Global()
 @Module({
@@ -113,7 +113,8 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
     {
       provide: LOKI_CONFIG,
       inject: [VideosConfigService],
-      useFactory: (configService: VideosConfigService) => configService.GRAFANA_LOKI_URL,
+      useFactory: (configService: VideosConfigService) =>
+        ({ url: configService.GRAFANA_LOKI_URL }) satisfies LokiConfig,
     },
     { provide: VIDEOS_BUFFER_PORT, useClass: RedisStreamBufferAdapter },
     {
@@ -132,7 +133,7 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
         ({
           host: configService.KAFKA_HOST,
           port: configService.KAFKA_PORT,
-          service: 'users',
+          service: 'videos',
           logErrors: true,
           resilienceOptions: {
             circuitBreakerThreshold: 50,
@@ -143,7 +144,7 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
           dlqOnApplicationException: true,
           dlqOnDomainException: false,
           sendToDlqAfterAttempts: 5,
-          dlqTopic: `dlq.users`,
+          dlqTopic: `dlq.videos`,
         }) satisfies KafkaEventConsumerHandlerConfig,
     },
     {
@@ -153,7 +154,7 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
         ({
           host: configService.KAFKA_HOST,
           port: configService.KAFKA_PORT,
-          service: 'users',
+          service: 'videos',
           logErrors: true,
           resilienceOptions: {
             circuitBreakerThreshold: 50,
@@ -164,7 +165,7 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
           dlqOnApplicationException: true,
           dlqOnDomainException: false,
           sendToDlqAfterAttempts: 5,
-          dlqTopic: `dlq.users`,
+          dlqTopic: `dlq.videos`,
         }) satisfies KafkaEventPublisherHandlerConfig,
     },
     {
@@ -230,26 +231,27 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandlerConfig } from '@app/hand
     PrismaHandler,
     RedisCacheHandler,
     RedisBufferHandler,
-    VideosKafkaConsumerAdapter,
-    VideosKafkaPublisherAdapter,
+    KafkaEventConsumerHandler,
+    KafkaEventPublisherHandler,
 
     VideoPrismaClient,
     KafkaClient,
     RedisClient,
-    KafkaEventConsumerHandler,
-    KafkaEventPublisherHandler,
 
-    VIDEOS_RESPOSITORY_PORT,
-    VIDEOS_BUFFER_PORT,
-    VIDEOS_CACHE_PORT,
-    STORAGE_PORT,
     LOGGER_PORT,
-    KAFKA_CLIENT_CONFIG,
-    REDIS_CLIENT_CONFIG,
+    STORAGE_PORT,
+    VIDEOS_CACHE_PORT,
+    VIDEOS_BUFFER_PORT,
+    EVENT_CONSUMER_PORT,
+    EVENT_PUBLISHER_PORT,
+    VIDEOS_RESPOSITORY_PORT,
+
     PRISMA_CLIENT,
     PRISMA_CLIENT_NAME,
-    KAFKA_BUFFER_HANDLER_CONFIG,
+    KAFKA_CLIENT_CONFIG,
+    REDIS_CLIENT_CONFIG,
     VIDEOS_REDIS_STREAM_CONFIG,
+    KAFKA_BUFFER_HANDLER_CONFIG,
   ],
 })
 export class PlatformModule {}

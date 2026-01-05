@@ -5,10 +5,10 @@
 // source: videos.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "Video";
+export const protobufPackage = 'Video';
 
 export enum VideoTransportPublishStatus {
   TRANSPORT_PENDING = 0,
@@ -39,7 +39,7 @@ export interface GetPresignedUrlDto {
 }
 
 export interface VideoCreateDto {
-  ownerId: string;
+  userId: string;
   channelId: string;
   title: string;
   videoFileIdentifier: string;
@@ -77,15 +77,18 @@ export interface VideoUpdatedResponse {
   videoId: string;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
-export const VIDEO_PACKAGE_NAME = "Video";
+export const VIDEO_PACKAGE_NAME = 'Video';
 
 export interface VideoServiceClient {
-  getPresignedUrlForVideoFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
+  getPresignedUrlForVideoFileUpload(
+    request: GetPresignedUrlDto,
+  ): Observable<GetPreSignedUrlResponse>;
 
-  getPresignedUrlForThumbnailFileUpload(request: GetPresignedUrlDto): Observable<GetPreSignedUrlResponse>;
+  getPresignedUrlForThumbnailFileUpload(
+    request: GetPresignedUrlDto,
+  ): Observable<GetPreSignedUrlResponse>;
 
   save(request: VideoCreateDto): Observable<VideoPublishedResponse>;
 
@@ -95,11 +98,17 @@ export interface VideoServiceClient {
 export interface VideoServiceController {
   getPresignedUrlForVideoFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   getPresignedUrlForThumbnailFileUpload(
     request: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> | Observable<GetPreSignedUrlResponse> | GetPreSignedUrlResponse;
+  ):
+    | Promise<GetPreSignedUrlResponse>
+    | Observable<GetPreSignedUrlResponse>
+    | GetPreSignedUrlResponse;
 
   save(
     request: VideoCreateDto,
@@ -113,21 +122,21 @@ export interface VideoServiceController {
 export function VideoServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "getPresignedUrlForVideoFileUpload",
-      "getPresignedUrlForThumbnailFileUpload",
-      "save",
-      "update",
+      'getPresignedUrlForVideoFileUpload',
+      'getPresignedUrlForThumbnailFileUpload',
+      'save',
+      'update',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("VideoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod('VideoService', method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("VideoService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod('VideoService', method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const VIDEO_SERVICE_NAME = "VideoService";
+export const VIDEO_SERVICE_NAME = 'VideoService';

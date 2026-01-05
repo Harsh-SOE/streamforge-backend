@@ -1,8 +1,9 @@
 import { Admin } from 'kafkajs';
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { HealthIndicatorResult, HealthIndicatorService } from '@nestjs/terminus';
 
 import { KafkaClient } from '@app/clients/kafka';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 @Injectable()
 export class AppHealthService implements OnModuleInit, OnModuleDestroy {
@@ -11,12 +12,14 @@ export class AppHealthService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly healthIndicator: HealthIndicatorService,
     private readonly kafka: KafkaClient,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {
     this.admin = this.kafka.getAdmin();
   }
 
   async onModuleInit() {
     await this.admin.connect();
+    this.logger.alert(`Connected to kafka admin...`);
   }
 
   async onModuleDestroy() {

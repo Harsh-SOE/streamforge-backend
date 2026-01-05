@@ -12,23 +12,20 @@ export class UserProjectionModel extends Document {
   @Prop({ required: true, index: true })
   userAuthId: string;
 
+  @Prop({ index: true })
+  handle: string;
+
   @Prop()
   userName: string;
 
   @Prop()
   avatar: string;
 
-  @Prop({ index: true })
-  handle: string;
-
   @Prop()
   phoneNumber?: string;
 
   @Prop({ type: Boolean, default: false })
   isPhoneNumberVerified: boolean;
-
-  @Prop({ type: Boolean, default: false })
-  hasChannel: boolean;
 
   @Prop()
   dob?: string;

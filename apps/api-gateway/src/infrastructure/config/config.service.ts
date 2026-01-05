@@ -4,6 +4,7 @@ import { JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
 import { QUERY_PACKAGE_NAME } from '@app/contracts/query';
 import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
@@ -11,11 +12,6 @@ import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
 import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
 import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
 import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
-
-export enum ENVIRONMENT {
-  DEVELOPMENT = 'DEVELOPMENT',
-  PRODUCTION = 'PRODUCTION',
-}
 
 @Injectable()
 export class GatewayConfigService {

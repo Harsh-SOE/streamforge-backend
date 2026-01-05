@@ -20,7 +20,7 @@ import {
 import { LOGGER_PORT } from '@app/common/ports/logger';
 import { REDIS_CLIENT_CONFIG, RedisClientConfig, RedisClient } from '@app/clients/redis';
 import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
-import { LOKI_CONFIG, LokiConsoleLogger } from '@app/utils/loki-console-logger';
+import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 import {
   KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
@@ -201,7 +201,8 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandler } from '@app/handlers/b
     {
       provide: LOKI_CONFIG,
       inject: [CommentsConfigService],
-      useFactory: (configService: CommentsConfigService) => configService.GRAFANA_LOKI_URL,
+      useFactory: (configService: CommentsConfigService) =>
+        ({ url: configService.GRAFANA_LOKI_URL }) satisfies LokiConfig,
     },
 
     {

@@ -1,6 +1,7 @@
 import { Consumer } from 'kafkajs';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
 import { EventsConsumerPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
@@ -55,7 +56,7 @@ export class TranscoderKafkaConsumerAdapter
   public async subscribe(eventNames: Array<string>): Promise<void> {
     await this.consumer.subscribe({
       topics: eventNames,
-      fromBeginning: this.configService.NODE_ENVIRONMENT === 'development',
+      fromBeginning: this.configService.NODE_ENVIRONMENT === ENVIRONMENT.DEVELOPMENT,
     });
   }
 

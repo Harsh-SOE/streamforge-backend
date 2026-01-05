@@ -67,23 +67,22 @@ export class VideoService implements OnModuleInit {
     video: CreateVideoRequestDto,
     user: UserAuthPayload,
   ): Promise<PublishedVideoRequestResponse> {
-    // const channel$ = this.queryService.({
-    //   userId: user.id,
-    // });
+    const channel$ = this.queryService.getChannelFromUserId({
+      userId: user.id,
+    });
 
-    // const channel = await firstValueFrom(channel$);
-    // if (!channel || !channel.channel) {
-    //   this.logger.info(`No channel was found`);
-    //   throw new Error(`Channel not found`);
-    // }
+    const foundChannel = await firstValueFrom(channel$);
+    if (!foundChannel || !foundChannel.channel) {
+      this.logger.info(`No channel was found`);
+      throw new Error(`Channel not found`);
+    }
 
     const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper[video.visibility];
-
     const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper[video.status];
 
     const response$ = this.videoService.save({
-      ownerId: user.id,
-      channelId: '',
+      userId: user.id,
+      channelId: foundChannel.channel.channelId,
       videoTransportPublishStatus: videoServicePublishStatus,
       videoTransportVisibilityStatus: videoServiceVisibilityStatus,
       ...video,

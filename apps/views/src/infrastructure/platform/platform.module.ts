@@ -7,10 +7,20 @@ import {
   RedisCacheHandlerConfig,
 } from '@app/handlers/cache/redis';
 import {
+  VIEWS_BUFFER_PORT,
+  VIEWS_CACHE_PORT,
+  VIEWS_REPOSITORY_PORT,
+} from '@views/application/ports';
+import {
   REDIS_BUFFER_HANDLER_CONFIG,
   RedisBufferHandler,
   RedisBufferHandlerConfig,
 } from '@app/handlers/buffer/redis';
+import {
+  KAFKA_BUFFER_HANDLER_CONFIG,
+  KafkaBufferHandler,
+  KafkaBufferHandlerConfig,
+} from '@app/handlers/buffer/kafka';
 import {
   DATABASE_HANDLER_CONFIG,
   DatabaseConfig,
@@ -27,22 +37,11 @@ import {
   KafkaEventPublisherHandlerConfig,
 } from '@app/handlers/events-publisher/kafka';
 import { LOGGER_PORT } from '@app/common/ports/logger';
-import { LOKI_CONFIG, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 import { REDIS_CLIENT_CONFIG, RedisClient, RedisClientConfig } from '@app/clients/redis';
 import { KAFKA_CLIENT_CONFIG, KafkaClient, KafkaClientConfig } from '@app/clients/kafka';
-
-import {
-  VIEWS_BUFFER_PORT,
-  VIEWS_CACHE_PORT,
-  VIEWS_REPOSITORY_PORT,
-} from '@views/application/ports';
-import {
-  KAFKA_BUFFER_HANDLER_CONFIG,
-  KafkaBufferHandler,
-  KafkaBufferHandlerConfig,
-} from '@app/handlers/buffer/kafka';
+import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 
 import { PrismaClient as ViewPrismaClient } from '@persistance/views';
 
@@ -90,7 +89,8 @@ import { REDIS_STREAM_CONFIG, RedisStreamBufferAdapter, StreamConfig } from '../
     {
       provide: LOKI_CONFIG,
       inject: [ViewsConfigService],
-      useFactory: (configService: ViewsConfigService) => configService.GRAFANA_LOKI_URL,
+      useFactory: (configService: ViewsConfigService) =>
+        ({ url: configService.GRAFANA_LOKI_URL }) satisfies LokiConfig,
     },
     {
       provide: REDIS_STREAM_CONFIG,
@@ -238,28 +238,25 @@ import { REDIS_STREAM_CONFIG, RedisStreamBufferAdapter, StreamConfig } from '../
 
     PrismaHandler,
     RedisCacheHandler,
+    KafkaEventConsumerHandler,
+    KafkaEventPublisherHandler,
 
     KafkaClient,
     RedisClient,
     PrismaDBClient,
 
-    EVENT_PUBLISHER_PORT,
-    KAFKA_EVENT_PUBLISHER_HANDLER_CONFIG,
-    ViewsKafkaPublisherAdapter,
-    KafkaEventPublisherHandler,
-
-    EVENT_CONSUMER_PORT,
-    KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
-    KAFKA_BUFFER_HANDLER_CONFIG,
-    ViewsKafkaConsumerAdapter,
-    KafkaEventConsumerHandler,
-
-    VIEWS_CACHE_PORT,
-    VIEWS_REPOSITORY_PORT,
-    VIEWS_BUFFER_PORT,
     LOGGER_PORT,
+    VIEWS_CACHE_PORT,
+    VIEWS_BUFFER_PORT,
+    EVENT_CONSUMER_PORT,
+    EVENT_PUBLISHER_PORT,
+    VIEWS_REPOSITORY_PORT,
+
     PRISMA_CLIENT,
     PRISMA_CLIENT_NAME,
+    KAFKA_BUFFER_HANDLER_CONFIG,
+    KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
+    KAFKA_EVENT_PUBLISHER_HANDLER_CONFIG,
   ],
 })
 export class platformModule {}

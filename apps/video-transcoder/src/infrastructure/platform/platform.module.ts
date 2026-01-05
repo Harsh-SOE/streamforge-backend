@@ -36,8 +36,10 @@ import { MeasureModule } from '../measure';
 import { AwsS3StorageAdapter } from '../storage/adapters';
 import { SegmentWatcher } from '../transcoder/segment-watcher';
 import { TranscoderConfigModule, TranscoderConfigService } from '../config';
+import { TranscoderKafkaConsumerAdapter } from '../events-consumer/adapters';
 import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
 import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
+import { TranscoderKafkaPublisherAdapter } from '../events-publisher/adapters';
 
 @Global()
 @Module({
@@ -74,15 +76,14 @@ import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
     BullTranscodeJobsWorker,
     BullSegmentUploadWorker,
 
-    {
-      provide: EVENT_PUBLISHER_PORT,
-      useClass: KafkaEventPublisherHandler,
-    },
-
     // ports and adapters
     {
+      provide: EVENT_PUBLISHER_PORT,
+      useClass: TranscoderKafkaPublisherAdapter,
+    },
+    {
       provide: EVENT_CONSUMER_PORT,
-      useClass: KafkaEventConsumerHandler,
+      useClass: TranscoderKafkaConsumerAdapter,
     },
     { provide: LOGGER_PORT, useClass: LokiConsoleLogger },
     { provide: TRANSCODER_STORAGE_PORT, useClass: AwsS3StorageAdapter },
@@ -100,7 +101,7 @@ import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
         ({
           host: configService.KAFKA_HOST,
           port: configService.KAFKA_PORT,
-          service: 'views',
+          service: 'transcoder',
           logErrors: true,
           resilienceOptions: {
             circuitBreakerThreshold: 50,
@@ -111,7 +112,7 @@ import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
           dlqOnApplicationException: true,
           dlqOnDomainException: false,
           sendToDlqAfterAttempts: 5,
-          dlqTopic: `dlq.views`,
+          dlqTopic: `dlq.transcoder`,
         }) satisfies KafkaEventPublisherHandlerConfig,
     },
     {

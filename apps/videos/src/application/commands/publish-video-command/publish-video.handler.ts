@@ -23,7 +23,7 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
 
   async execute({ videoCreateDto }: PublishVideoCommand): Promise<VideoPublishedResponse> {
     const {
-      ownerId,
+      userId,
       channelId,
       title,
       videoThumbnailIdentifier,
@@ -44,7 +44,7 @@ export class PublishVideoHandler implements ICommandHandler<PublishVideoCommand>
     const videoAggregate = this.eventPublisher.mergeObjectContext(
       VideoAggregate.create({
         id,
-        ownerId,
+        userId,
         channelId,
         title,
         videoFileIdentifier,

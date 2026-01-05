@@ -1,12 +1,12 @@
 import { Inject } from '@nestjs/common';
 
-import { VideoUploadedEventDto } from '@app/contracts/videos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   VIDEO_PROJECTION_REPOSITORY_PORT,
   VideoProjectionRepositoryPort,
 } from '@projection/application/ports';
+import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
 
 export class VideoEventsService {
   public constructor(
@@ -15,9 +15,9 @@ export class VideoEventsService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async onVideoUploaded(videoUploadedEventDto: VideoUploadedEventDto) {
+  public async onVideoPublished(videoPublishedIntegrationEvent: VideoPublishedIntegrationEvent) {
     // Implementation for handling video uploaded projection event
     this.logger.info(`saving video projection`);
-    await this.videoProjectionRespository.saveVideo(videoUploadedEventDto);
+    await this.videoProjectionRespository.saveVideo(videoPublishedIntegrationEvent);
   }
 }

@@ -1,6 +1,6 @@
 export interface VideoAggregateOptions {
   id?: string;
-  ownerId: string;
+  userId: string;
   channelId: string;
   title: string;
   videoThumbnailIdentifier: string;

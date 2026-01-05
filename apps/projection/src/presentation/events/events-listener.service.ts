@@ -1,11 +1,14 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { VideoUploadedEventDto } from '@app/contracts/videos';
-import { ChannelCreatedEventDto } from '@app/contracts/channel';
+import {
+  OnboardedIntegrationEvent,
+  ProfileUpdatedIntegrationEvent,
+} from '@app/common/events/users';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+import { ChannelCreatedIntegrationEvent } from '@app/common/events/channel';
 import { CHANNEL_EVENTS, USERS_EVENTS, VIDEO_EVENTS } from '@app/common/events';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
-import { UserProfileCreatedEventDto, UserProfileUpdatedEventDto } from '@app/contracts/users';
 
 import { UsersEventsService } from './users-events.service';
 import { VideoEventsService } from './video-events.service';
@@ -26,23 +29,25 @@ export class EventsListenerService implements OnModuleInit {
       this.logger.info(`projection event recieved`, event);
       switch (event.eventName) {
         case USERS_EVENTS.USER_ONBOARDED_EVENT.toString(): {
-          await this.usersEventService.onUserProfileOnBoarded(
-            event.payload as UserProfileCreatedEventDto,
-          );
+          await this.usersEventService.onUserProfileOnBoarded(event as OnboardedIntegrationEvent);
           break;
         }
         case USERS_EVENTS.USER_PROFILE_UPDATED_EVENT.toString(): {
           await this.usersEventService.onUserProfileUpdated(
-            event.payload as UserProfileUpdatedEventDto,
+            event.payload as ProfileUpdatedIntegrationEvent,
           );
           break;
         }
         case CHANNEL_EVENTS.CHANNEL_CREATED.toString(): {
-          await this.channelEventsService.onChannelCreated(event.payload as ChannelCreatedEventDto);
+          await this.channelEventsService.onChannelCreated(
+            event.payload as ChannelCreatedIntegrationEvent,
+          );
           break;
         }
-        case VIDEO_EVENTS.VIDEO_UPLOADED_EVENT.toString(): {
-          await this.videoEventsService.onVideoUploaded(event.payload as VideoUploadedEventDto);
+        case VIDEO_EVENTS.VIDEO_PUBLISHED_EVENT.toString(): {
+          await this.videoEventsService.onVideoPublished(
+            event.payload as VideoPublishedIntegrationEvent,
+          );
           break;
         }
       }

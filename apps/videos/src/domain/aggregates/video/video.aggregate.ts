@@ -13,7 +13,7 @@ export class VideoAggregate extends AggregateRoot {
   public static create(aggregateProps: VideoAggregateOptions) {
     const {
       id,
-      ownerId,
+      userId,
       channelId,
       title,
       videoThumbnailIdentifier,
@@ -26,10 +26,10 @@ export class VideoAggregate extends AggregateRoot {
 
     const videoEntity = VideoEntity.create({
       id,
-      ownerId,
+      userId,
       channelId,
       title,
-      videoThumbnailIdentifier: videoThumbnailIdentifier,
+      videoThumbnailIdentifier,
       videoFileIdentifier,
       categories,
       publishStatus,
@@ -40,10 +40,17 @@ export class VideoAggregate extends AggregateRoot {
     const videoAggregate = new VideoAggregate(videoEntity);
 
     videoAggregate.apply(
-      new VideoCreatedDomainEvent(
-        videoAggregate.getSnapshot().videoFileIdentifier,
-        videoAggregate.getSnapshot().id,
-      ),
+      new VideoCreatedDomainEvent({
+        videoId: videoAggregate.getSnapshot().id,
+        userId,
+        channelId,
+        title,
+        categories,
+        description,
+        visibility: visibilityStatus,
+        fileIdentifier: videoFileIdentifier,
+        thumbnailIdentifier: videoThumbnailIdentifier,
+      }),
     );
 
     return videoAggregate;

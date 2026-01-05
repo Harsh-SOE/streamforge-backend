@@ -1,6 +1,6 @@
 import Redis from 'ioredis';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Inject, Injectable, OnModuleInit, Optional } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit, Optional } from '@nestjs/common';
 
 import { RedisClient } from '@app/clients/redis';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
@@ -21,7 +21,7 @@ export interface RedisBufferConfig {
 export const REDIS_BUFFER_CONFIG = Symbol('REDIS_STREAM_CONFIG');
 
 @Injectable()
-export class UsersRedisBuffer implements UsersBufferPort, OnModuleInit {
+export class UsersRedisBuffer implements UsersBufferPort, OnModuleInit, OnModuleDestroy {
   private client: Redis;
 
   public constructor(
@@ -57,6 +57,12 @@ export class UsersRedisBuffer implements UsersBufferPort, OnModuleInit {
   public async onModuleInit() {
     await this.handler.execute(async () => await this.connect(), { operationType: 'CONNECT' });
     await this.handler.execute(async () => await this.createStream(), { operationType: 'CONNECT' });
+  }
+
+  public async onModuleDestroy() {
+    await this.handler.execute(async () => await this.disconnect(), {
+      operationType: 'DISCONNECT',
+    });
   }
 
   public async createStream() {

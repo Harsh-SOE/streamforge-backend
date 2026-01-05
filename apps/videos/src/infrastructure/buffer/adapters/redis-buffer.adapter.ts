@@ -1,8 +1,9 @@
 import Redis from 'ioredis';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Inject, Injectable, OnModuleInit, Optional } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit, Optional } from '@nestjs/common';
 
 import { RedisClient } from '@app/clients/redis';
+import { RedisBufferHandler } from '@app/handlers/buffer/redis';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
@@ -23,40 +24,51 @@ export interface StreamConfig {
 export const VIDEOS_REDIS_STREAM_CONFIG = Symbol('VIDEOS_REDIS_STREAM_CONFIG');
 
 @Injectable()
-export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit {
+export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit, OnModuleDestroy {
   private readonly client: Redis;
 
   public constructor(
     private readonly configService: VideosConfigService,
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+
+    @Inject(LOGGER_PORT)
+    private readonly logger: LoggerPort,
+
     @Inject(VIDEOS_RESPOSITORY_PORT)
     private readonly videosRepository: VideoRepositoryPort,
+
     private readonly redis: RedisClient,
+    private readonly handler: RedisBufferHandler,
+
     @Optional()
     @Inject(VIDEOS_REDIS_STREAM_CONFIG)
     private readonly streamConfig?: StreamConfig,
   ) {
     this.client = redis.getClient();
+    this.logger.alert(`Using Redis stream as buffer for videos service`);
   }
 
   public async connect(): Promise<void> {
+    this.logger.alert(`Redis buffer connecting...`);
     await this.client.connect();
+    this.logger.alert(`Redis buffer connected successfully!`);
   }
 
   public async disconnect(): Promise<void> {
+    this.logger.alert(`Redis buffer disconnecting...`);
     await this.client.quit();
+    this.logger.alert(`Redis buffer disconnected successfully!`);
   }
 
   public async createStream() {
-    if (!this.streamConfig) return;
+    if (!this.streamConfig) {
+      this.logger.info(`Redis stream config not provided`);
+      return;
+    }
+    this.logger.info(`Setting up redis stream`);
+    const { key, groupName } = this.streamConfig;
+
     try {
-      await this.client.xgroup(
-        'CREATE',
-        this.streamConfig.key,
-        this.streamConfig.groupName,
-        '0',
-        'MKSTREAM',
-      );
+      await this.client.xgroup('CREATE', key, groupName, '0', 'MKSTREAM');
 
       this.logger.info(`Stream with key:${this.streamConfig.key} was created successfully`);
     } catch (error) {
@@ -66,22 +78,28 @@ export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit 
           `Stream with key: ${this.streamConfig.key} already exists, skipping creation`,
         );
       } else {
+        console.error(err);
         throw err;
       }
     }
   }
 
   public async onModuleInit() {
-    await this.connect();
-    await this.disconnect();
-    await this.createStream();
+    await this.handler.execute(async () => await this.connect(), { operationType: 'CONNECT' });
+    await this.handler.execute(async () => await this.createStream(), { operationType: 'CONNECT' });
+  }
+
+  public async onModuleDestroy() {
+    await this.handler.execute(async () => await this.disconnect(), {
+      operationType: 'DISCONNECT',
+    });
   }
 
   public async bufferVideo(video: VideoAggregate): Promise<void> {
     await this.client.xadd(
       this.configService.REDIS_STREAM_KEY,
       '*',
-      'like-message',
+      'videos-message',
       JSON.stringify(video.getSnapshot()),
     );
   }
@@ -130,7 +148,7 @@ export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit 
     const models = messages.map((message) => {
       return VideoAggregate.create({
         id: message.id,
-        ownerId: message.ownerId,
+        userId: message.ownerId,
         channelId: message.channelId,
         title: message.title,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,

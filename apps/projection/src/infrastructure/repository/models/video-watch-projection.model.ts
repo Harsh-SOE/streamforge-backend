@@ -24,9 +24,6 @@ export class VideoWatchProjectionModel extends Document {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ index: true })
-  searchTitle?: string;
-
   @Prop()
   thumbnailUrl: string;
 

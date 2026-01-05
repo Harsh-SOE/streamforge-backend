@@ -6,6 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, KafkaOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ChannelConfigService {
   public constructor(private configService: ConfigService) {}
 
   get NODE_ENVIRONMENT() {
-    return this.configService.getOrThrow<string>('NODE_ENVIRONMENT');
+    return this.configService.getOrThrow<ENVIRONMENT>('NODE_ENVIRONMENT');
   }
 
   get SERVICE_PORT() {

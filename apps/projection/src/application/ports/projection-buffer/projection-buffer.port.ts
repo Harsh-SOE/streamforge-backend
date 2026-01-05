@@ -1,9 +1,10 @@
 import { IntegrationEvent } from '@app/common/events';
-// TODO fix this integration event payload...
 
 export interface ProjectionBufferPort {
+  // todo: fix this integration event payload...
   bufferUser(event: IntegrationEvent<any>): Promise<void>;
 
+  // todo: fix this integration event payload...
   bufferVideo(event: IntegrationEvent<any>): Promise<void>;
 }
 

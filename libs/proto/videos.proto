@@ -28,15 +28,15 @@ message GetPresignedUrlDto {
 }
 
 message VideoCreateDto {
-  string ownerId = 1;
+  string userId = 1;
   string channelId = 2;
-  string title = 3;
-  string videoFileIdentifier = 4;
-  string videoThumbnailIdentifier = 5;
-  repeated string categories = 6;
-  optional string description = 7;
-  VideoTransportPublishStatus videoTransportPublishStatus = 8;
-  VideoTransportVisibilityStatus videoTransportVisibilityStatus = 9;
+  string title = 5;
+  string videoFileIdentifier = 6;
+  string videoThumbnailIdentifier = 7;
+  repeated string categories = 8;
+  optional string description = 9;
+  VideoTransportPublishStatus videoTransportPublishStatus = 10;
+  VideoTransportVisibilityStatus videoTransportVisibilityStatus = 11;
 }
 
 message VideoUpdateDto {

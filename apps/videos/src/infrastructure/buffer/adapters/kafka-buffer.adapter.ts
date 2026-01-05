@@ -76,7 +76,7 @@ export class KafkaBufferAdapter implements VideosBufferPort {
     const models = videosMessages.map((message) => {
       return VideoAggregate.create({
         id: message.id,
-        ownerId: message.ownerId,
+        userId: message.ownerId,
         channelId: message.channelId,
         title: message.title,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,

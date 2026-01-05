@@ -50,6 +50,8 @@ import {
 } from '../repository/adapters';
 import { KafkaBufferAdapter } from '../buffer/adapters';
 import { ProjectionConfigModule, ProjectionConfigService } from '../config';
+import { ProjectionKafkaConsumerAdapter } from '../events-consumer/adapters';
+import { ProjectionKafkaPublisherAdapter } from '../events-producer/adapters';
 import { ChannelProjectionACL, UserProjectionACL, VideoProjectionACL } from '../anti-corruption';
 
 @Global()
@@ -107,8 +109,8 @@ import { ChannelProjectionACL, UserProjectionACL, VideoProjectionACL } from '../
       provide: VIDEO_PROJECTION_REPOSITORY_PORT,
       useClass: VideoProjectionRepository,
     },
-    { provide: EVENT_PUBLISHER_PORT, useClass: KafkaEventPublisherHandler },
-    { provide: EVENT_CONSUMER_PORT, useClass: KafkaEventConsumerHandler },
+    { provide: EVENT_PUBLISHER_PORT, useClass: ProjectionKafkaPublisherAdapter },
+    { provide: EVENT_CONSUMER_PORT, useClass: ProjectionKafkaConsumerAdapter },
     { provide: PROJECTION_BUFFER_PORT, useClass: KafkaBufferAdapter },
     {
       provide: LOGGER_PORT,

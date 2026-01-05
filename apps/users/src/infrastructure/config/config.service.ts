@@ -6,6 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { USER_PACKAGE_NAME } from '@app/contracts/users';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class UserConfigService {
   constructor(private configService: ConfigService) {}
 
   get NODE_ENVIRONMENT() {
-    return this.configService.getOrThrow<string>('NODE_ENVIRONMENT');
+    return this.configService.getOrThrow<ENVIRONMENT>('NODE_ENVIRONMENT');
   }
 
   get HTTP_PORT() {
