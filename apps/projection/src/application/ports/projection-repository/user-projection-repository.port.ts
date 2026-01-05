@@ -1,11 +1,14 @@
-import { UserProfileCreatedEventDto } from '@app/contracts/users';
+import {
+  OnboardedIntegrationEvent,
+  ProfileUpdatedIntegrationEvent,
+} from '@app/common/events/users';
 
 export interface UserProjectionRepositoryPort {
-  saveUser(data: UserProfileCreatedEventDto): Promise<boolean>;
+  saveUser(data: OnboardedIntegrationEvent): Promise<boolean>;
 
-  saveManyUser(data: UserProfileCreatedEventDto[]): Promise<number>;
+  saveManyUser(data: OnboardedIntegrationEvent[]): Promise<number>;
 
-  updateUser(userId: string, data: Partial<UserProfileCreatedEventDto>): Promise<boolean>;
+  updateUser(userId: string, data: Partial<ProfileUpdatedIntegrationEvent>): Promise<boolean>;
 
   deleteUser(userId: string): Promise<boolean>;
 }

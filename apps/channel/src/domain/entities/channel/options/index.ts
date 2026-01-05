@@ -10,8 +10,8 @@ export interface ChannelEntityOptions {
   readonly userId: ChannelUserId;
   bio: ChannelBio;
   coverImage?: ChannelCoverImage;
-  isChannelVerified?: boolean;
-  isChannelMonitized?: boolean;
+  isChannelVerified: boolean;
+  isChannelMonitized: boolean;
 }
 
 export interface ChannelEntityCreateOptions {

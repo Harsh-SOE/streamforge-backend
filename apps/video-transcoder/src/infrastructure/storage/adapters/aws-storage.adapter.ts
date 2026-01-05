@@ -1,10 +1,10 @@
-import { RpcException } from '@nestjs/microservices';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Readable } from 'stream';
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
+import { RpcException } from '@nestjs/microservices';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { UploadResult, UploadOptions, TranscoderStoragePort } from '@transcoder/application/ports';
 import { TranscoderConfigService } from '@transcoder/infrastructure/config';
@@ -17,8 +17,9 @@ export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort 
   private s3Client: S3Client;
 
   public constructor(
+    @Inject(LOGGER_PORT)
+    private readonly logger: LoggerPort,
     private readonly configService: TranscoderConfigService,
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
   public onModuleInit() {

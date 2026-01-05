@@ -1,4 +1,4 @@
-import { ApplicationException } from './application.exception';
+import { ApplicationException } from '@app/common/exceptions/payload/base';
 
 export interface UserNotFoundExceptionOptions {
   message?: string;

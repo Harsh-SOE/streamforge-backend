@@ -1,9 +1,9 @@
-import { Inject } from '@nestjs/common';
-import Ffmpeg from 'fluent-ffmpeg';
-import * as fs from 'fs/promises';
 import path from 'path';
+import * as fs from 'fs/promises';
+import Ffmpeg from 'fluent-ffmpeg';
+import { Inject } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   TranscoderPort,
@@ -18,7 +18,8 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
   public constructor(
     @Inject(TRANSCODER_STORAGE_PORT)
     private readonly storageAdapter: TranscoderStoragePort,
-    @Inject(LOGGER_PORT) private readonly loggerAdapter: LoggerPort,
+    @Inject(LOGGER_PORT)
+    private readonly loggerAdapter: LoggerPort,
   ) {}
 
   public async transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void> {

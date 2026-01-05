@@ -1,3 +1,11 @@
+export interface UserOnboardedEvent {
+  readonly eventName: string;
+  readonly eventVersion: number;
+  readonly eventId: string;
+  readonly occurredAt: string;
+  readonly payload: { userId: string; authId: string; email: string; handle: string };
+}
+
 export interface UserProfileCreatedEventDto {
   id: string;
   userAuthId: string;

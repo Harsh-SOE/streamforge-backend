@@ -1,15 +1,16 @@
-import { EachBatchPayload, KafkaMessage } from 'kafkajs';
+// TODO add handler here
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { KafkaClient } from '@app/clients/kafka';
+import { BUFFER_EVENTS } from '@app/common/events';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   ReactionBufferPort,
   ReactionRepositoryPort,
   REACTION_DATABASE_PORT,
 } from '@reaction/application/ports';
-import { BUFFER_EVENTS } from '@app/clients';
-import { KafkaClient } from '@app/clients/kafka';
 import { ReactionAggregate } from '@reaction/domain/aggregates';
 import { TransportDomainReactionStatusEnumMapper } from '@reaction/infrastructure/anti-corruption';
 
@@ -17,20 +18,36 @@ import { ReactionMessage } from '../types';
 
 @Injectable()
 export class KafkaBufferAdapter implements OnModuleInit, ReactionBufferPort {
+  private readonly consumer: Consumer;
+  private readonly producer: Producer;
+
   public constructor(
     private readonly kafka: KafkaClient,
     @Inject(REACTION_DATABASE_PORT)
     private readonly reactionsRepo: ReactionRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-  ) {}
+  ) {
+    this.consumer = kafka.getConsumer({ groupId: 'reaction-buffer' });
+    this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
+  }
+
+  public async connect(): Promise<void> {
+    await this.consumer.connect();
+    await this.producer.connect();
+  }
+
+  public async disconnect(): Promise<void> {
+    await this.consumer.disconnect();
+    await this.producer.disconnect();
+  }
 
   public async onModuleInit() {
-    await this.kafka.consumer.subscribe({
+    await this.consumer.subscribe({
       topic: BUFFER_EVENTS.REACTION_BUFFER_EVENT,
       fromBeginning: false,
     });
 
-    await this.kafka.consumer.run({
+    await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
@@ -44,9 +61,9 @@ export class KafkaBufferAdapter implements OnModuleInit, ReactionBufferPort {
   }
 
   public async bufferReaction(reaction: ReactionAggregate): Promise<void> {
-    await this.kafka.producer.send({
+    await this.producer.send({
       topic: BUFFER_EVENTS.REACTION_BUFFER_EVENT,
-      messages: [{ value: JSON.stringify(reaction.getSnapshot()) }],
+      messages: [{ value: JSON.stringify(reaction) }],
     });
   }
 

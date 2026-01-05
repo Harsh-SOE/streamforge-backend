@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Components } from '@app/common/components';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { PrismaHandler } from '@app/handlers/database-handler';
+import { Components } from '@app/common';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { PrismaHandler } from '@app/handlers/database/prisma';
 
 import { ViewAggregate } from '@views/domain/aggregates';
 import { ViewRepositoryPort } from '@views/application/ports';

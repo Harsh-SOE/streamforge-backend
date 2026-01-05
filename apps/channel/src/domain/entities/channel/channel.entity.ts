@@ -22,8 +22,8 @@ export class ChannelEntity {
       bio: ChannelBio.create(bio),
       userId: ChannelUserId.create(userId),
       coverImage: ChannelCoverImage.create(coverImage),
-      isChannelMonitized: isChannelMonitized,
-      isChannelVerified: isChannelVerified,
+      isChannelMonitized: isChannelMonitized ?? false,
+      isChannelVerified: isChannelVerified ?? false,
     });
   }
 

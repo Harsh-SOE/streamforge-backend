@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { MessagesModule } from './presentation/messages/messages.module';
+import { EventsModule } from './presentation/events/events.module';
 import { AppHealthModule } from './infrastructure/health/health.module';
 import { MeasureModule } from './infrastructure/measure';
 
 @Module({
-  imports: [MessagesModule, AppHealthModule, MeasureModule],
+  imports: [EventsModule, AppHealthModule, MeasureModule],
 })
 export class RootModule {}

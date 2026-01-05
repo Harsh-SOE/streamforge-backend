@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { firstValueFrom } from 'rxjs';
 
-import { SERVICES } from '@app/clients/constant';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { SERVICES } from '@app/common';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { QUERY_SERVICE_NAME, QueryServiceClient } from '@app/contracts/query';
 
 import { GatewayConfigService } from '@gateway/infrastructure/config';

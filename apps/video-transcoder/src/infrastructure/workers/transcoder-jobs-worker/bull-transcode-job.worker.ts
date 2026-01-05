@@ -1,16 +1,19 @@
+import { Job } from 'bullmq';
 import { Inject, Injectable } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Job } from 'bullmq';
 
 import { TranscodeVideoEventDto } from '@app/contracts/video-transcoder';
 
-import { TRANSCODER_PORT, TranscoderPort } from '@transcoder/application/ports';
 import { TRANSCODER_JOB_QUEUE } from '@transcoder/utils/constants';
+import { TRANSCODER_PORT, TranscoderPort } from '@transcoder/application/ports';
 
 @Injectable()
 @Processor(TRANSCODER_JOB_QUEUE)
 export class BullTranscodeJobsWorker extends WorkerHost {
-  constructor(@Inject(TRANSCODER_PORT) private readonly transcoder: TranscoderPort) {
+  constructor(
+    @Inject(TRANSCODER_PORT)
+    private readonly transcoder: TranscoderPort,
+  ) {
     super();
   }
 

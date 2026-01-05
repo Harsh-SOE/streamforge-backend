@@ -3,6 +3,8 @@ import * as joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { ENVIRONMENT } from '@app/utils/enums';
+
 import { ProjectionConfigService } from './config.service';
 
 @Module({
@@ -11,6 +13,12 @@ import { ProjectionConfigService } from './config.service';
       isGlobal: true,
       envFilePath: path.join(__dirname, '../../.env'),
       validationSchema: joi.object({
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
+
         HTTP_PORT: joi.number().required(),
 
         KAFKA_HOST: joi.string().required(),

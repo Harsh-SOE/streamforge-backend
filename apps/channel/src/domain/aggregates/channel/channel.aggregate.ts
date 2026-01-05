@@ -1,8 +1,12 @@
-import { AggregateRoot } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
+import { AggregateRoot } from '@nestjs/cqrs';
 
+import {
+  ChannelCreatedDomainEvent,
+  ChannelMonitizedDomainEvent,
+  ChannelUpdatedDomainEvent,
+} from '@channel/domain/domain-events';
 import { ChannelEntity } from '@channel/domain/entities';
-import { ChannelMonitizedEvent, ChannelUpdatedEvent } from '@channel/application/events';
 
 import { ChannelAggregateCreateOptions, ChannelUpdateOptions } from './options';
 
@@ -36,6 +40,19 @@ export class ChannelAggregate extends AggregateRoot {
     });
     const channelAggregate = new ChannelAggregate(channelEntity);
 
+    const channelSnapshot = channelAggregate.getChannelSnapshot();
+
+    channelAggregate.apply(
+      new ChannelCreatedDomainEvent(
+        channelSnapshot.id,
+        channelSnapshot.userId,
+        channelSnapshot.isChannelMonitized,
+        channelSnapshot.isChannelVerified,
+        channelSnapshot.bio,
+        channelSnapshot.coverImage,
+      ),
+    );
+
     return channelAggregate;
   }
 
@@ -46,7 +63,19 @@ export class ChannelAggregate extends AggregateRoot {
     channelEntity.updateChannelBio(bio);
     channelEntity.updateChannelCoverImage(coverImage);
 
-    this.apply(new ChannelUpdatedEvent(this));
+    const channelSnapshot = channelEntity.getChannelSnapshot();
+    const { id, isChannelMonitized, isChannelVerified, userId } = channelSnapshot;
+
+    this.apply(
+      new ChannelUpdatedDomainEvent(
+        id,
+        userId,
+        isChannelMonitized,
+        isChannelVerified,
+        bio,
+        coverImage,
+      ),
+    );
   }
 
   public updateChannelVerificationStatus() {
@@ -61,6 +90,7 @@ export class ChannelAggregate extends AggregateRoot {
       return;
     }
     channelEntity.demonitizeChannel();
-    this.apply(new ChannelMonitizedEvent(this));
+    const { id, isChannelMonitized } = channelEntity.getChannelSnapshot();
+    this.apply(new ChannelMonitizedDomainEvent(id, isChannelMonitized));
   }
 }

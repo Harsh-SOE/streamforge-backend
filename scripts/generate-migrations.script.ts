@@ -3,9 +3,7 @@ import { execSync } from 'child_process';
 const serviceName = process.argv[2];
 const migrationName = process.argv[3];
 if (!serviceName || !migrationName) {
-  console.error(
-    'Usage: yarn prisma:generate:migrations <serviceName> <migrationName>',
-  );
+  console.error('Usage: yarn prisma:generate:migrations <serviceName> <migrationName>');
   process.exit(1);
 }
 

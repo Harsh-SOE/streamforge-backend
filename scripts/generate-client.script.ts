@@ -2,9 +2,7 @@ import { execSync } from 'child_process';
 
 const serviceName = process.argv[2];
 if (!serviceName) {
-  console.error(
-    'Usage: yarn prisma:generate:client <serviceName> <migrationName>',
-  );
+  console.error('Usage: yarn prisma:generate:client <serviceName> <migrationName>');
   process.exit(1);
 }
 

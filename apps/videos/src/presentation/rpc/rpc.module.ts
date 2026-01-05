@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 
-import { VideoCommandHandlers } from '@videos/application/use-cases';
+import { VideoCommandHandlers } from '@videos/application/commands';
 
 import { RpcService } from './rpc.service';
 import { RpcController } from './rpc.controller';

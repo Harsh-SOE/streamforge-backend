@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { EmailPort, SendMailOptions } from '@email/application/ports';
 import { EmailConfigService } from '@email/infrastructure/config';

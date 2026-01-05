@@ -1,9 +1,9 @@
-import { EachBatchPayload, KafkaMessage } from 'kafkajs';
 import { Inject, Injectable } from '@nestjs/common';
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 
-import { BUFFER_EVENTS } from '@app/clients';
 import { KafkaClient } from '@app/clients/kafka';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { BUFFER_EVENTS } from '@app/common/events';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   VideosBufferPort,
@@ -16,20 +16,29 @@ import { VideoMessage } from '../types';
 
 @Injectable()
 export class KafkaBufferAdapter implements VideosBufferPort {
+  private readonly consumer: Consumer;
+  private readonly producer: Producer;
+
   public constructor(
     @Inject(VIDEOS_RESPOSITORY_PORT)
     private readonly videosRepository: VideoRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly kafka: KafkaClient,
-  ) {}
+  ) {
+    this.consumer = kafka.getConsumer({ groupId: 'videos', allowAutoTopicCreation: true });
+    this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
+  }
 
   public async onModuleInit() {
-    await this.kafka.consumer.subscribe({
+    await this.connect();
+    await this.disconnect();
+
+    await this.consumer.subscribe({
       topic: BUFFER_EVENTS.VIDEOS_BUFFER_EVENT,
-      fromBeginning: false,
+      fromBeginning: true,
     });
 
-    await this.kafka.consumer.run({
+    await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
@@ -42,8 +51,18 @@ export class KafkaBufferAdapter implements VideosBufferPort {
     });
   }
 
+  public async connect(): Promise<void> {
+    await this.consumer.connect();
+    await this.producer.connect();
+  }
+
+  public async disconnect(): Promise<void> {
+    await this.consumer.disconnect();
+    await this.consumer.disconnect();
+  }
+
   public async bufferVideo(video: VideoAggregate): Promise<void> {
-    await this.kafka.producer.send({
+    await this.producer.send({
       topic: BUFFER_EVENTS.VIDEOS_BUFFER_EVENT,
       messages: [{ value: JSON.stringify(video.getSnapshot()) }],
     });
@@ -57,7 +76,7 @@ export class KafkaBufferAdapter implements VideosBufferPort {
     const models = videosMessages.map((message) => {
       return VideoAggregate.create({
         id: message.id,
-        ownerId: message.ownerId,
+        userId: message.ownerId,
         channelId: message.channelId,
         title: message.title,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,

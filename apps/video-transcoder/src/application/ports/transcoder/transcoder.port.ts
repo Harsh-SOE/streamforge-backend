@@ -1,4 +1,4 @@
-import { TranscodeVideoOptions } from './options/trancode-video.options';
+import { TranscodeVideoOptions } from './options/transcode-video.options';
 
 export interface TranscoderPort {
   transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void>;

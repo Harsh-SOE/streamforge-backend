@@ -1,5 +1,5 @@
-export * from './transcoder/options/trancode-video.options';
 export * from './transcoder/transcoder.port';
+export * from './transcoder/options/transcode-video.options';
 
-export * from './transcoder-storage/storage.port';
 export * from './transcoder-storage/options';
+export * from './transcoder-storage/storage.port';

@@ -10,7 +10,7 @@ import { ResponseTimeMiddleware } from './persentation/middlewares';
 import { CommentsModule } from './services/comments/comments.module';
 import { ReactionModule } from './services/reactions/reaction.module';
 import { AppHealthModule } from './infrastructure/health/health.module';
-import { FrameworkModule } from './infrastructure/framework/framework.module';
+import { PlatformModule } from './infrastructure/platform/platform.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { FrameworkModule } from './infrastructure/framework/framework.module';
     WatchModule,
     CommentsModule,
     ChannelModule,
-    FrameworkModule,
+    PlatformModule,
   ],
 })
 export class RootModule implements NestModule {

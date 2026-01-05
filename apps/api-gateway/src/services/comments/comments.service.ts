@@ -2,7 +2,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
-import { SERVICES } from '@app/clients';
+import { SERVICES } from '@app/common';
 import { COMMENT_SERVICE_NAME, CommentServiceClient } from '@app/contracts/comments';
 
 import { CommentVideoResponse } from './response';

@@ -2,8 +2,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { RedisClient } from '@app/clients/redis';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { RedisCacheHandler } from '@app/handlers/redis-cache-handler';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache/redis';
 
 import { VideoCachePort } from '@videos/application/ports';
 

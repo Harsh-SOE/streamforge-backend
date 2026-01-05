@@ -1,6 +1,6 @@
-import { ConfigModule } from '@nestjs/config';
-import { Module } from '@nestjs/common';
 import * as joi from 'joi';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AuthzConfigService } from './config.service';
 

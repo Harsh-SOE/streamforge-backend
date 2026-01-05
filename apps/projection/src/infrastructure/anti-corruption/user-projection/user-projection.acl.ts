@@ -2,7 +2,10 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { UserProfileCreatedEventDto, UserProfileUpdatedEventDto } from '@app/contracts/users';
+import {
+  OnboardedIntegrationEvent,
+  ProfileUpdatedIntegrationEvent,
+} from '@app/common/events/users';
 
 import { UserProjectionModel } from '@projection/infrastructure/repository/models';
 
@@ -14,29 +17,28 @@ export class UserProjectionACL {
   ) {}
 
   public userProfileCreatedEventToPersistance(
-    event: UserProfileCreatedEventDto,
+    event: OnboardedIntegrationEvent,
   ): UserProjectionModel {
+    const { authId, userId, email, handle } = event.payload;
     const userCard = {
-      userId: event.id,
-      userAuthId: event.userAuthId,
-      email: event.email,
-      handle: event.handle,
-      avatar: event.avatar,
-      dob: event.dob,
-      phoneNumber: event.phoneNumber,
-      isPhoneNumberVerified: event.isPhoneNumberVerified || false,
+      userId,
+      email,
+      handle,
+      userAuthId: authId,
     };
 
     return new this.userCard(userCard);
   }
 
   public userProfileUpdatedEventToPersistance(
-    event: UserProfileUpdatedEventDto,
+    event: ProfileUpdatedIntegrationEvent,
   ): UserProjectionModel {
+    const { userId, avatar, dob } = event.payload;
+
     const userCard = {
-      userId: event.id,
-      avatar: event.avatar,
-      dob: event.dob,
+      userId,
+      avatar,
+      dob,
     };
 
     return new this.userCard(userCard);

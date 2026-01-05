@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { CommentEventHandler } from '@comments/application/events';
-import { CommentCommandHandler } from '@comments/application/use-cases';
+import { CommentCommandHandler } from '@comments/application/commands';
+import { CommentEventHandler } from '@comments/application/integration-events';
+import { PlatformModule } from '@comments/infrastructure/platform/platform.module';
 
 import { RpcService } from './rpc.service';
 import { RpcController } from './rpc.controller';
-import { FrameworkModule } from '@comments/infrastructure/framework/framework.module';
 
 @Module({
-  imports: [FrameworkModule],
+  imports: [PlatformModule],
   controllers: [RpcController],
   providers: [RpcService, ...CommentCommandHandler, ...CommentEventHandler],
 })

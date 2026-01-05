@@ -1,6 +1,8 @@
 import { ViewAggregate } from '@views/domain/aggregates';
 
 export interface ViewsBufferPort {
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
   bufferView(view: ViewAggregate): Promise<void>;
 }
 

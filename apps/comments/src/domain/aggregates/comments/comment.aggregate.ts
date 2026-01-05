@@ -1,5 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import { CommentCreatedDomainEvent } from '@comments/domain/domain-events';
+
 import { CommentEntity } from '../../entities';
 import { CommentsAggregateOptions } from './options';
 
@@ -11,7 +13,19 @@ export class CommentAggregate extends AggregateRoot {
   public static create(data: CommentsAggregateOptions): CommentAggregate {
     const { id, userId, videoId, commentText } = data;
     const commentEntity = CommentEntity.create({ id, userId, videoId, commentText });
-    return new CommentAggregate(commentEntity);
+    const commentAggregate = new CommentAggregate(commentEntity);
+
+    const channelSnapshot = commentAggregate.getSnapshot();
+
+    commentAggregate.apply(
+      new CommentCreatedDomainEvent(
+        channelSnapshot.id,
+        channelSnapshot.userId,
+        channelSnapshot.videoId,
+        channelSnapshot.commentText,
+      ),
+    );
+    return commentAggregate;
   }
 
   public getEntity() {

@@ -1,9 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { EachBatchPayload, KafkaMessage } from 'kafkajs';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 
-import { BUFFER_EVENTS } from '@app/clients';
+import { BUFFER_EVENTS } from '@app/common/events';
 import { KafkaClient } from '@app/clients/kafka';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   ViewsBufferPort,
@@ -15,21 +15,39 @@ import { ViewAggregate } from '@views/domain/aggregates';
 import { ViewMessage } from '../types';
 
 @Injectable()
-export class KafkaBufferAdapter implements OnModuleInit, ViewsBufferPort {
+export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, ViewsBufferPort {
+  private readonly consumer: Consumer;
+  private readonly producer: Producer;
+
   public constructor(
     @Inject(VIEWS_REPOSITORY_PORT)
     private readonly viewsRepo: ViewRepositoryPort,
     private readonly kafka: KafkaClient,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-  ) {}
+  ) {
+    this.consumer = kafka.getConsumer({ groupId: 'views' });
+    this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
+  }
+
+  public async connect(): Promise<void> {
+    await this.consumer.connect();
+    await this.producer.connect();
+  }
+
+  public async disconnect(): Promise<void> {
+    await this.consumer.disconnect();
+    await this.producer.disconnect();
+  }
 
   public async onModuleInit() {
-    await this.kafka.consumer.subscribe({
+    await this.connect();
+
+    await this.consumer.subscribe({
       topic: BUFFER_EVENTS.VIEWS_BUFFER_EVENT,
       fromBeginning: false,
     });
 
-    await this.kafka.consumer.run({
+    await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
@@ -42,8 +60,12 @@ export class KafkaBufferAdapter implements OnModuleInit, ViewsBufferPort {
     });
   }
 
+  public async onModuleDestroy() {
+    await this.disconnect();
+  }
+
   public async bufferView(like: ViewAggregate): Promise<void> {
-    await this.kafka.producer.send({
+    await this.producer.send({
       topic: BUFFER_EVENTS.VIEWS_BUFFER_EVENT,
       messages: [{ value: JSON.stringify(like.getSnapshot()) }],
     });

@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Components } from '@app/common/components';
+import { Components } from '@app/common';
 import { PrismaDBClient } from '@app/clients/prisma';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { PrismaHandler } from '@app/handlers/database-handler';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { PrismaHandler } from '@app/handlers/database/prisma';
 
 import { ReactionDomainStatus } from '@reaction/domain/enums';
 import { ReactionAggregate } from '@reaction/domain/aggregates';

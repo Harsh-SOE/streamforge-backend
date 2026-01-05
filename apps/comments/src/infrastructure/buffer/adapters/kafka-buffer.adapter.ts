@@ -1,10 +1,9 @@
-import { EachBatchPayload, KafkaMessage } from 'kafkajs';
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { BUFFER_EVENTS } from '@app/clients';
 import { KafkaClient } from '@app/clients/kafka';
-import { CommentMessage } from '@app/common/types';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { BUFFER_EVENTS } from '@app/common/events';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   CommentBufferPort,
@@ -13,22 +12,30 @@ import {
 } from '@comments/application/ports';
 import { CommentAggregate } from '@comments/domain/aggregates';
 
+import { CommentMessage } from '../types';
+
 @Injectable()
 export class KafkaBufferAdapter implements OnModuleInit, CommentBufferPort {
+  private readonly consumer: Consumer;
+  private readonly producer: Producer;
+
   public constructor(
     @Inject(COMMENTS_REPOSITORY_PORT)
     private readonly commentsRepo: CommentRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly kafka: KafkaClient,
-  ) {}
+  ) {
+    this.consumer = kafka.getConsumer({ groupId: 'comments', allowAutoTopicCreation: true });
+    this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
+  }
 
   public async onModuleInit() {
-    await this.kafka.consumer.subscribe({
+    await this.consumer.subscribe({
       topic: BUFFER_EVENTS.COMMENT_BUFFER_EVENT,
       fromBeginning: false,
     });
 
-    await this.kafka.consumer.run({
+    await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
@@ -41,8 +48,18 @@ export class KafkaBufferAdapter implements OnModuleInit, CommentBufferPort {
     });
   }
 
+  public async connect(): Promise<void> {
+    await this.producer.connect();
+    await this.consumer.connect();
+  }
+
+  public async disconnect(): Promise<void> {
+    await this.producer.disconnect();
+    await this.consumer.disconnect();
+  }
+
   public async bufferComment(comment: CommentAggregate): Promise<void> {
-    await this.kafka.producer.send({
+    await this.producer.send({
       topic: BUFFER_EVENTS.COMMENT_BUFFER_EVENT,
       messages: [{ value: JSON.stringify(comment.getSnapshot()) }],
     });

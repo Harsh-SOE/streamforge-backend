@@ -4,10 +4,10 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { ChannelCreatedResponse } from '@app/contracts/channel';
 
 import { ChannelAggregate } from '@channel/domain/aggregates';
-import { ChannelCreatedEvent } from '@channel/application/events';
 import { CHANNEL_REPOSITORY, ChannelCommandRepositoryPort } from '@channel/application/ports';
 
 import { CreateChannelCommand } from './create-channel.command';
+import { ChannelCreatedDomainEvent } from '@channel/domain/domain-events';
 
 @CommandHandler(CreateChannelCommand)
 export class CreateChannelCommandHandler implements ICommandHandler<CreateChannelCommand> {
@@ -32,14 +32,14 @@ export class CreateChannelCommandHandler implements ICommandHandler<CreateChanne
     this.eventPublisher.mergeObjectContext(channelAggregate);
 
     channelAggregate.apply(
-      new ChannelCreatedEvent({
-        id: channelAggregate.getChannelSnapshot().id,
-        bio: channelAggregate.getChannelSnapshot().bio,
-        coverImage: channelAggregate.getChannelSnapshot().coverImage,
-        userId: channelAggregate.getChannelSnapshot().userId,
-        avatar: channelCreateDto.avatar,
-        handle: channelCreateDto.handle,
-      }),
+      new ChannelCreatedDomainEvent(
+        channelAggregate.getChannelSnapshot().id,
+        channelAggregate.getChannelSnapshot().userId,
+        channelAggregate.getChannelSnapshot().isChannelMonitized,
+        channelAggregate.getChannelSnapshot().isChannelVerified,
+        channelAggregate.getChannelSnapshot().bio,
+        channelAggregate.getChannelSnapshot().coverImage,
+      ),
     );
 
     await this.channelCommandRepository.saveChannel(channelAggregate);

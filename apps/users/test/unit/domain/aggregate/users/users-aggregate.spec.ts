@@ -1,10 +1,10 @@
-import { UserProfileUpdatedEvent } from '@users/application/events/user-profile-updated-event';
-import { UserAggregate } from '@users/domain/aggregates';
 import {
   InvalidAvatarUrlException,
   InvalidDobException,
   InvalidPhoneNumberException,
 } from '@users/domain/exceptions';
+import { UserAggregate } from '@users/domain/aggregates';
+import { ProfileUpdatedDomainEvent } from '@users/domain/domain-events';
 
 describe('UserAggregate', () => {
   let userAggregate: UserAggregate;
@@ -29,7 +29,7 @@ describe('UserAggregate', () => {
 
     const events = userAggregate.getUncommittedEvents();
     expect(events).toHaveLength(2);
-    expect(events[1]).toBeInstanceOf(UserProfileUpdatedEvent);
+    expect(events[1]).toBeInstanceOf(ProfileUpdatedDomainEvent);
     expect(userAggregate.getUserSnapshot().avatarUrl).toBe(
       'https://test-avatar.com?avatar=updated-avatar',
     );

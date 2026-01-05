@@ -1,17 +1,17 @@
 import { Test } from '@nestjs/testing';
 
-import { LOGGER_PORT } from '@app/ports/logger';
-import { PrismaHandler } from '@app/handlers/database-handler';
+import { LOGGER_PORT } from '@app/common/ports/logger';
+import { PrismaHandler } from '@app/handlers/database/prisma';
 
 import { PrismaDBClient } from '@app/clients/prisma';
 import { UserRepositoryAdapter } from '@users/infrastructure/repository/adapters';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption/aggregate-persistance-acl';
 
-import { PrismaClientMock, DatabaseHandlerMock } from '@test/users/mocks/infrastructure/repository';
+import { UserAggregateStub } from '@test/users/stubs/aggregate';
+import { persistedUserStub } from '@test/users/stubs/persistance';
 import { UserACLMock } from '@test/users/mocks/infrastructure/acl';
 import { LoggerMock } from '@test/users/mocks/infrastructure/logger';
-import { persistedUserStub } from '@test/users/stubs/persistance';
-import { UserAggregateStub } from '@test/users/stubs/aggregate';
+import { PrismaClientMock, DatabaseHandlerMock } from '@test/users/mocks/infrastructure/repository';
 
 describe('UserRepositoryAdapter', () => {
   let adapter: UserRepositoryAdapter;

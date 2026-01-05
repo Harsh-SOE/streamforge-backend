@@ -2,7 +2,7 @@ import LokiTransport from 'winston-loki';
 import { Inject, Injectable } from '@nestjs/common';
 import winston, { createLogger, format, Logger, transport, Logform, transports } from 'winston';
 
-import { LoggerPort } from '@app/ports/logger';
+import { LoggerPort } from '@app/common/ports/logger';
 
 const levels = {
   fatal: 0,
@@ -29,13 +29,17 @@ export interface MyConsoleLogCompleteInfo extends Logform.TransformableInfo {
   [key: string]: any;
 }
 
-export const LOKI_URL = Symbol('LOKI_URL');
+export interface LokiConfig {
+  url: string;
+}
+
+export const LOKI_CONFIG = Symbol('LOKI_CONFIG');
 
 @Injectable()
 export class LokiConsoleLogger implements LoggerPort {
   private logger: Logger;
 
-  public constructor(@Inject(LOKI_URL) private readonly url: string) {
+  public constructor(@Inject(LOKI_CONFIG) private readonly config: LokiConfig) {
     winston.addColors(colors);
     const loggerTransports: transport[] = [this.consoleTransport(), this.lokiTransport()];
 
@@ -72,7 +76,7 @@ export class LokiConsoleLogger implements LoggerPort {
       format.json({ maximumDepth: 3 }),
     );
     return new LokiTransport({
-      host: this.url,
+      host: this.config.url,
       level: 'debug',
       format: lokiFormatPipeline,
     });

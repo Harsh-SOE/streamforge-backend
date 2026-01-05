@@ -16,7 +16,7 @@ import {
   GetPreSignedUrlResponse,
 } from '@app/contracts/channel';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { GrpcFilter } from '../filters';
 import { RpcService } from './rpc.service';

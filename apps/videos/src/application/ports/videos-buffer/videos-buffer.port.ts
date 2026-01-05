@@ -1,6 +1,8 @@
 import { VideoAggregate } from '@videos/domain/aggregates';
 
 export interface VideosBufferPort {
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
   bufferVideo(video: VideoAggregate): Promise<void>;
 }
 

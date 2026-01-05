@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true })
 export class VideoCommentProjectionModel extends Document {
@@ -11,12 +11,6 @@ export class VideoCommentProjectionModel extends Document {
 
   @Prop({ type: String, index: true, unique: true })
   videoId: string;
-
-  @Prop()
-  handle: string;
-
-  @Prop()
-  userAvatar: string;
 
   @Prop()
   content: string;

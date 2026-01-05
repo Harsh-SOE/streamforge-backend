@@ -1,4 +1,3 @@
-export * from './domain.exception';
 export * from './invalid-video-id.exception';
 export * from './invalid-owner-id.exception';
 export * from './invalid-channel-id.exception';

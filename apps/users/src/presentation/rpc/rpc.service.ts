@@ -27,10 +27,10 @@ import {
   GeneratePreSignedUrlCommand,
   UpdateProfileCommand,
   VerifyPhoneNumberCommand,
-} from '@users/application/use-cases/commands';
+} from '@users/application/commands';
 
 @Injectable()
-export class GrpcService {
+export class RpcService {
   constructor(private readonly commandBus: CommandBus) {}
 
   async generatePreSignedUrl(

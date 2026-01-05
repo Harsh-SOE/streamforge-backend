@@ -1,7 +1,9 @@
+import * as joi from 'joi';
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
-import * as joi from 'joi';
+
+import { ENVIRONMENT } from '@app/utils/enums';
 
 import { GatewayConfigService } from './config.service';
 
@@ -11,9 +13,13 @@ import { GatewayConfigService } from './config.service';
       isGlobal: true,
       envFilePath: join(__dirname, '../../.env'),
       validationSchema: joi.object({
-        PORT: joi.number().required(),
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
 
-        NODE_ENVIRONMENT: joi.string().required(),
+        PORT: joi.number().required(),
 
         COOKIE_MAX_AGE: joi.number().required(),
 

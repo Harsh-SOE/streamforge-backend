@@ -44,15 +44,6 @@
         "tsConfigPath": "apps/authz/tsconfig.app.json"
       }
     },
-    "cache": {
-      "type": "library",
-      "root": "libs/cache",
-      "entryFile": "index",
-      "sourceRoot": "libs/cache/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cache/tsconfig.lib.json"
-      }
-    },
     "channel": {
       "type": "application",
       "root": "apps/channel",
@@ -104,15 +95,6 @@
         "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
     },
-    "counters": {
-      "type": "library",
-      "root": "libs/counters",
-      "entryFile": "index",
-      "sourceRoot": "libs/counters/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/counters/tsconfig.lib.json"
-      }
-    },
     "email": {
       "type": "application",
       "root": "apps/email",
@@ -123,24 +105,6 @@
         "watchAssets": true,
         "webpack": true,
         "webpackConfigPath": "apps/email/webpack.config.js"
-      }
-    },
-    "errors": {
-      "type": "library",
-      "root": "libs/errors",
-      "entryFile": "index",
-      "sourceRoot": "libs/errors/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/errors/tsconfig.lib.json"
-      }
-    },
-    "exceptions": {
-      "type": "library",
-      "root": "libs/exceptions",
-      "entryFile": "index",
-      "sourceRoot": "libs/exceptions/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
       }
     },
     "handlers": {
@@ -162,24 +126,6 @@
         "webpack": true,
         "webpackConfigPath": "apps/history/webpack.config.js",
         "watchAssets": true
-      }
-    },
-    "infrastructure": {
-      "type": "library",
-      "root": "libs/infrastructure",
-      "entryFile": "index",
-      "sourceRoot": "libs/infrastructure/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/infrastructure/tsconfig.lib.json"
-      }
-    },
-    "observable-stream": {
-      "type": "library",
-      "root": "libs/observable-stream",
-      "entryFile": "index",
-      "sourceRoot": "libs/observable-stream/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/observable-stream/tsconfig.lib.json"
       }
     },
     "playlist": {
@@ -249,15 +195,6 @@
         "watchAssets": true,
         "webpack": true,
         "webpackConfigPath": "apps/subscribe/webpack.config.js"
-      }
-    },
-    "testing": {
-      "type": "library",
-      "root": "libs/testing",
-      "entryFile": "index",
-      "sourceRoot": "libs/testing/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/testing/tsconfig.lib.json"
       }
     },
     "users": {

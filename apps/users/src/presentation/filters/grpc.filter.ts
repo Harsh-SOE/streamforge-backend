@@ -2,12 +2,14 @@ import { throwError } from 'rxjs';
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Catch, ExceptionFilter, HttpStatus, Inject } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { GrpcApplicationException, GrpcExceptionPayload } from '@app/exceptions/grpc-exceptions';
-import { InfrastructureException } from '@app/exceptions/infrastructure-exceptions';
+import {
+  GrpcApplicationException,
+  GrpcExceptionPayload,
+} from '@app/common/exceptions/payload/grpc-exceptions';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { InfrastructureException, ApplicationException } from '@app/common/exceptions/payload/base';
 
 import { DomainException } from '@users/domain/exceptions';
-import { ApplicationException } from '@users/application/exceptions';
 
 @Catch()
 export class GrpcFilter implements ExceptionFilter {

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { FrameworkModule } from '@users/infrastructure/framework';
+import { PlatformModule } from '@users/infrastructure/platform';
 
-import { GrpcService } from './rpc.service';
-import { GrpcController } from './rpc.controller';
+import { RpcService } from './rpc.service';
+import { RpcController } from './rpc.controller';
 
 @Module({
-  imports: [FrameworkModule],
-  controllers: [GrpcController],
-  providers: [GrpcService],
+  imports: [PlatformModule],
+  controllers: [RpcController],
+  providers: [RpcService],
 })
-export class GrpcModule {}
+export class RpcModule {}

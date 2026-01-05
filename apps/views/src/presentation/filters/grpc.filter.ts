@@ -1,10 +1,11 @@
 import { status as GrpcStatus } from '@grpc/grpc-js';
 import { Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 
-import { InfrastructureException } from '@app/exceptions/infrastructure-exceptions';
-import { GrpcApplicationException, GrpcExceptionPayload } from '@app/exceptions/grpc-exceptions';
-
-import { DomainException } from '@views/domain/exceptions';
+import {
+  GrpcApplicationException,
+  GrpcExceptionPayload,
+} from '@app/common/exceptions/payload/grpc-exceptions';
+import { InfrastructureException, DomainException } from '@app/common/exceptions/payload/base';
 
 @Catch()
 export class GrpcFilter implements ExceptionFilter {

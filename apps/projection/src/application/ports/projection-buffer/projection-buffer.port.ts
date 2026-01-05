@@ -1,10 +1,11 @@
-import { VideoUploadedEventDto } from '@app/contracts/videos';
-import { UserProfileCreatedEventDto } from '@app/contracts/users';
+import { IntegrationEvent } from '@app/common/events';
 
 export interface ProjectionBufferPort {
-  bufferUser(event: UserProfileCreatedEventDto): Promise<void>;
+  // todo: fix this integration event payload...
+  bufferUser(event: IntegrationEvent<any>): Promise<void>;
 
-  bufferVideo(event: VideoUploadedEventDto): Promise<void>;
+  // todo: fix this integration event payload...
+  bufferVideo(event: IntegrationEvent<any>): Promise<void>;
 }
 
 export const PROJECTION_BUFFER_PORT = Symbol('PROJECTION_BUFFER_PORT');

@@ -2,7 +2,10 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { ChannelCreatedEventDto } from '@app/contracts/channel';
+import {
+  ChannelCreatedIntegrationEvent,
+  ChannelUpdatedIntegrationEvent,
+} from '@app/common/events/channel';
 
 import { ChannelProjectionModel } from '@projection/infrastructure/repository/models';
 
@@ -13,13 +16,29 @@ export class ChannelProjectionACL {
     private readonly channelCard: Model<ChannelProjectionModel>,
   ) {}
 
-  public channelCreatedEventToPersistance(event: ChannelCreatedEventDto): ChannelProjectionModel {
+  public channelCreatedEventToPersistance(
+    event: ChannelCreatedIntegrationEvent,
+  ): ChannelProjectionModel {
+    const { channelId, userId, bio, coverImage } = event.payload;
+
     return new this.channelCard({
-      userId: event.userId,
-      channelId: event.id,
-      bio: event.bio,
-      handle: event.handle,
-      coverImage: event.coverImage,
+      userId,
+      channelId,
+      bio,
+      coverImage,
+    });
+  }
+
+  public channelUpdatedEventToPersistance(
+    event: ChannelUpdatedIntegrationEvent,
+  ): ChannelProjectionModel {
+    const { channelId, userId, bio, coverImage } = event.payload;
+
+    return new this.channelCard({
+      userId,
+      channelId,
+      bio,
+      coverImage,
     });
   }
 }

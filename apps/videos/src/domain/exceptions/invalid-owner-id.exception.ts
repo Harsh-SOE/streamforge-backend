@@ -1,4 +1,4 @@
-import { DomainException } from './domain.exception';
+import { DomainException } from '@app/common/exceptions/payload/base';
 
 export interface InvalidOwnerIdExceptionOptions {
   message?: string;

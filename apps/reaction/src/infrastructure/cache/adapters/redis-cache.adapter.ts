@@ -1,28 +1,43 @@
+// TODO Add handler here...
 import * as fs from 'fs';
 import { join } from 'path';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
-import { getShardFor } from '@app/counters';
 import { RedisClient } from '@app/clients/redis';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { RedisCacheHandler } from '@app/handlers/redis-cache-handler';
+import { getShardFor } from '@app/common/counters';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache/redis';
 
 import { ReactionCachePort } from '@reaction/application/ports';
 
 import { RedisWithCommands } from '../types';
 
 @Injectable()
-export class RedisCacheAdapter implements OnModuleInit, ReactionCachePort {
+export class RedisCacheAdapter implements OnModuleInit, OnModuleDestroy, ReactionCachePort {
   private readonly SHARDS: number = 64;
   private client: RedisWithCommands;
 
   public constructor(
-    private readonly redisCacheHandler: RedisCacheHandler,
+    private readonly handler: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly redis: RedisClient,
-  ) {}
+  ) {
+    this.client = redis.getClient() as RedisWithCommands;
+  }
 
-  public onModuleInit() {
+  public async connect(): Promise<void> {
+    await this.client.connect();
+  }
+
+  public async disconnect(): Promise<void> {
+    await this.client.quit();
+  }
+
+  public async onModuleInit() {
+    await this.handler.execute(async () => await this.connect(), {
+      operationType: 'CONNECT_OR_DISCONNECT',
+    });
+
     const likeScript = fs.readFileSync(join(__dirname, 'scripts/like.lua'), 'utf8');
 
     const unlikeScript = fs.readFileSync(join(__dirname, 'scripts/unlike.lua'), 'utf8');
@@ -31,29 +46,33 @@ export class RedisCacheAdapter implements OnModuleInit, ReactionCachePort {
 
     const undislikeScript = fs.readFileSync(join(__dirname, 'scripts/undislike.lua'), 'utf8');
 
-    this.redis.client.defineCommand('videoLikesCountIncr', {
+    this.client.defineCommand('videoLikesCountIncr', {
       numberOfKeys: 4,
       lua: likeScript,
     });
 
-    this.redis.client.defineCommand('videoLikesCountDecr', {
+    this.client.defineCommand('videoLikesCountDecr', {
       numberOfKeys: 2,
       lua: unlikeScript,
     });
 
-    this.redis.client.defineCommand('videoDislikesCountIncr', {
+    this.client.defineCommand('videoDislikesCountIncr', {
       numberOfKeys: 4,
       lua: dislikeScript,
     });
 
-    this.redis.client.defineCommand('videoDislikesCountDecr', {
+    this.client.defineCommand('videoDislikesCountDecr', {
       numberOfKeys: 2,
       lua: undislikeScript,
     });
 
-    this.client = this.redis.client as RedisWithCommands;
-
     this.logger.info('✅ Scripts intialized');
+  }
+
+  public async onModuleDestroy() {
+    await this.handler.execute(async () => await this.disconnect(), {
+      operationType: 'CONNECT_OR_DISCONNECT',
+    });
   }
 
   getShardKey(videoId: string, userId: string, shard: number = 64) {
@@ -83,7 +102,7 @@ export class RedisCacheAdapter implements OnModuleInit, ReactionCachePort {
 
     const getValuesOperations = async () => await this.client.mget(...allShardedKeys);
 
-    const values = await this.redisCacheHandler.execute(getValuesOperations, {
+    const values = await this.handler.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
     });
@@ -103,7 +122,7 @@ export class RedisCacheAdapter implements OnModuleInit, ReactionCachePort {
 
     const getValuesOperations = async () => await this.client.mget(...allShardedKeys);
 
-    const values = await this.redisCacheHandler.execute(getValuesOperations, {
+    const values = await this.handler.execute(getValuesOperations, {
       operationType: 'READ_MANY',
       keys: allShardedKeys,
     });

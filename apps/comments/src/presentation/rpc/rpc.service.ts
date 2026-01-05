@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 
 import { CommentVideoDto, CommentVideoResponse } from '@app/contracts/comments';
 
-import { CreateCommentCommand } from '@comments/application/use-cases';
+import { CreateCommentCommand } from '@comments/application/commands';
 
 @Injectable()
 export class RpcService {

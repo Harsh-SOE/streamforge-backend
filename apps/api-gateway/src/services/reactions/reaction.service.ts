@@ -3,8 +3,8 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { REACTION_SERVICE_NAME, ReactionServiceClient } from '@app/contracts/reaction';
-import { SERVICES } from '@app/clients';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { SERVICES } from '@app/common';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { GetLikesCountForVideo, GetDislikesCountForVideo, VideoReactedResponse } from './response';
 import { ClientTransportLikeStatusEnumMapper } from './mappers/like-status';

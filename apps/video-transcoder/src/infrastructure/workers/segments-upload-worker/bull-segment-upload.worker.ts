@@ -1,15 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import path from 'path';
+import { Job } from 'bullmq';
 import * as fsStream from 'fs';
 import * as fs from 'fs/promises';
-import { Job } from 'bullmq';
-import path from 'path';
+import { Inject, Injectable } from '@nestjs/common';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
+import { SEGMENT_UPLOADER_QUEUE } from '@transcoder/utils/constants';
 import { TranscoderStoragePort } from '@transcoder/application/ports';
 import { TRANSCODER_STORAGE_PORT } from '@transcoder/application/ports';
-import { SEGMENT_UPLOADER_QUEUE } from '@transcoder/utils/constants';
 
 @Injectable()
 @Processor(SEGMENT_UPLOADER_QUEUE)
@@ -17,7 +17,8 @@ export class BullSegmentUploadWorker extends WorkerHost {
   constructor(
     @Inject(TRANSCODER_STORAGE_PORT)
     private readonly transcoderStoragePort: TranscoderStoragePort,
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+    @Inject(LOGGER_PORT)
+    private readonly logger: LoggerPort,
   ) {
     super();
   }

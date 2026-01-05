@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
+import { IAggregatePersistanceACL } from '@app/common/ports/acl';
 
 import { VideoAggregate } from '@videos/domain/aggregates';
 
@@ -15,7 +15,7 @@ export class VideoAggregatePersistanceACL implements IAggregatePersistanceACL<
     // TODO mapper for enums 'PERSISTANCE' -> 'DOMAIN'...
     return VideoAggregate.create({
       id: persistance.id,
-      ownerId: persistance.ownerId,
+      userId: persistance.ownerId,
       channelId: persistance.channelId,
       title: persistance.title,
       videoThumbnailIdentifier: persistance.videoThumbnailIdentifer,

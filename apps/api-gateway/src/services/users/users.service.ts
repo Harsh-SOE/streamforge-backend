@@ -4,9 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import { SERVICES } from '@app/clients/constant';
+import { SERVICES } from '@app/common';
 import { UserAuthPayload } from '@app/contracts/auth';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 
 import { PreSignedUrlRequestDto, CompleteUserProfileDto, UpdateUserRequestDto } from './request';

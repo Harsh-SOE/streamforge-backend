@@ -1,6 +1,8 @@
+import * as joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as joi from 'joi';
+
+import { ENVIRONMENT } from '@app/utils/enums';
 
 import { QueryConfigService } from './config.service';
 
@@ -10,6 +12,12 @@ import { QueryConfigService } from './config.service';
       envFilePath: '../../.env',
       isGlobal: true,
       validationSchema: joi.object({
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
+
         HTTP_PORT: joi.string().required(),
         GRPC_PORT: joi.string().required(),
         DATABASE_URL: joi.string().required(),

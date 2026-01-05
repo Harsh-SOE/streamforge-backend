@@ -3,14 +3,14 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ReactionResponse, ReactionType, VideoReactionDto } from '@app/contracts/reaction';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
   DislikeCommand,
   LikeCommand,
   UnDislikeCommand,
   UnlikeCommand,
-} from '@reaction/application/use-cases/handlers';
+} from '@reaction/application/commands';
 
 @Injectable()
 export class RpcService {

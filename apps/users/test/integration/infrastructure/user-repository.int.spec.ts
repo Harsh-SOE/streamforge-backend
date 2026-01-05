@@ -3,12 +3,16 @@ import { execSync } from 'child_process';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 
-import { DATABASE_CONFIG, DatabaseConfig, PrismaHandler } from '@app/handlers/database-handler';
+import {
+  DATABASE_HANDLER_CONFIG,
+  DatabaseConfig,
+  PrismaHandler,
+} from '@app/handlers/database/prisma';
+import { LOGGER_PORT } from '@app/common/ports/logger';
 import {
   DatabaseEntityAlreadyExistsException,
   DatabaseEntityDoesNotExistsException,
-} from '@app/exceptions/database-exceptions';
-import { LOGGER_PORT } from '@app/ports/logger';
+} from '@app/common/exceptions/payload/database-exceptions';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 
 import {
@@ -63,7 +67,7 @@ describe('UserRepositoryAdapter (Integration)', () => {
           useValue: UserPrismaClient,
         },
         {
-          provide: DATABASE_CONFIG,
+          provide: DATABASE_HANDLER_CONFIG,
           useFactory: () =>
             ({
               host: 'test-container',

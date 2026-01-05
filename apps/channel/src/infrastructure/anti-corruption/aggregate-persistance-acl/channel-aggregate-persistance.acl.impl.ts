@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAggregatePersistanceACL } from '@app/ports/anti-corruption';
+import { IAggregatePersistanceACL } from '@app/common/ports/acl';
 
 import { Channel } from '@persistance/channel';
 

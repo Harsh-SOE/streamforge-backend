@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
 import { join } from 'path';
 
+import { ENVIRONMENT } from '@app/utils/enums';
+
 import { ReactionConfigService } from './config.service';
 
 @Module({
@@ -12,6 +14,12 @@ import { ReactionConfigService } from './config.service';
       isGlobal: true,
       envFilePath: join(__dirname, '../../.env'),
       validationSchema: joi.object({
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
+
         HTTP_PORT: joi.number().required(),
         GRPC_PORT: joi.number().required(),
 

@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import {
@@ -8,7 +9,6 @@ import {
 import { GetChannelResponse } from '@app/contracts/query';
 
 import { GetChannelFromIdQuery } from './get-channel-from-id.query';
-import { Inject } from '@nestjs/common';
 
 @QueryHandler(GetChannelFromIdQuery)
 export class GetChannelFromIdHandler implements IQueryHandler<GetChannelFromIdQuery> {

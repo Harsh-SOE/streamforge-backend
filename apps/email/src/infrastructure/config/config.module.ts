@@ -1,7 +1,9 @@
+import * as joi from 'joi';
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
-import * as joi from 'joi';
+
+import { ENVIRONMENT } from '@app/utils/enums';
 
 import { EmailConfigService } from './config.service';
 
@@ -12,6 +14,12 @@ import { EmailConfigService } from './config.service';
       envFilePath: join(__dirname, '../../.env'),
       isGlobal: true,
       validationSchema: joi.object({
+        NODE_ENVIRONMENT: joi
+          .string()
+          .valid(...Object.values(ENVIRONMENT))
+          .required()
+          .default(ENVIRONMENT.DEVELOPMENT),
+
         HTTP_PORT: joi.number().required(),
         GRAFANA_LOKI_URL: joi.string().required(),
 

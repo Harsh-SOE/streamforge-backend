@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserProjectionModel } from '@query/infrastructure/repository/models';
 import { UserQueryModel } from '@query/queries/models';
+import { UserProjectionModel } from '@query/infrastructure/repository/models';
 
 @Injectable()
 export class UserQueryACL {

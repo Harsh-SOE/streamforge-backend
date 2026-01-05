@@ -1,5 +1,5 @@
-import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { Controller, Get } from '@nestjs/common';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 
 import { AppHealthService } from './health.service';
 

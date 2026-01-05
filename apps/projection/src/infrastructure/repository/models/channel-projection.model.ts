@@ -9,9 +9,6 @@ export class ChannelProjectionModel extends Document {
   @Prop({ type: String, unique: true, required: true, index: true })
   userId: string;
 
-  @Prop({ type: String, unique: true, required: true, index: true })
-  handle: string;
-
   @Prop()
   coverImage: string;
 

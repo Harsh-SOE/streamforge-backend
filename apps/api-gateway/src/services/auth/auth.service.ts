@@ -4,14 +4,15 @@ import { JwtService } from '@nestjs/jwt';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { SERVICES } from '@app/clients/constant';
+import { SERVICES } from '@app/common';
+import { ENVIRONMENT } from '@app/utils/enums';
 import { UserAuthPayload } from '@app/contracts/auth';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
 import { QUERY_SERVICE_NAME, QueryServiceClient, UserProfileMessage } from '@app/contracts/query';
 
 import { UserProfile } from '@gateway/infrastructure/oauth/types';
-import { ENVIRONMENT, GatewayConfigService } from '@gateway/infrastructure/config';
+import { GatewayConfigService } from '@gateway/infrastructure/config';
 
 const ONBOARDING_INFO_COOKIE_NAME = 'onboarding_info';
 const ACCESS_TOKEN_COOKIE_NAME = 'access_info';

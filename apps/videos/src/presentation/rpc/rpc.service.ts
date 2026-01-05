@@ -9,11 +9,11 @@ import {
   VideoUpdatedResponse,
   VideoUpdateDto,
 } from '@app/contracts/videos';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { GeneratePreSignedUrlVideoCommand } from '@videos/application/use-cases/generate-presigned-url-video-command';
-import { GeneratePreSignedUrlThumbnailCommand } from '@videos/application/use-cases/generate-presigned-url-thumbnail-command';
-import { PublishVideoCommand } from '@videos/application/use-cases/publish-video-command';
-import { UpdateVideoCommand } from '@videos/application/use-cases/update-video-command';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { GeneratePreSignedUrlVideoCommand } from '@videos/application/commands/generate-presigned-url-video-command';
+import { GeneratePreSignedUrlThumbnailCommand } from '@videos/application/commands/generate-presigned-url-thumbnail-command';
+import { PublishVideoCommand } from '@videos/application/commands/publish-video-command';
+import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
 
 @Injectable()
 export class RpcService {

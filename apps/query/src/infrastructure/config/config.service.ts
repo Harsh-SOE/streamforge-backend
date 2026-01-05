@@ -6,11 +6,16 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
+import { ENVIRONMENT } from '@app/utils/enums';
 import { QUERY_PACKAGE_NAME } from '@app/contracts/query/query';
 
 @Injectable()
 export class QueryConfigService {
   constructor(private configService: ConfigService) {}
+
+  get NODE_ENVIRONMENT() {
+    return this.configService.getOrThrow<ENVIRONMENT>('NODE_ENVIRONMENT');
+  }
 
   get HTTP_PORT() {
     return this.configService.getOrThrow<number>('HTTP_PORT');

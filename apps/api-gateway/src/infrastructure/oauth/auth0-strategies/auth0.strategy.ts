@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ExtraVerificationParams, Strategy } from 'passport-auth0';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { GatewayConfigService } from '@gateway/infrastructure/config';
 

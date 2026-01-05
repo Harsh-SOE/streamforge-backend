@@ -4,9 +4,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MeasureModule } from '@users/infrastructure/measure';
 import { UserConfigModule } from '@users/infrastructure/config';
 
-import { GrpcModule } from './presentation/rpc';
+import { RpcModule } from './presentation/rpc';
+import { EventsModule } from './presentation/events';
 
 @Module({
-  imports: [GrpcModule, MeasureModule, UserConfigModule, ScheduleModule.forRoot()],
+  imports: [RpcModule, EventsModule, MeasureModule, UserConfigModule, ScheduleModule.forRoot()],
 })
 export class RootModule {}

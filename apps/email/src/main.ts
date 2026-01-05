@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { KafkaOptions } from '@nestjs/microservices';
+
 import { RootModule } from './root.module';
 import { EmailConfigService } from './infrastructure/config/config.service';
 

@@ -1,11 +1,12 @@
+// TODO add handler here...
 import * as fs from 'fs';
 import { join } from 'path';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { getShardFor } from '@app/counters';
 import { RedisClient } from '@app/clients/redis';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { RedisCacheHandler } from '@app/handlers/redis-cache-handler';
+import { getShardFor } from '@app/common/counters';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache/redis';
 
 import { ViewCachePort } from '@views/application/ports';
 
@@ -20,17 +21,17 @@ export class ViewCacheAdapter implements OnModuleInit, ViewCachePort {
     private readonly redisHandler: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly redis: RedisClient,
-  ) {}
+  ) {
+    this.client = redis.getClient() as RedisWithCommands;
+  }
 
   public onModuleInit() {
     const watchScript = fs.readFileSync(join(__dirname, 'scripts/watch.lua'), 'utf8');
 
-    this.redis.client.defineCommand('watchVideoCounterIncr', {
+    this.client.defineCommand('watchVideoCounterIncr', {
       numberOfKeys: 2,
       lua: watchScript,
     });
-
-    this.client = this.redis.client as RedisWithCommands;
 
     this.logger.info('Scripts intialized');
   }

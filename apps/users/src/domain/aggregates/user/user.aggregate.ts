@@ -1,13 +1,14 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
+import {
+  LanguageChangedDomainEvent,
+  NotificationStatusChangedDomainEvent,
+  OnboardedDomainEvent,
+  PhoneNumberVerifiedDomainEvent,
+  ProfileUpdatedDomainEvent,
+  ThemeChangedDomainEvent,
+} from '@users/domain/domain-events';
 import { UserEntity } from '@users/domain/entities';
-
-import { UserOnboardingEvent } from '@users/application/events/user-onboarded-event';
-import { UserProfileUpdatedEvent } from '@users/application/events/user-profile-updated-event';
-import { UserPhoneNumberVerifiedEvent } from '@users/application/events/user-phone-number-verified-event';
-import { UserThemeChangedEvent } from '@users/application/events/user-theme-changed-event';
-import { UserLanguageChangedEvent } from '@users/application/events/user-language-changed-event';
-import { UserNotificationStatusChangedEvent } from '@users/application/events/user-notification-status-changed-event';
 
 import { UserAggregateOption } from './options';
 
@@ -59,16 +60,12 @@ export class UserAggregate extends AggregateRoot {
     if (emitOnboardingEvent) {
       const userEntity = userAggregate.getUserEntity();
       userAggregate.apply(
-        new UserOnboardingEvent({
-          id: userEntity.getId(),
-          userAuthId: userEntity.getUserAuthId(),
-          email: userEntity.getEmail(),
-          handle: userEntity.getUserHandle(),
-          avatar: userEntity.getAvatarUrl(),
-          dob: userEntity.getDob()?.toISOString(),
-          phoneNumber: userEntity.getPhoneNumber(),
-          isPhoneNumberVerified: userEntity.getIsPhoneNumberVerified(),
-        }),
+        new OnboardedDomainEvent(
+          userEntity.getId(),
+          userEntity.getUserAuthId(),
+          userEntity.getEmail(),
+          userEntity.getUserHandle(),
+        ),
       );
     }
 
@@ -92,12 +89,12 @@ export class UserAggregate extends AggregateRoot {
 
     if (emitUpdatedProfileEvent) {
       this.apply(
-        new UserProfileUpdatedEvent({
-          id: userEntity.getId(),
-          avatar: userEntity.getAvatarUrl(),
-          dob: userEntity.getDob()?.toISOString(),
-          phoneNumber: userEntity.getPhoneNumber(),
-        }),
+        new ProfileUpdatedDomainEvent(
+          userEntity.getId(),
+          userEntity.getAvatarUrl(),
+          userEntity.getDob()?.toISOString(),
+          userEntity.getPhoneNumber(),
+        ),
       );
     }
 
@@ -114,10 +111,10 @@ export class UserAggregate extends AggregateRoot {
 
     if (emitPhoneNumberVerifiedEvent) {
       this.apply(
-        new UserPhoneNumberVerifiedEvent({
-          id: userEntity.getId(),
-          phoneNumber: userEntity.getPhoneNumber() as string,
-        }),
+        new PhoneNumberVerifiedDomainEvent(
+          userEntity.getId(),
+          userEntity.getPhoneNumber() as string,
+        ),
       );
     }
 
@@ -129,12 +126,7 @@ export class UserAggregate extends AggregateRoot {
     userEntity.updateThemePreference(newTheme);
 
     if (emitThemeChangedEvent) {
-      this.apply(
-        new UserThemeChangedEvent({
-          id: userEntity.getId(),
-          theme: userEntity.getThemePreference(),
-        }),
-      );
+      this.apply(new ThemeChangedDomainEvent(userEntity.getId(), userEntity.getThemePreference()));
     }
 
     return true;
@@ -146,10 +138,7 @@ export class UserAggregate extends AggregateRoot {
 
     if (emitLanguageEvent) {
       this.apply(
-        new UserLanguageChangedEvent({
-          id: userEntity.getId(),
-          language: userEntity.getLanguagePreference(),
-        }),
+        new LanguageChangedDomainEvent(userEntity.getId(), userEntity.getLanguagePreference()),
       );
     }
 
@@ -165,13 +154,9 @@ export class UserAggregate extends AggregateRoot {
 
     if (emitNotificationEvent) {
       this.apply(
-        new UserNotificationStatusChangedEvent({
-          id: userEntity.getId(),
-          status: userEntity.getNotification(),
-        }),
+        new NotificationStatusChangedDomainEvent(userEntity.getId(), userEntity.getNotification()),
       );
     }
-
     return true;
   }
 }

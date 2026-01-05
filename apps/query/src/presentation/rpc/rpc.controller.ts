@@ -1,5 +1,5 @@
-import { Controller, UseFilters } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { Controller, UseFilters } from '@nestjs/common';
 
 import {
   GetChannelFromIdDto,
@@ -12,8 +12,8 @@ import {
   QueryServiceControllerMethods,
 } from '@app/contracts/query';
 
-import { RpcService } from './rpc.service';
 import { GrpcFilter } from '../filters';
+import { RpcService } from './rpc.service';
 
 @Controller()
 @UseFilters(GrpcFilter)

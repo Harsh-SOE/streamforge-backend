@@ -1,11 +1,14 @@
-import { ChannelCreatedEventDto } from '@app/contracts/channel';
+import {
+  ChannelCreatedIntegrationEvent,
+  ChannelUpdatedIntegrationEvent,
+} from '@app/common/events/channel';
 
 export interface ChannelProjectionRepositoryPort {
-  saveChannel(data: ChannelCreatedEventDto): Promise<boolean>;
+  saveChannel(data: ChannelCreatedIntegrationEvent): Promise<boolean>;
 
-  saveManyChannels(data: ChannelCreatedEventDto[]): Promise<number>;
+  saveManyChannels(data: ChannelCreatedIntegrationEvent[]): Promise<number>;
 
-  updateChannel(videoId: string, data: Partial<ChannelCreatedEventDto>): Promise<boolean>;
+  updateChannel(videoId: string, data: Partial<ChannelUpdatedIntegrationEvent>): Promise<boolean>;
 
   deleteChannel(videoId: string): Promise<boolean>;
 }

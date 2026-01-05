@@ -2,12 +2,13 @@ import { Model } from 'mongoose';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+
 import { UserQueryModel } from '@query/queries/models';
 import { UserQueryRepositoryPort } from '@query/application/ports';
 import { UserQueryACL } from '@query/infrastructure/anti-corruption';
 
 import { UserProjectionModel } from '../models';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
 
 @Injectable()
 export class UserQueryRepository implements UserQueryRepositoryPort {

@@ -22,13 +22,13 @@ import {
 } from '@app/contracts/users';
 
 import { GrpcFilter } from '../filters';
-import { GrpcService } from './rpc.service';
+import { RpcService } from './rpc.service';
 
 @Controller()
 @UseFilters(GrpcFilter)
 @UserServiceControllerMethods()
-export class GrpcController implements UserServiceController {
-  constructor(private readonly userService: GrpcService) {}
+export class RpcController implements UserServiceController {
+  constructor(private readonly userService: RpcService) {}
 
   getPresignedUrlForFileUpload(
     getPresignedUrlDto: GetPresignedUrlDto,

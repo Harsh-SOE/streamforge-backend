@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { FrameworkModule } from '@authz/infrastructure/framework/framework.module';
+import { PlatformModule } from '@authz/infrastructure/platform/platform.module';
 
 import { RpcService } from './rpc.service';
 import { RpcController } from './rpc.controller';
 
 @Module({
-  imports: [FrameworkModule],
+  imports: [PlatformModule],
   providers: [RpcService],
   controllers: [RpcController],
 })

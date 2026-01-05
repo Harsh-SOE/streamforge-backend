@@ -21,7 +21,7 @@ export class VideoEntity {
   public static create(data: CreateVideoEntityOptions) {
     const {
       id,
-      ownerId,
+      userId,
       channelId,
       categories,
       publishStatus,
@@ -35,7 +35,7 @@ export class VideoEntity {
     return new VideoEntity({
       id: VideoId.create(id),
       channelId: VideoChannelId.create(channelId),
-      ownerId: VideoOwnerId.create(ownerId),
+      ownerId: VideoOwnerId.create(userId),
       categories: VideoCategories.create(categories),
       title: VideoTitle.create(title),
       publishStatus: VideoPublish.create(publishStatus),

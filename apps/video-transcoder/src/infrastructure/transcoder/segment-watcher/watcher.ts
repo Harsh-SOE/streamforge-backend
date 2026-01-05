@@ -1,10 +1,10 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Inject } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import chokidar, { FSWatcher } from 'chokidar';
 import path from 'path';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+import chokidar, { FSWatcher } from 'chokidar';
+import { Injectable, OnModuleInit, OnModuleDestroy, Inject } from '@nestjs/common';
 
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { SEGMENT_UPLOADER, SEGMENT_UPLOADER_QUEUE } from '@transcoder/utils/constants';
 
@@ -15,7 +15,8 @@ export class SegmentWatcher implements OnModuleInit, OnModuleDestroy {
   constructor(
     @InjectQueue(SEGMENT_UPLOADER_QUEUE)
     private readonly uploaderQueue: Queue,
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+    @Inject(LOGGER_PORT)
+    private readonly logger: LoggerPort,
   ) {}
 
   onModuleInit() {

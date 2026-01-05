@@ -1,12 +1,12 @@
-import { EachBatchPayload, KafkaMessage } from 'kafkajs';
+// todo: FIX THIS...
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { KafkaClient } from '@app/clients/kafka';
-import { PROJECTION_EVENTS } from '@app/clients';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { VideoUploadedEventDto } from '@app/contracts/videos';
-import { UserProfileCreatedEventDto } from '@app/contracts/users';
-import { KafkaHandler } from '@app/handlers/kafka-bus-handler';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { PROJECTION_EVENTS } from '@app/common/events';
+import { KafkaEventConsumerHandler } from '@app/handlers/events-consumer/kafka';
+import { KafkaEventPublisherHandler } from '@app/handlers/events-publisher/kafka';
 
 import {
   USER_PROJECTION_REPOSITORY_PORT,
@@ -15,43 +15,50 @@ import {
   VIDEO_PROJECTION_REPOSITORY_PORT,
   VideoProjectionRepositoryPort,
 } from '@projection/application/ports';
-import { ProjectionConfigService } from '@projection/infrastructure/config';
+import { OnboardedIntegrationEvent } from '@app/common/events/users';
+import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
 
 @Injectable()
 export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
+  private consumer: Consumer;
+  private producer: Producer;
+
   public constructor(
-    private readonly configService: ProjectionConfigService,
     @Inject(USER_PROJECTION_REPOSITORY_PORT)
     private readonly userProjectionRepo: UserProjectionRepositoryPort,
     @Inject(VIDEO_PROJECTION_REPOSITORY_PORT)
     private readonly videoProjectionRepo: VideoProjectionRepositoryPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
-    private readonly kafkaClient: KafkaClient,
-    private readonly kafkaHandler: KafkaHandler,
-  ) {}
+    private readonly kafka: KafkaClient,
+    private readonly consumerhandler: KafkaEventConsumerHandler,
+    private readonly publisherhandler: KafkaEventPublisherHandler,
+  ) {
+    this.consumer = kafka.getConsumer({ groupId: 'projection', allowAutoTopicCreation: true });
+    this.producer = kafka.getProducer({ allowAutoTopicCreation: true });
+  }
 
   public async onModuleInit() {
     const userSubscribeOperation = async () =>
-      await this.kafkaClient.consumer.subscribe({
+      await this.consumer.subscribe({
         topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
         fromBeginning: false,
       });
 
     const videosubscribeOperation = async () =>
-      await this.kafkaClient.consumer.subscribe({
+      await this.consumer.subscribe({
         topic: PROJECTION_EVENTS.SAVE_VIDEO_EVENT,
         fromBeginning: false,
       });
 
-    await this.kafkaHandler.execute(userSubscribeOperation, {
-      operationType: 'CONNECT_OR_DISCONNECT',
+    await this.consumerhandler.execute(userSubscribeOperation, {
+      operationType: 'CONNECT',
     });
 
-    await this.kafkaHandler.execute(videosubscribeOperation, {
-      operationType: 'CONNECT_OR_DISCONNECT',
+    await this.consumerhandler.execute(videosubscribeOperation, {
+      operationType: 'CONNECT',
     });
 
-    await this.kafkaClient.consumer.run({
+    await this.consumer.run({
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
@@ -72,17 +79,40 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
     });
   }
 
-  async bufferUser(event: UserProfileCreatedEventDto): Promise<void> {
-    await this.kafkaClient.producer.send({
-      topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
-      messages: [{ value: JSON.stringify(event) }],
-    });
+  async bufferUser(event: OnboardedIntegrationEvent): Promise<void> {
+    await this.publisherhandler.execute(
+      async () =>
+        await this.producer.send({
+          topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
+          messages: [{ value: JSON.stringify(event) }],
+        }),
+      {
+        operationType: 'PUBLISH',
+        topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
+        message: event,
+      },
+    );
+  }
+
+  async bufferVideo(event: VideoPublishedIntegrationEvent): Promise<void> {
+    await this.publisherhandler.execute(
+      async () =>
+        await this.producer.send({
+          topic: PROJECTION_EVENTS.SAVE_VIDEO_EVENT,
+          messages: [{ value: JSON.stringify(event) }],
+        }),
+      {
+        operationType: 'PUBLISH',
+        topic: PROJECTION_EVENTS.SAVE_USER_EVENT,
+        message: event,
+      },
+    );
   }
 
   private async handleUserBatch(messages: KafkaMessage[]) {
     const userEvents = messages
       .filter((msg) => msg.value)
-      .map((msg) => JSON.parse(msg.value!.toString()) as UserProfileCreatedEventDto);
+      .map((msg) => JSON.parse(msg.value!.toString()) as OnboardedIntegrationEvent);
 
     if (userEvents.length > 0) {
       this.logger.info(`Saving ${userEvents.length} users to projection`);
@@ -93,18 +123,11 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
   private async handleVideoBatch(messages: KafkaMessage[]) {
     const videoEvents = messages
       .filter((msg) => msg.value)
-      .map((msg) => JSON.parse(msg.value!.toString()) as VideoUploadedEventDto);
+      .map((msg) => JSON.parse(msg.value!.toString()) as VideoPublishedIntegrationEvent);
 
     if (videoEvents.length > 0) {
       this.logger.info(`Saving ${videoEvents.length} videos to projection`);
       await this.videoProjectionRepo.saveManyVideos(videoEvents);
     }
-  }
-
-  async bufferVideo(event: VideoUploadedEventDto): Promise<void> {
-    await this.kafkaClient.producer.send({
-      topic: PROJECTION_EVENTS.SAVE_VIDEO_EVENT,
-      messages: [{ value: JSON.stringify(event) }],
-    });
   }
 }

@@ -3,10 +3,10 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/videos';
-import { SERVICES } from '@app/clients/constant';
+import { SERVICES } from '@app/common';
 import { UserAuthPayload } from '@app/contracts/auth';
 import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { QUERY_SERVICE_NAME, QueryServiceClient } from '@app/contracts/query';
 
 import { ClientTransportVideoVisibilityEnumMapper } from './mappers/video-visibility-status';
@@ -67,23 +67,22 @@ export class VideoService implements OnModuleInit {
     video: CreateVideoRequestDto,
     user: UserAuthPayload,
   ): Promise<PublishedVideoRequestResponse> {
-    // const channel$ = this.queryService.({
-    //   userId: user.id,
-    // });
+    const channel$ = this.queryService.getChannelFromUserId({
+      userId: user.id,
+    });
 
-    // const channel = await firstValueFrom(channel$);
-    // if (!channel || !channel.channel) {
-    //   this.logger.info(`No channel was found`);
-    //   throw new Error(`Channel not found`);
-    // }
+    const foundChannel = await firstValueFrom(channel$);
+    if (!foundChannel || !foundChannel.channel) {
+      this.logger.info(`No channel was found`);
+      throw new Error(`Channel not found`);
+    }
 
     const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper[video.visibility];
-
     const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper[video.status];
 
     const response$ = this.videoService.save({
-      ownerId: user.id,
-      channelId: '',
+      userId: user.id,
+      channelId: foundChannel.channel.channelId,
       videoTransportPublishStatus: videoServicePublishStatus,
       videoTransportVisibilityStatus: videoServiceVisibilityStatus,
       ...video,

@@ -2,10 +2,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { getShardFor } from '@app/counters';
 import { RedisClient } from '@app/clients/redis';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { RedisCacheHandler } from '@app/handlers/redis-cache-handler';
+import { getShardFor } from '@app/common/counters';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { RedisCacheHandler } from '@app/handlers/cache/redis';
 
 import { CommentCachePort } from '@comments/application/ports';
 
@@ -14,23 +14,23 @@ import { RedisWithCommands } from '../types';
 @Injectable()
 export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
   private readonly SHARDS = 64;
-  private redisClient: RedisWithCommands;
+  private client: RedisWithCommands;
 
   public constructor(
     private readonly redisHandler: RedisCacheHandler,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly redis: RedisClient,
-  ) {}
+  ) {
+    this.client = redis.getClient() as RedisWithCommands;
+  }
 
   public onModuleInit() {
     const commentVideoScript = readFileSync(join(__dirname, 'scripts/comments.lua'), 'utf-8');
 
-    this.redis.client.defineCommand('commentVideo', {
+    this.client.defineCommand('commentVideo', {
       numberOfKeys: 2,
       lua: commentVideoScript,
     });
-
-    this.redisClient = this.redis.client as RedisWithCommands;
 
     this.logger.info('Scripts intialized');
   }
@@ -53,7 +53,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
     const userCommentSetKey = this.getUserCommentedVideoSetKey(videoId);
 
     const operation = async () =>
-      await this.redisClient.commentVideo(userCommentSetKey, userCommentCounterKey, userId);
+      await this.client.commentVideo(userCommentSetKey, userCommentCounterKey, userId);
 
     return await this.redisHandler.execute(operation, {
       key: userCommentCounterKey,
@@ -67,7 +67,7 @@ export class RedisCacheAdapter implements CommentCachePort, OnModuleInit {
       this.getCommentsCountKey(videoId, i),
     );
 
-    const getValuesOperations = async () => await this.redisClient.mget(...allShardedKeys);
+    const getValuesOperations = async () => await this.client.mget(...allShardedKeys);
 
     const values = await this.redisHandler.execute(getValuesOperations, {
       operationType: 'READ_MANY',

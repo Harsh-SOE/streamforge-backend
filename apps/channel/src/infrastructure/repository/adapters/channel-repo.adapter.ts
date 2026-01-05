@@ -1,13 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Components } from '@app/common/components';
-import { LOGGER_PORT, LoggerPort } from '@app/ports/logger';
-import { PrismaHandler } from '@app/handlers/database-handler';
+import { Components } from '@app/common';
+import { PrismaDBClient } from '@app/clients/prisma';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { PrismaHandler } from '@app/handlers/database/prisma';
 
 import { ChannelAggregate } from '@channel/domain/aggregates';
 import { ChannelCommandRepositoryPort } from '@channel/application/ports';
 import { ChannelAggregatePersistanceACL } from '@channel/infrastructure/anti-corruption';
-import { PrismaDBClient } from '@app/clients/prisma';
+
 import { PrismaClient as ChannelPrismaClient } from '@persistance/channel';
 
 @Injectable()

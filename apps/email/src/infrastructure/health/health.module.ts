@@ -1,8 +1,8 @@
 import { TerminusModule } from '@nestjs/terminus';
 import { Module } from '@nestjs/common';
 
-import { AppHealthController } from './health.controller';
 import { AppHealthService } from './health.service';
+import { AppHealthController } from './health.controller';
 
 import { EmailConfigModule } from '../config';
 

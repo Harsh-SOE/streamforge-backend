@@ -4,9 +4,11 @@ import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 
+import { ENVIRONMENT } from '@app/utils/enums';
+
 import { RootModule } from './root.module';
+import { GatewayConfigService } from './infrastructure/config';
 import { GatewayExceptionFilter } from './persentation/filters';
-import { ENVIRONMENT, GatewayConfigService } from './infrastructure/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);

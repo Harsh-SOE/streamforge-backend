@@ -26,7 +26,7 @@ export interface VideoProps {
 
 export interface CreateVideoEntityOptions {
   readonly id?: string;
-  readonly ownerId: string;
+  readonly userId: string;
   readonly channelId: string;
   title: string;
   videoThumbnailIdentifier: string;

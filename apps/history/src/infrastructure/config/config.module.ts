@@ -1,7 +1,7 @@
+import path from 'path';
+import * as joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as joi from 'joi';
-import path from 'path';
 
 import { HistoryConfigService } from './config.service';
 
