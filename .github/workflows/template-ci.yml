@@ -63,12 +63,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push to docker hub
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./apps/${{ inputs.service-name }}/Dockerfile
-          push: true
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-${{ inputs.service-name }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/streamforge-${{ inputs.service-name }}:${{ github.sha }}
