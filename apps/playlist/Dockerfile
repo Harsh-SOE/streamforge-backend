@@ -30,7 +30,7 @@ RUN npx prisma generate --schema ./apps/playlist/prisma/schema.prisma
 
 RUN chmod +x apps/playlist/scripts/entrypoint.dev.bash
 
-CMD ["apps/playlist/scripts/entrypoint.dev.bash"]
+ENTRYPOINT [ "./apps/playlist/scripts/entrypoint.dev.bash" ]
 
 FROM base AS builder
 
@@ -63,7 +63,7 @@ COPY --from=builder /@streamforge/apps/playlist/prisma ./prisma
 COPY --from=builder /@streamforge/apps/playlist/generated/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node /.prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node
 COPY --from=builder /@streamforge/dist/apps/playlist/main.js ./main.js
 COPY --from=builder /@streamforge/dist/apps/playlist/proto ./proto
-COPY --from=builder /@streamforge/dist/apps/playlist/scripts ./scripts
+COPY --from=builder /@streamforge/dist/apps/playlist/scripts/entrypoint.prod.bash ./scripts/entrypoint.prod.bash
 
 USER root
 

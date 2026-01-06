@@ -6,7 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
-import { HISTORY_PACKAGE_NAME } from '@app/contracts/history/history';
+import { HISTORY_PACKAGE_NAME } from '@app/contracts/history';
 
 @Injectable()
 export class HistoryConfigService {
