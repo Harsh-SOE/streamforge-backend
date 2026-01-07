@@ -7,7 +7,7 @@ import { AuthzConfigService } from './config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '../../.env',
+      envFilePath: 'apps/authz/.env',
       isGlobal: true,
       validationSchema: joi.object({
         HTTP_PORT: joi.number().required(),

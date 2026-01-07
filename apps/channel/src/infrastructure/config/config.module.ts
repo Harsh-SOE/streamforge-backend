@@ -1,5 +1,4 @@
 import * as joi from 'joi';
-import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,7 +10,7 @@ import { ChannelConfigService } from './config.service';
   providers: [ChannelConfigService],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: join(__dirname, '../../.env'),
+      envFilePath: 'apps/channel/.env',
       isGlobal: true,
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi

@@ -1,4 +1,3 @@
-import path from 'path';
 import * as joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -11,7 +10,7 @@ import { PlaylistConfigService } from './config.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: path.join(__dirname, '../../.env'),
+      envFilePath: 'apps/playlist/.env',
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi
           .string()

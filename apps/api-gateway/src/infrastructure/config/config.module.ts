@@ -1,5 +1,4 @@
 import * as joi from 'joi';
-import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -11,7 +10,7 @@ import { GatewayConfigService } from './config.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: join(__dirname, '../../.env'),
+      envFilePath: 'apps/api-gateway/.env',
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi
           .string()

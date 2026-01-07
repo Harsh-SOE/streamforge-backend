@@ -1,5 +1,4 @@
 import * as joi from 'joi';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 
@@ -12,7 +11,7 @@ import { ViewsConfigService } from './config.service';
   providers: [ViewsConfigService],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: join(__dirname, '../.env'),
+      envFilePath: 'apps/views/.env',
       isGlobal: true,
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi

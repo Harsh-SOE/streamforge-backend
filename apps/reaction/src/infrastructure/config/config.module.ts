@@ -1,7 +1,6 @@
+import * as joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as joi from 'joi';
-import { join } from 'path';
 
 import { ENVIRONMENT } from '@app/utils/enums';
 
@@ -12,7 +11,7 @@ import { ReactionConfigService } from './config.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: join(__dirname, '../../.env'),
+      envFilePath: 'apps/reaction/.env',
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi
           .string()

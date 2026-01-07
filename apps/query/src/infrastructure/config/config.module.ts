@@ -9,7 +9,7 @@ import { QueryConfigService } from './config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '../../.env',
+      envFilePath: 'apps/query/.env',
       isGlobal: true,
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi

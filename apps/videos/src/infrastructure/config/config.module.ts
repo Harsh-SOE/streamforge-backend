@@ -1,5 +1,4 @@
 import * as joi from 'joi';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 
@@ -11,7 +10,7 @@ import { VideosConfigService } from './config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: join(__dirname, '../../.env'),
+      envFilePath: 'apps/videos/.env',
       isGlobal: true,
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi

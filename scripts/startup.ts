@@ -6,17 +6,14 @@ import ora, { Ora } from 'ora';
 import { checkbox, select } from '@inquirer/prompts';
 import { spawn, spawnSync, ChildProcess } from 'child_process';
 
-// --- Types ---
 type DockerCleanupChoice = 'dangling-images' | 'dangling-volumes' | 'cache';
 type AppMode = 'development' | 'production';
 
-// --- Global State ---
 let activeSpinner: Ora | null = null;
 let activeChildProcess: ChildProcess | null = null;
-let isExiting = false; // Prevents spamming Ctrl+C
-let currentMode: AppMode = 'development'; // Default fallback
+let isExiting = false;
+let currentMode: AppMode = 'development';
 
-// --- Helpers ---
 const printBox = (text: string, color: 'cyan' | 'green' | 'yellow' | 'red' | 'blue' = 'cyan') => {
   console.log(
     boxen(chalk[color](text), {
@@ -69,7 +66,6 @@ function runCommand(command: string, label: string): Promise<void> {
 function runTilt(mode: AppMode) {
   printBox(`🚀 Tilt started in ${mode.toUpperCase()} mode`, 'green');
 
-  // Update global state so gracefulExit knows which mode to tear down
   currentMode = mode;
 
   const tilt = spawn('tilt up', {
@@ -173,18 +169,15 @@ async function main() {
   }
 }
 
-// --- Updated Exit Handler ---
 function gracefulExit(msg?: string) {
   if (isExiting) return;
   isExiting = true;
 
-  // 1. Stop any loading spinners
   if (activeSpinner) {
     activeSpinner.stop();
     activeSpinner = null;
   }
 
-  // 2. Kill the active process (e.g., tilt up) immediately
   if (activeChildProcess && !activeChildProcess.killed) {
     activeChildProcess.kill('SIGINT');
   }
@@ -192,14 +185,12 @@ function gracefulExit(msg?: string) {
   console.log('\n');
   printBox('🛑 Shutting Down', 'yellow');
 
-  // 3. Run Tilt Down (Synchronously)
-  // We use spawnSync to block the exit until cleanup is done.
   console.log(chalk.yellow(`▶ Running: tilt down -v (Mode: ${currentMode})`));
 
   try {
     spawnSync('tilt down -v', {
       shell: true,
-      stdio: 'inherit', // Let user see the cleanup logs
+      stdio: 'inherit',
       env: { ...process.env, MODE: currentMode },
     });
     console.log(chalk.green('✔ Tilt resources destroyed'));

@@ -9,7 +9,7 @@ import { CommentsConfigService } from './config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '../../.env',
+      envFilePath: 'apps/comments/.env',
       isGlobal: true,
       validationSchema: joi.object({
         NODE_ENVIRONMENT: joi
