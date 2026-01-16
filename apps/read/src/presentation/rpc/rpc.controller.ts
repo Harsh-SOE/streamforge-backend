@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Controller, UseFilters } from '@nestjs/common';
+import { Controller, Inject, UseFilters } from '@nestjs/common';
 
 import {
   GetChannelFromIdDto,
@@ -11,6 +11,7 @@ import {
   ReadQueryServiceController,
   ReadQueryServiceControllerMethods,
 } from '@app/contracts/read';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { GrpcFilter } from '../filters';
 import { RpcService } from './rpc.service';
@@ -19,11 +20,15 @@ import { RpcService } from './rpc.service';
 @UseFilters(GrpcFilter)
 @ReadQueryServiceControllerMethods()
 export class RpcController implements ReadQueryServiceController {
-  public constructor(public readonly grpcService: RpcService) {}
+  public constructor(
+    public readonly grpcService: RpcService,
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+  ) {}
 
   getUserProfileFromId(
     getUserProfileFromIdDto: GetUserProfileFromIdDto,
   ): Promise<GetUserProfileResponse> | Observable<GetUserProfileResponse> | GetUserProfileResponse {
+    this.logger.info(`Searching for user with id: ${getUserProfileFromIdDto.userId}`);
     return this.grpcService.getUserProfileFromIdQuery(getUserProfileFromIdDto);
   }
 

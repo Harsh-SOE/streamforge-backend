@@ -19,7 +19,7 @@ export class UserQueryRepository implements UserQueryRepositoryPort {
   ) {}
 
   public async getUserFromId(userId: string): Promise<UserReadModel | null> {
-    const user = await this.projectedUserInfo.findById(userId);
+    const user = await this.projectedUserInfo.findOne({ userId });
 
     return user ? this.userQueryACL.userProjectionSchemaToQueryModel(user) : null;
   }

@@ -216,7 +216,7 @@ export class GatewayConfigService {
       options: {
         package: READ_PACKAGE_NAME,
         protoPath: join(__dirname, 'proto/read.proto'),
-        url: `${this.WATCH_SERVICE_HOST}:${this.WATCH_SERVICE_PORT}`,
+        url: `${this.READ_SERVICE_HOST}:${this.READ_SERVICE_PORT}`,
       },
     };
   }
