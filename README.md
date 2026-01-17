@@ -1,98 +1,298 @@
+# Streamforge Backend
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  A production-grade, distributed backend system inspired by modern video streaming platforms.
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<p align="center">
+  Built with <b>NestJS</b>, designed using <b>Hexagonal Architecture + CQRS + Event-Driven Architecture</b>,
+  and orchestrated locally using <b>Docker</b> and <b>Tilt</b>.
+</p>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## ✨ Overview
 
-```bash
-$ yarn install
+Streamforge is a **fully distributed backend system** inspired by platforms like YouTube.
+
+This project focuses on **how large-scale backend systems are actually engineered**, not just on delivering APIs.
+
+It emphasizes:
+
+- Strong domain boundaries
+- Independent services
+- Asynchronous communication
+- Clear separation of responsibility
+- Production-aligned architecture patterns
+
+---
+
+## 🧠 Architectural Philosophy
+
+The system is intentionally designed using **multiple complementary architecture patterns**, each solving a different class of problems.
+
+| Pattern                   | Purpose                                  |
+| ------------------------- | ---------------------------------------- |
+| Hexagonal Architecture    | Protect domain logic from frameworks     |
+| CQRS                      | Separate write and read responsibilities |
+| Event-Driven Architecture | Enable loose coupling and scalability    |
+
+These patterns are not used in isolation — they work together to form a cohesive system.
+
+---
+
+## 🧩 Architectural Patterns Used
+
+### 1️⃣ Hexagonal Architecture (Per Service)
+
+Each microservice follows **Hexagonal Architecture (Ports & Adapters)**.
+
+The core idea:
+
+> Business logic must not depend on frameworks, databases, or transport layers.
+
+**Layered flow inside every service:**
+
+```
+Controller / Message Consumer
+        ↓
+Application Layer (Use Cases)
+        ↓
+Domain Layer (Entities, Aggregates, Rules)
+        ↓
+Ports (Interfaces)
+        ↓
+Adapters (DB, Kafka, External APIs)
 ```
 
-## Compile and run the project
+**Key rules enforced:**
 
-```bash
-# development
-$ yarn run start
+- Domain layer has zero NestJS imports
+- Infrastructure details are replaceable
+- Application layer orchestrates all use-cases
+- Adapters implement ports, never the other way around
 
-# watch mode
-$ yarn run start:dev
+This provides:
 
-# production mode
-$ yarn run start:prod
+- High testability
+- Framework independence
+- Long-term maintainability
+
+---
+
+### 2️⃣ CQRS (System-Level)
+
+CQRS is applied at the **system boundary**, not merely as folder separation.
+
+The system distinguishes between:
+
+- **Write side → owns truth**
+- **Read side → owns representation**
+
+#### Write Side
+
+- Handles commands
+- Enforces domain invariants
+- Executes business rules
+- Emits domain events
+
+#### Read Side
+
+- Consumes domain events
+- Builds projections
+- Stores denormalized view models
+- Serves optimized queries
+
+> The read service never performs writes and contains no domain logic.
+
+There is:
+
+- No direct database sharing
+- No synchronous coupling
+- No HTTP calls between write and read services
+
+All communication happens exclusively through events.
+
+---
+
+### 3️⃣ Event-Driven Architecture
+
+Kafka acts as the **backbone of the entire system**.
+
+Domain events represent **facts that already happened**, not intentions.
+
+Examples:
+
+- `UserRegistered`
+- `VideoUploaded`
+- `VideoPublished`
+
+Events are:
+
+- Immutable
+- Past-tense
+- Versioned
+
+This enables:
+
+- Loose coupling between services
+- Independent deployment
+- Horizontal scalability
+- Fault isolation
+
+---
+
+## 🏗️ High-Level System Architecture
+
+```
+                          ┌────────────────────┐
+                          │      Clients       │
+                          │  Web / Mobile App  │
+                          └─────────┬──────────┘
+                                    │
+                                    ▼
+                          ┌────────────────────┐
+                          │     API Gateway    │
+                          │ (Auth, Routing)    │
+                          └─────────┬──────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        │                           │                           │
+        ▼                           ▼                           ▼
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│   User Service   │     │  Video Service   │     │ Interaction Svc  │
+│ (commands only)  │     │ (commands only)  │     │ (commands only)  │
+└─────────┬────────┘     └─────────┬────────┘     └─────────┬────────┘
+          │                          │                          │
+          └──────────────┬───────────┴───────────┬─────────────┘
+                         ▼                       ▼
+                ┌────────────────────────────────────┐
+                │               Kafka                │
+                │         (Domain Events Bus)        │
+                └──────────────┬─────────────────────┘
+                               │
+                               ▼
+                     ┌────────────────────┐
+                     │     Read Service   │
+                     │  (Queries Only)    │
+                     └────────────────────┘
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ yarn run test
+## 📦 Repository Structure
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```
+backend/
+│
+├── apps/
+│   ├── gateway/                 # API Gateway (HTTP entrypoint)
+│   ├── user/                    # User write service
+│   ├── video/                   # Video write service
+│   ├── interaction/             # Likes, comments, views
+│   ├── read/                    # Query + projection service
+│
+├── libs/
+│   ├── common/                  # Shared infrastructure
+│   │   ├── kafka/               # Kafka producers & consumers
+│   │   ├── logger/              # Centralized logging
+│   │   ├── exceptions/          # Global exception handling
+│   │   └── decorators/          # Custom decorators
+│   │
+│   ├── contracts/               # Domain event contracts
+│   └── config/                  # Environment configuration
+│
+├── infra/
+│   ├── docker/                  # Service Dockerfiles
+│   ├── kafka/                   # Kafka & Zookeeper setup
+│   ├── prometheus/              # Metrics
+│   └── grafana/                 # Observability dashboards
+│
+├── Tiltfile                     # Local orchestration
+├── docker-compose.yml           # Infrastructure services
+├── package.json
+├── yarn.lock
+└── README.md
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## ⚙️ Requirements
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Node.js (>= 18)
+- Yarn
+- Docker
+- Docker Compose
+- Tilt
+- NestJS CLI
+
+---
+
+## 🚀 Running the Project
+
+### Manual (Service-by-Service)
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+yarn build <service_name>
+yarn start <service_name>
+yarn start:dev <service_name>
+yarn start:prod <service_name>
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+If no service is specified, `gateway` is used by default.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+### Docker + Tilt (Recommended)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+yarn start:all
+```
 
-## Support
+This spins up:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- All microservices
+- Kafka & infrastructure
+- Hot reload environment
+- Unified logging and health visibility
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🧪 Testing
 
-## License
+```bash
+yarn test
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+yarn test <service_name>
+
+yarn test:e2e
+
+yarn test:cov
+```
+
+---
+
+## 📌 Why This Project Exists
+
+This repository is built as a **long-term backend engineering system**, not a demo.
+
+It is used to:
+
+- Practice real distributed-system design
+- Understand CQRS at scale
+- Learn event-driven consistency
+- Explore production architecture patterns
+
+---
+
+## 📜 License
+
+MIT License
+
+---
+
+> Streamforge is an evolving backend architecture project focused on correctness, clarity, and scalability.

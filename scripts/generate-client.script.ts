@@ -5,7 +5,17 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { execFileSync } from 'child_process';
 
-const allowedServices = ['users', 'videos', 'reaction', 'channel', 'comments', 'views'];
+const allowedServices = [
+  'users',
+  'videos',
+  'reaction',
+  'channel',
+  'comments',
+  'views',
+  'history',
+  'playlist',
+  'subscribe',
+];
 
 const serviceName = process.argv[2];
 

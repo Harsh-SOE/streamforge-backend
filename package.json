@@ -1,8 +1,8 @@
 {
-  "name": "books",
+  "name": "streamforge",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A scalable backend for video sharing and streaming format.",
+  "author": "Harsh vardhan yadav",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
