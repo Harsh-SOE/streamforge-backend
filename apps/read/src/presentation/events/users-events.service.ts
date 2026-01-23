@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  OnboardedIntegrationEvent,
-  ProfileUpdatedIntegrationEvent,
-} from '@app/common/events/users';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { UserProjectionEvent } from '@app/common/events/projections';
+import { ProfileUpdatedIntegrationEvent } from '@app/common/events/users';
 
 import {
   USER_PROJECTION_REPOSITORY_PORT,
@@ -19,7 +17,7 @@ export class UsersEventsService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async onUserProfileOnBoarded(userProfileCreatedEventDto: OnboardedIntegrationEvent) {
+  public async onUserProfileOnBoarded(userProfileCreatedEventDto: UserProjectionEvent) {
     this.logger.info(`saving user projection`);
     await this.userProjectionRespository.saveUser(userProfileCreatedEventDto.payload);
   }

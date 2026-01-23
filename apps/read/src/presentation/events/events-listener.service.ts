@@ -1,13 +1,11 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import {
-  OnboardedIntegrationEvent,
-  ProfileUpdatedIntegrationEvent,
-} from '@app/common/events/users';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { ProfileUpdatedIntegrationEvent } from '@app/common/events/users';
 import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
 import { ChannelCreatedIntegrationEvent } from '@app/common/events/channel';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
+import { PROJECTION_EVENTS, UserProjectionEvent } from '@app/common/events/projections';
 
 import { UsersEventsService } from './users-events.service';
 import { VideoEventsService } from './video-events.service';
@@ -27,8 +25,9 @@ export class EventsListenerService implements OnModuleInit {
     await this.eventConsumer.consumeMessage(async (event) => {
       this.logger.info(`projection event recieved`, event);
       switch (event.eventType) {
-        case 'USER_ONBOARDED_EVENT': {
-          await this.usersEventService.onUserProfileOnBoarded(event as OnboardedIntegrationEvent);
+        case PROJECTION_EVENTS.USER_ONBOARDED_PROJECTION_EVENT.toString(): {
+          this.logger.info(`Saving user projection`);
+          await this.usersEventService.onUserProfileOnBoarded(event as UserProjectionEvent);
           break;
         }
         case 'USER_PROFILE_UPDATED_EVENT': {
