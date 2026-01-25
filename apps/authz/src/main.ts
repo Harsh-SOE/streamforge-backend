@@ -15,7 +15,7 @@ async function bootstrap() {
 }
 bootstrap()
   .then(() => {
-    console.log(`Authz microservice started successfully`);
+    console.log(`Authz service started successfully`);
   })
   .catch((error) => {
     console.log(`An Error occured while starting the authz service`);

@@ -5,5 +5,5 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}[ENTRYPOINT]${NC} Starting Read service in ${YELLOW}production${NC} mode."
+echo -e "${BLUE}[ENTRYPOINT - production]${NC} Starting Read service in ${YELLOW}production${NC} mode."
 exec "$@"

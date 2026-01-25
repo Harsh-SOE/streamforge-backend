@@ -1,287 +1,44 @@
+x-grpc-healthcheck: &grpc_healthcheck
+  test: ['CMD', 'grpc_health_probe', '-addr=:5000']
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 90s
+
+x-http-healthcheck: &http_healthcheck
+  test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+  interval: 10s
+  timeout: 5s
+  retries: 5
+  start_period: 60s
+
+x-kafka-healthcheck: &kafka_healthcheck
+  test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 180s
+
+x-service-resources: &service_resources
+  resources:
+    reservations:
+      cpus: '0.25'
+      memory: '256M'
+    limits:
+      cpus: '0.25'
+      memory: '512M'
+
 services:
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                            DATABASES                                                        #
-  #-------------------------------------------------------------------------------------------------------------#
-
-  users-database:
-    image: postgres:latest
-    container_name: users-database
-    env_file:
-      - apps/users/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: users
-    ports:
-      - 5433:5432
-    volumes:
-      - users-database-volume:/var/lib/postgresql
-    networks:
-      - users-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d users"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: &postgres-resources
-      resources:
-        reservations:
-          memory: "512M"
-          cpus: "0.5"
-        limits:
-          memory: "1G"
-          cpus: "1"
-    logging: &logging
-      driver: "local"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  videos-database:
-    image: postgres:latest
-    container_name: videos-database
-    env_file:
-      - apps/videos/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: videos
-    ports:
-      - 5434:5432
-    volumes:
-      - videos-database-volume:/var/lib/postgresql
-    networks:
-      - videos-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d videos"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  views-database:
-    image: postgres:latest
-    container_name: views-database
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: views
-    ports:
-      - 5437:5432
-    volumes:
-      - views-database-volume:/var/lib/postgresql
-    networks:
-      - views-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d views"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  comments-database:
-    image: postgres:latest
-    container_name: comments-database
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: comments
-    ports:
-      - 5436:5432
-    volumes:
-      - comments-database-volume:/var/lib/postgresql
-    networks:
-      - comments-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d comments"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  channel-database:
-    image: postgres:latest
-    container_name: channel-database
-    env_file:
-      - apps/channel/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: channel
-    ports:
-      - 5438:5432
-    volumes:
-      - channel-database-volume:/var/lib/postgresql
-    networks:
-      - channel-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d channel"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  subscribe-database:
-    image: postgres:latest
-    container_name: subscribe-database
-    env_file:
-      - apps/subscribe/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: subscribe
-    ports:
-      - 5439:5432
-    volumes:
-      - subscribe-database-volume:/var/lib/postgresql
-    networks:
-      - subscribe-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d subscribe"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  playlist-database:
-    image: postgres:latest
-    container_name: playlist-database
-    env_file:
-      - apps/playlist/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: playlist
-    ports:
-      - 5440:5432
-    volumes:
-      - playlist-database-volume:/var/lib/postgresql
-    networks:
-      - playlist-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d playlist"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
-  history-database:
-    image: postgres:latest
-    container_name: history-database
-    env_file:
-      - apps/history/.env
-    environment:
-      POSTGRES_USER: harsh
-      POSTGRES_PASSWORD: harsh123
-      POSTGRES_DB: history
-    ports:
-      - 5441:5432
-    volumes:
-      - history-database-volume:/var/lib/postgresql
-    networks:
-      - history-database-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U harsh -d history"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    deploy: *postgres-resources
-    logging: *logging
-
   analytics-database:
     image: clickhouse/clickhouse-server:latest
     ports:
-      - "8123:8123"
-      - "9000:9000"
+      - '8123:8123'
+      - '9000:9000'
     volumes:
       - analytics_data:/var/lib/clickhouse
       - analytics_logs:/var/log/clickhouse-server
     networks:
       - analytics-database-network
-
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                            MESSAGE BROKER                                                   #
-  #-------------------------------------------------------------------------------------------------------------#
-
-  kafka:
-    image: obsidiandynamics/kafka
-    container_name: kafka
-    restart: "no"
-    environment:
-      KAFKA_LISTENERS: "INTERNAL://:29092"
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
-      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
-      KAFKA_RESTART_ATTEMPTS: "10"
-      KAFKA_RESTART_DELAY: "5"
-      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
-    networks:
-      - message-broker
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "/opt/kafka_2.12-2.3.0/bin/kafka-topics.sh --bootstrap-server localhost:29092 --list > /dev/null 2>&1 || exit 1",
-        ]
-      interval: 15s
-      timeout: 30s
-      retries: 5
-      start_period: 120s
-    deploy:
-      resources:
-        reservations:
-          memory: "512M"
-          cpus: "0.5"
-        limits:
-          memory: "1G"
-          cpus: "1"
-    logging: *logging
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
-
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    container_name: kafdrop
-    restart: "no"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka:29092"
-    ports:
-      - "9999:9000"
-    networks:
-      - message-broker
-    deploy:
-      resources:
-        reservations:
-          memory: "256M"
-          cpus: "0.5"
-        limits:
-          memory: "512M"
-          cpus: "1"
-    logging: *logging
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                          METRICS AND OBSERVABILITY                                          #
-  #-------------------------------------------------------------------------------------------------------------#
 
   prom-server:
     image: prom/prometheus
@@ -296,12 +53,20 @@ services:
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.5"
+          memory: '256M'
+          cpus: '0.5'
         limits:
-          memory: "512M"
-          cpus: "1"
-    logging: *logging
+          memory: '512M'
+          cpus: '1'
+    logging: &logging
+      driver: 'local'
+      options:
+        max-size: '10m'
+        max-file: '3'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     depends_on:
       gateway:
         condition: service_healthy
@@ -335,11 +100,11 @@ services:
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.5"
+          memory: '256M'
+          cpus: '0.5'
         limits:
-          memory: "512M"
-          cpus: "1"
+          memory: '512M'
+          cpus: '1'
     logging: *logging
 
   grafana-loki:
@@ -354,46 +119,12 @@ services:
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.5"
+          memory: '256M'
+          cpus: '0.5'
         limits:
-          memory: "512M"
-          cpus: "0.5"
+          memory: '512M'
+          cpus: '0.5'
     logging: *logging
-
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                                 CACHE                                                       #
-  #-------------------------------------------------------------------------------------------------------------#
-
-  redis-cache:
-    image: redis:alpine
-    container_name: redis-cache
-    ports:
-      - 6379:6379
-    volumes:
-      - cache:/usr/src/cache/data
-    networks:
-      - services
-      - cache
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-    deploy:
-      resources:
-        reservations:
-          memory: "256M"
-          cpus: "0.25"
-        limits:
-          memory: "512M"
-          cpus: "0.5"
-    logging: *logging
-
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                              AUTHORIZATION                                                  #
-  #-------------------------------------------------------------------------------------------------------------#
 
   postgres:
     image: postgres:17
@@ -402,22 +133,22 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - "5435:5432"
+      - '5435:5432'
     networks:
       - authorization
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
       timeout: 5s
       retries: 5
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.25"
+          memory: '256M'
+          cpus: '0.25'
         limits:
-          memory: "512M"
-          cpus: "0.5"
+          memory: '512M'
+          cpus: '0.5'
     logging: *logging
 
   migrate:
@@ -432,11 +163,11 @@ services:
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.25"
+          memory: '256M'
+          cpus: '0.25'
         limits:
-          memory: "512M"
-          cpus: "0.5"
+          memory: '512M'
+          cpus: '0.5'
     logging: *logging
     depends_on:
       postgres:
@@ -451,27 +182,23 @@ services:
       - OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
       - OPENFGA_LOG_FORMAT=json
     ports:
-      - "8080:8080"
-      - "8081:8081"
-      - "3333:3000"
+      - '8080:8080'
+      - '8081:8081'
+      - '3333:3000'
     networks:
       - authorization
     deploy:
       resources:
         reservations:
-          memory: "256M"
-          cpus: "0.25"
+          memory: '256M'
+          cpus: '0.25'
         limits:
-          memory: "512M"
-          cpus: "0.5"
+          memory: '512M'
+          cpus: '0.5'
     logging: *logging
     depends_on:
       migrate:
         condition: service_completed_successfully
-
-  #-------------------------------------------------------------------------------------------------------------#
-  #                                              MICROSERVICES                                                  #
-  #-------------------------------------------------------------------------------------------------------------#
 
   gateway:
     image: mytube/gateway/development:latest
@@ -486,25 +213,7 @@ services:
     networks:
       - services
       - authorization
-      - cache
-      - message-broker
       - observer
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/healthcheck/monitor"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 1m
-    deploy: &service_resources
-      resources:
-        reservations:
-          cpus: "0.25"
-          memory: "256M"
-        limits:
-          cpus: "0.25"
-          memory: "512M"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       users:
         condition: service_healthy
@@ -522,6 +231,10 @@ services:
         condition: service_healthy
       email:
         condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *http_healthcheck
 
   users:
     image: mytube/users/development:latest
@@ -531,32 +244,18 @@ services:
       dockerfile: apps/users/Dockerfile
     env_file:
       - apps/users/.env
-    environment:
-      - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - users-database-network
-    healthcheck: &grpc-healthcheck
-      test: ["CMD", "grpc_health_probe", "-addr=:5000"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 180s
-    deploy: *service_resources
     depends_on:
-      users-database:
-        condition: service_healthy
       users-migrate:
         condition: service_completed_successfully
       email:
         condition: service_healthy
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   authz:
     image: mytube/authz/development:latest
@@ -568,12 +267,12 @@ services:
       - apps/authz/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
       - authorization
-    deploy: *service_resources
-    healthcheck: *grpc-healthcheck
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   users-migrate:
     image: mytube/users/development:latest
@@ -582,22 +281,10 @@ services:
       - apps/users/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - users-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/users/prisma/schema.prisma",
-      ]
-    depends_on:
-      users-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/users/prisma/schema.prisma']
+    restart: 'no'
 
   channel:
     image: mytube/channel/development:latest
@@ -611,23 +298,16 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - channel-database-network
-    deploy: *service_resources
-    healthcheck: *grpc-healthcheck
     depends_on:
-      channel-database:
-        condition: service_healthy
       channel-migrate:
         condition: service_completed_successfully
       email:
         condition: service_healthy
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   channel-migrate:
     image: mytube/channel/development:latest
@@ -639,22 +319,9 @@ services:
       - apps/channel/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - channel-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/channel/prisma/schema.prisma",
-      ]
-    depends_on:
-      channel-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/channel/prisma/schema.prisma']
 
   videos:
     image: mytube/videos/development:latest
@@ -668,23 +335,16 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - videos-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      videos-database:
-        condition: service_healthy
       videos-migrate:
         condition: service_completed_successfully
       email:
         condition: service_healthy
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   videos-migrate:
     image: mytube/videos/development:latest
@@ -693,22 +353,9 @@ services:
       - apps/videos/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - videos-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/videos/prisma/schema.prisma",
-      ]
-    depends_on:
-      videos-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/videos/prisma/schema.prisma']
 
   video-transcoder:
     image: mytube/video-transcoder/development:latest
@@ -724,23 +371,14 @@ services:
       - transcoder-volume:/home/node/transcoded-videos
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-    healthcheck: &message-broker-healthcheck
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 180s
-    deploy: *service_resources
     depends_on:
       videos:
         condition: service_healthy
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *kafka_healthcheck
 
   views:
     image: mytube/views/development:latest
@@ -754,21 +392,14 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - views-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      views-database:
-        condition: service_healthy
       views-migrate:
         condition: service_completed_successfully
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   views-migrate:
     image: mytube/views/development:latest
@@ -777,22 +408,9 @@ services:
       - apps/views/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - views-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/views/prisma/schema.prisma",
-      ]
-    depends_on:
-      views-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/views/prisma/schema.prisma']
 
   reaction:
     image: mytube/reaction/development:latest
@@ -806,16 +424,11 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
-    depends_on:
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   comments:
     image: mytube/comments/development:latest
@@ -829,21 +442,14 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-      - comments-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      comments-database:
-        condition: service_healthy
       comments-migrate:
         condition: service_completed_successfully
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   comments-migrate:
     image: mytube/comments/development:latest
@@ -852,22 +458,9 @@ services:
       - apps/comments/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - comments-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/comments/prisma/schema.prisma",
-      ]
-    depends_on:
-      comments-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/comments/prisma/schema.prisma']
 
   playlist:
     image: mytube/playlist/development:latest
@@ -881,21 +474,14 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-      - playlist-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      playlist-database:
-        condition: service_healthy
       playlist-migrate:
         condition: service_completed_successfully
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   playlist-migrate:
     image: mytube/playlist/development:latest
@@ -904,22 +490,9 @@ services:
       - apps/playlist/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - playlist-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/playlist/prisma/schema.prisma",
-      ]
-    depends_on:
-      playlist-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/playlist/prisma/schema.prisma']
 
   subscribe:
     image: mytube/subscribe/development:latest
@@ -933,21 +506,14 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-      - subscribe-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      subscribe-database:
-        condition: service_healthy
       subscribe-migrate:
         condition: service_completed_successfully
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   subscribe-migrate:
     image: mytube/subscribe/development:latest
@@ -956,22 +522,9 @@ services:
       - apps/subscribe/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - subscribe-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/subscribe/prisma/schema.prisma",
-      ]
-    depends_on:
-      subscribe-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/subscribe/prisma/schema.prisma']
 
   history:
     image: mytube/history/development:latest
@@ -985,21 +538,14 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-      - history-database-network
-    healthcheck: *grpc-healthcheck
-    deploy: *service_resources
     depends_on:
-      history-database:
-        condition: service_healthy
       history-migrate:
         condition: service_completed_successfully
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *grpc_healthcheck
 
   history-migrate:
     image: mytube/history/development:latest
@@ -1008,22 +554,9 @@ services:
       - apps/history/.env
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-      - history-database-network
     entrypoint:
-      [
-        "npx",
-        "prisma",
-        "migrate",
-        "deploy",
-        "--schema",
-        "apps/history/prisma/schema.prisma",
-      ]
-    depends_on:
-      history-database:
-        condition: service_healthy
+      ['npx', 'prisma', 'migrate', 'deploy', '--schema', 'apps/history/prisma/schema.prisma']
 
   email:
     image: mytube/email/development:latest
@@ -1037,73 +570,42 @@ services:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
-      - message-broker
       - observer
-    healthcheck: *message-broker-healthcheck
-    deploy: *service_resources
-    depends_on:
-      kafka:
-        condition: service_healthy
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      <<: *kafka_healthcheck
 
-  projection:
-    image: mytube/projection/development:latest
-    container_name: projection
+  read:
+    image: mytube/read/development:latest
+    container_name: read
     build:
       context: .
-      dockerfile: apps/projection/Dockerfile
+      dockerfile: apps/read/Dockerfile
     env_file:
-      - apps/projection/.env
+      - apps/read/.env
     environment:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
     networks:
       - services
-      - cache
       - observer
-      - message-broker
-    healthcheck: *message-broker-healthcheck
-    deploy: *service_resources
-    depends_on:
-      kafka:
-        condition: service_healthy
-      redis-cache:
-        condition: service_healthy
-
-#-------------------------------------------------------------------------------------------------------------#
-#                                                  VOLUMES                                                    #
-#-------------------------------------------------------------------------------------------------------------#
+    deploy:
+      <<: *service_resources
+    healthcheck:
+      test: ['CMD-SHELL', 'grpc_health_probe -addr=:5000 && curl -f http://localhost:3000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
 
 volumes:
-  cache: {}
   grafana-storage: {}
   transcoder-volume: {}
-  users-database-volume: {}
-  videos-database-volume: {}
-  views-database-volume: {}
-  comments-database-volume: {}
-  channel-database-volume: {}
-  subscribe-database-volume: {}
-  playlist-database-volume: {}
-  history-database-volume: {}
   analytics_data: {}
   analytics_logs: {}
 
-#-------------------------------------------------------------------------------------------------------------#
-#                                                 NETWORKS                                                    #
-#-------------------------------------------------------------------------------------------------------------#
-
 networks:
   services: {}
-  cache: {}
-  message-broker: {}
   authorization: {}
   observer: {}
-  users-database-network: {}
-  videos-database-network: {}
-  channel-database-network: {}
-  views-database-network: {}
-  comments-database-network: {}
-  subscribe-database-network: {}
-  playlist-database-network: {}
-  history-database-network: {}
   analytics-database-network: {}

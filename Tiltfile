@@ -13,18 +13,20 @@ else:
     print('Starting App in development mode...')
 
 SERVICES = {
-  'users': './apps/users',
-  'videos': './apps/videos',
-  'email': './apps/email',
-  'reaction': './apps/reaction',
-  'video-transcoder': './apps/video-transcoder',
-  'views': './apps/views',
-  'comments': './apps/comments',
-  'channel': './apps/channel',
   'gateway': './apps/api-gateway',
+  'authz': 'apps/authz',
+  'channel': './apps/channel',
+  'comments': './apps/comments',
+  'email': './apps/email',
   'history': './apps/history',
-  'subscribe': './apps/subscribe',
   'playlist': './apps/playlist',
+  'reaction': './apps/reaction',
+  'read': './apps/read',
+  'subscribe': './apps/subscribe',
+  'users': './apps/users',
+  'video-transcoder': './apps/video-transcoder',
+  'videos': './apps/videos',
+  'views': './apps/views',
 }
 
 # -----------------------------------------

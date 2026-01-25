@@ -1,27 +1,17 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const swcDefaultConfig =
+  require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory().swcOptions;
 
-module.exports = (options) => {
-  return {
-    ...options,
-    plugins: [
-      ...options.plugins,
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: path.join(__dirname, 'scripts/entrypoint.dev.bash'),
-            to: path.join(__dirname, '../../dist/apps/read/scripts'),
-          },
-          {
-            from: path.join(__dirname, 'scripts/entrypoint.prod.bash'),
-            to: path.join(__dirname, '../../dist/apps/read/scripts'),
-          },
-          {
-            from: path.join('libs/proto/read.proto'),
-            to: path.join(__dirname, '../../dist/apps/read/proto'),
-          },
-        ],
-      }),
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'swc-loader',
+          options: swcDefaultConfig,
+        },
+      },
     ],
-  };
+  },
 };

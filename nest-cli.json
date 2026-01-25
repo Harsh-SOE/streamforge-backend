@@ -28,9 +28,54 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/api-gateway/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/authz.proto",
+            "outDir": "dist/apps/api-gateway/proto/authz.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/channel.proto",
+            "outDir": "dist/apps/api-gateway/proto/channel.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/comments.proto",
+            "outDir": "dist/apps/api-gateway/proto/comments.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/reaction.proto",
+            "outDir": "dist/apps/api-gateway/proto/reaction.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/users.proto",
+            "outDir": "dist/apps/api-gateway/proto/users.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/videos.proto",
+            "outDir": "dist/apps/api-gateway/proto/videos.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/views.proto",
+            "outDir": "dist/apps/api-gateway/proto/views.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../../../libs/proto/read.proto",
+            "outDir": "dist/apps/api-gateway/proto/read.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/api-gateway/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "authz": {
@@ -39,9 +84,20 @@
       "sourceRoot": "apps/authz/src",
       "entryFile": "main",
       "compilerOptions": {
-        "webpack": true,
+        "tsConfigPath": "apps/authz/tsconfig.app.json",
         "webpackConfigPath": "apps/authz/webpack.config.js",
-        "tsConfigPath": "apps/authz/tsconfig.app.json"
+        "assets": [
+          {
+            "include": "../../../libs/proto/authz.proto",
+            "outDir": "dist/apps/authz/proto/authz.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/authz/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "channel": {
@@ -51,9 +107,19 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/channel/tsconfig.app.json",
-        "watchAssets": true,
-        "webpack": true,
-        "webpackConfigPath": "apps/channel/webpack.config.js"
+        "webpackConfigPath": "apps/channel/webpack.config.js",
+        "assets": [
+          {
+            "include": "../../../libs/proto/channel.proto",
+            "outDir": "dist/apps/channel/proto/channel.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/channel/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "clients": {
@@ -72,9 +138,24 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/comments/tsconfig.app.json",
-        "watchAssets": true,
-        "webpack": true,
-        "webpackConfigPath": "apps/comments/webpack.config.js"
+        "webpackConfigPath": "apps/comments/webpack.config.js",
+        "assets": [
+          {
+            "include": "../../../libs/proto/comments.proto",
+            "outDir": "dist/apps/comments/proto/comments.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/comments/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/comments.lua",
+            "outDir": "dist/apps/comments/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "common": {
@@ -102,9 +183,14 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/email/tsconfig.app.json",
-        "watchAssets": true,
-        "webpack": true,
-        "webpackConfigPath": "apps/email/webpack.config.js"
+        "webpackConfigPath": "apps/email/webpack.config.js",
+        "assets": [
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/email/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "handlers": {
@@ -123,9 +209,19 @@
       "sourceRoot": "apps/history/src",
       "compilerOptions": {
         "tsConfigPath": "apps/history/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/history/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/history.proto",
+            "outDir": "dist/apps/history/proto/history.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/history/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "playlist": {
@@ -135,9 +231,19 @@
       "sourceRoot": "apps/playlist/src",
       "compilerOptions": {
         "tsConfigPath": "apps/playlist/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/playlist/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/playlist.proto",
+            "outDir": "dist/apps/playlist/proto/playlist.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/playlist/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "read": {
@@ -147,9 +253,19 @@
       "sourceRoot": "apps/read/src",
       "compilerOptions": {
         "tsConfigPath": "apps/read/tsconfig.app.json",
-        "webpack": true,
-        "watchAssets": true,
-        "webpackConfigPath": "apps/read/webpack.config.js"
+        "webpackConfigPath": "apps/read/webpack.config.js",
+        "assets": [
+          {
+            "include": "../../../libs/proto/read.proto",
+            "outDir": "dist/apps/read/proto/read.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/read/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "proto": {
@@ -168,9 +284,14 @@
       "sourceRoot": "apps/query/src",
       "compilerOptions": {
         "tsConfigPath": "apps/query/tsconfig.app.json",
-        "webpack": true,
-        "watchAssets": true,
-        "webpackConfigPath": "apps/query/webpack.config.js"
+        "webpackConfigPath": "apps/query/webpack.config.js",
+        "assets": [
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/query/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "reaction": {
@@ -180,9 +301,39 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/reaction/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/reaction/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/reaction.proto",
+            "outDir": "dist/apps/reaction/proto/reaction.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/reaction/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/dislike.lua",
+            "outDir": "dist/apps/reaction/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/like.lua",
+            "outDir": "dist/apps/reaction/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/unlike.lua",
+            "outDir": "dist/apps/reaction/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/undislike.lua",
+            "outDir": "dist/apps/reaction/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "subscribe": {
@@ -192,9 +343,19 @@
       "sourceRoot": "apps/subscribe/src",
       "compilerOptions": {
         "tsConfigPath": "apps/subscribe/tsconfig.app.json",
-        "watchAssets": true,
-        "webpack": true,
-        "webpackConfigPath": "apps/subscribe/webpack.config.js"
+        "webpackConfigPath": "apps/subscribe/webpack.config.js",
+        "assets": [
+          {
+            "include": "../../../libs/proto/subscribe.proto",
+            "outDir": "dist/apps/subscribe/proto/subscribe.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/subscribe/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "users": {
@@ -204,8 +365,19 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/users/tsconfig.app.json",
-        "webpack": true,
-        "webpackConfigPath": "apps/users/webpack.config.js"
+        "webpackConfigPath": "apps/users/webpack.config.js",
+        "assets": [
+          {
+            "include": "../../../libs/proto/users.proto",
+            "outDir": "dist/apps/users/proto/users.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/users/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "utils": {
@@ -224,8 +396,14 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/video-transcoder/tsconfig.app.json",
-        "watchAssets": true,
-        "webpackConfigPath": "apps/video-transcoder/webpack.config.js"
+        "webpackConfigPath": "apps/video-transcoder/webpack.config.js",
+        "assets": [
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/video-transcoder/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "videos": {
@@ -235,9 +413,19 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/videos/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/videos/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/videos.proto",
+            "outDir": "dist/apps/videos/proto/videos.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/videos/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "views": {
@@ -247,9 +435,24 @@
       "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/views/tsconfig.app.json",
-        "webpack": true,
         "webpackConfigPath": "apps/views/webpack.config.js",
-        "watchAssets": true
+        "assets": [
+          {
+            "include": "../../../libs/proto/views.proto",
+            "outDir": "dist/apps/views/proto/views.proto",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/*.bash",
+            "outDir": "dist/apps/views/scripts",
+            "watchAssets": true
+          },
+          {
+            "include": "../scripts/watch.lua",
+            "outDir": "dist/apps/views/scripts",
+            "watchAssets": true
+          }
+        ]
       }
     }
   }

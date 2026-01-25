@@ -25,12 +25,10 @@ export class EventsListenerService implements OnModuleInit {
       this.logger.info(`projection event recieved`, event);
       switch (event.eventType) {
         case PROJECTION_EVENTS.USER_ONBOARDED_PROJECTION_EVENT.toString(): {
-          this.logger.info(`Saving user projection`);
           await this.usersEventService.onUserProfileOnBoarded(event as UserProjectionEvent);
           break;
         }
         case PROJECTION_EVENTS.USER_PROFILE_UPDATED_PROJECTION_EVENT.toString(): {
-          this.logger.info(`Updating user projection`);
           break;
         }
         case PROJECTION_EVENTS.CHANNEL_CREATED_PROJECTION_EVENT.toString(): {

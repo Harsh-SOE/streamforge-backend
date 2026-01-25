@@ -5,5 +5,5 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}[ENTRYPOINT]${NC} Starting Subscribe service in ${YELLOW}development${NC} mode."
+echo -e "${BLUE}[ENTRYPOINT - development]${NC} Starting Subscribe service in ${YELLOW}development${NC} mode."
 yarn start:dev subscribe
