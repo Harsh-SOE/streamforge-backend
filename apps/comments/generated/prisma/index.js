@@ -127,7 +127,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/harsh/Projects/streamforge/backend/apps/comments/generated/prisma",
+      "value": "/home/harsh/Projects/Streamforge/backend/apps/comments/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -145,7 +145,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/harsh/Projects/streamforge/backend/apps/comments/prisma/schema.prisma",
+    "sourceFilePath": "/home/harsh/Projects/Streamforge/backend/apps/comments/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

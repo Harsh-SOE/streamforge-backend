@@ -97,10 +97,7 @@ async function cleanDocker(actions: DockerCleanupChoice[]) {
   printBox('🧹 Docker Cleanup', 'blue');
 
   if (actions.includes('dangling-images')) {
-    await runCommand(
-      'docker image ls -qf dangling=true | xargs -r docker image rm',
-      'Removing dangling images',
-    );
+    await runCommand('docker image prune -f', 'Removing dangling images');
   }
 
   if (actions.includes('dangling-volumes')) {
