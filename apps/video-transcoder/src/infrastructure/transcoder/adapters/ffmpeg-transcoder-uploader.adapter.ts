@@ -19,12 +19,12 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
     @Inject(TRANSCODER_STORAGE_PORT)
     private readonly storageAdapter: TranscoderStoragePort,
     @Inject(LOGGER_PORT)
-    private readonly loggerAdapter: LoggerPort,
+    private readonly logger: LoggerPort,
   ) {}
 
   public async transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void> {
     const { fileIdentifier, videoId } = transcodeVideoOptions;
-    this.loggerAdapter.alert(`Transcoding video now: ${fileIdentifier}`);
+    this.logger.alert(`Transcoding video now: ${fileIdentifier}`);
 
     const videoFileToTranscode =
       await this.storageAdapter.getRawVideoFileAsReadableStream(fileIdentifier);
@@ -45,16 +45,16 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
         .outputOption('-hls_playlist_type', 'vod')
         .outputOption('-hls_segment_filename', segmentPattern)
         .on('error', (err, _, stderr) => {
-          this.loggerAdapter.error(`FFmpeg error for video:${videoId}`, err);
-          this.loggerAdapter.error(`ffmpeg stderr: ${stderr}`);
+          this.logger.error(`FFmpeg error for video:${videoId}`, err);
+          this.logger.error(`ffmpeg stderr: ${stderr}`);
           reject(err);
         })
         .on('end', () => {
-          this.loggerAdapter.info(`HLS transcoding for ${videoId} finished successfully.`);
+          this.logger.info(`HLS transcoding for ${videoId} finished successfully.`);
           resolve();
         })
         .on('progress', (progress) => {
-          this.loggerAdapter.info(`Processing: ${progress.timemark}`);
+          this.logger.info(`Processing: ${progress.timemark}`);
         })
         .save(manifestPath);
     });

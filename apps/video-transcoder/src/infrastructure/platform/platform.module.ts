@@ -1,5 +1,4 @@
 import { CqrsModule } from '@nestjs/cqrs';
-import { BullModule } from '@nestjs/bullmq';
 import { Global, Module } from '@nestjs/common';
 
 import {
@@ -25,42 +24,19 @@ import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/client
 import { REDIS_CLIENT_CONFIG, RedisClientConfig, RedisClient } from '@app/clients/redis';
 import { REDIS_BUFFER_HANDLER_CONFIG, RedisBufferHandlerConfig } from '@app/handlers/buffer/redis';
 
-import {
-  SEGMENT_DELETE_QUEUE,
-  SEGMENT_UPLOADER_QUEUE,
-  TRANSCODER_JOB_QUEUE,
-} from '@transcoder/utils/constants';
 import { TRANSCODER_PORT, TRANSCODER_STORAGE_PORT } from '@transcoder/application/ports';
 
 import { MeasureModule } from '../measure';
+import { SegmentWatcher } from '../segment-watcher';
 import { AwsS3StorageAdapter } from '../storage/adapters';
-import { SegmentWatcher } from '../transcoder/segment-watcher';
-import { TranscoderConfigModule, TranscoderConfigService } from '../config';
+import { TranscoderConfigService } from '../config';
 import { TranscoderKafkaConsumerAdapter } from '../events-consumer/adapters';
 import { FFmpegVideoTranscoderUploaderAdapter } from '../transcoder/adapters';
-import { BullSegmentUploadWorker, BullTranscodeJobsWorker } from '../workers';
 import { TranscoderKafkaPublisherAdapter } from '../events-publisher/adapters';
 
 @Global()
 @Module({
-  imports: [
-    MeasureModule,
-    CqrsModule,
-    BullModule.forRootAsync({
-      imports: [TranscoderConfigModule],
-      inject: [TranscoderConfigService],
-      useFactory: (configService: TranscoderConfigService) => ({
-        connection: {
-          url: `${configService.REDIS_HOST}:${configService.REDIS_PORT}`,
-        },
-      }),
-    }),
-    BullModule.registerQueue(
-      { name: TRANSCODER_JOB_QUEUE },
-      { name: SEGMENT_UPLOADER_QUEUE },
-      { name: SEGMENT_DELETE_QUEUE },
-    ),
-  ],
+  imports: [MeasureModule, CqrsModule],
   providers: [
     // handlers
     RedisCacheHandler,
@@ -71,10 +47,7 @@ import { TranscoderKafkaPublisherAdapter } from '../events-publisher/adapters';
     KafkaClient,
     RedisClient,
 
-    // bull workers
     SegmentWatcher,
-    BullTranscodeJobsWorker,
-    BullSegmentUploadWorker,
 
     // ports and adapters
     {
@@ -235,8 +208,6 @@ import { TranscoderKafkaPublisherAdapter } from '../events-publisher/adapters';
     RedisCacheHandler,
 
     SegmentWatcher,
-    BullTranscodeJobsWorker,
-    BullSegmentUploadWorker,
     SegmentWatcher,
 
     LOGGER_PORT,
@@ -251,8 +222,6 @@ import { TranscoderKafkaPublisherAdapter } from '../events-publisher/adapters';
     KAFKA_BUFFER_HANDLER_CONFIG,
     KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
     KAFKA_EVENT_PUBLISHER_HANDLER_CONFIG,
-
-    BullModule,
   ],
 })
 export class PlatformModule {}
