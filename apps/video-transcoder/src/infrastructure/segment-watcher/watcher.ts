@@ -48,6 +48,7 @@ export class SegmentWatcher implements OnModuleInit, OnModuleDestroy {
     this.watcher.on('add', (filePath) => {
       this.logger.info(`file ${filePath} was created in the directory that was being watched`);
 
+      // UNRELIABLE OUTCOMES POSSIBLE
       this.uploadFileToS3(filePath).catch((error: Error) => {
         this.logger.error(`Failed to process uploaded segment: ${filePath}`, { error: error });
       });
