@@ -17,10 +17,10 @@ export class TranscoderKafkaConsumerAdapter
   private readonly consumer: Consumer;
 
   public constructor(
-    private readonly configService: TranscoderConfigService,
-    private readonly handler: KafkaEventConsumerHandler,
-    private readonly kafka: KafkaClient,
-    @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
+    private readonly configService: TranscoderConfigService, // via platform module
+    private readonly handler: KafkaEventConsumerHandler, // via kafka consumer module
+    private readonly kafka: KafkaClient, // via platform module
+    @Inject(LOGGER_PORT) private readonly logger: LoggerPort, // via logger module
   ) {
     this.consumer = kafka.getConsumer({
       groupId: 'videos-transcoder',

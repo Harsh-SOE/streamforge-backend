@@ -12,7 +12,7 @@ import {
   TranscoderStoragePort,
 } from '@transcoder/application/ports';
 
-export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
+export class FFmpegVideoTranscoderAdapter implements TranscoderPort {
   private readonly transcodedVideoDir = '/@streamforge/transcoded-videos';
 
   public constructor(
@@ -54,7 +54,7 @@ export class FFmpegVideoTranscoderUploaderAdapter implements TranscoderPort {
           resolve();
         })
         .on('progress', (progress) => {
-          this.logger.info(`Processing: ${progress.timemark}`);
+          this.logger.info(`Transcoding video: ${progress.percent ?? 0}`);
         })
         .save(manifestPath);
     });
