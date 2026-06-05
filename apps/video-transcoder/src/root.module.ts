@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { EventListenerModule } from '@transcoder/presentation';
-import { TranscoderConfigModule } from '@transcoder/infrastructure/config';
-
+import { EventListenerModule } from './presentation';
 import { AppHealthModule } from './infrastructure/health';
+import { PlatformModule } from './infrastructure/platform/platform.module';
 
 @Module({
-  imports: [TranscoderConfigModule, EventListenerModule, AppHealthModule],
+  imports: [PlatformModule, EventListenerModule, AppHealthModule],
 })
 export class RootModule {}
