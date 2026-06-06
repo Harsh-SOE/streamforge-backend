@@ -12,9 +12,7 @@ import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 import { TranscoderKafkaPublisherAdapter } from './adapters';
 
 @Module({
-  imports: [],
   providers: [
-    KafkaEventPublisherHandler,
     {
       provide: EVENT_PUBLISHER_PORT,
       useClass: TranscoderKafkaPublisherAdapter,
@@ -39,6 +37,7 @@ import { TranscoderKafkaPublisherAdapter } from './adapters';
           sendToDlqAfterAttempts: 5,
         }) satisfies KafkaEventPublisherHandlerConfig,
     },
+    KafkaEventPublisherHandler,
   ],
   exports: [EVENT_PUBLISHER_PORT],
 })

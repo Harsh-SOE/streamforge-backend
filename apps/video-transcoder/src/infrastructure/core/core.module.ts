@@ -4,21 +4,15 @@ import { Global, Module } from '@nestjs/common';
 import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/clients/kafka';
 
 import { LoggerModule } from '../logger';
-import { MeasureModule } from '../measure';
-import { SegmentWatcher } from '../segment-watcher';
+import { MetricsModule } from '../metrics';
 import { TranscoderConfigModule, TranscoderConfigService } from '../config';
 
 @Global()
 @Module({
-  imports: [CqrsModule, MeasureModule, TranscoderConfigModule, LoggerModule],
+  imports: [CqrsModule, MetricsModule, TranscoderConfigModule, LoggerModule],
   providers: [
-    SegmentWatcher,
-    TranscoderConfigService,
-
-    // clients
+    // clients and config
     KafkaClient,
-
-    // clients config
     {
       provide: KAFKA_CLIENT_CONFIG,
       inject: [TranscoderConfigService],
@@ -33,15 +27,6 @@ import { TranscoderConfigModule, TranscoderConfigService } from '../config';
         }) as KafkaClientConfig,
     },
   ],
-  exports: [
-    CqrsModule,
-    MeasureModule,
-    LoggerModule,
-    KafkaClient,
-    SegmentWatcher,
-    TranscoderConfigModule,
-    TranscoderConfigService,
-    KAFKA_CLIENT_CONFIG,
-  ],
+  exports: [CqrsModule, TranscoderConfigModule, MetricsModule, LoggerModule, KafkaClient],
 })
-export class PlatformModule {}
+export class CoreModule {}

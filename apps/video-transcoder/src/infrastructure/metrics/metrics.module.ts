@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
-import { emailServiceRequestsCounter } from './metrics/requests-counter';
+import { videoTranscoderServiceRequestsCounter } from './counters/requests-counter';
 
 @Global()
 @Module({
@@ -10,7 +10,7 @@ import { emailServiceRequestsCounter } from './metrics/requests-counter';
       defaultMetrics: { enabled: true },
     }),
   ],
-  providers: [emailServiceRequestsCounter],
-  exports: [emailServiceRequestsCounter],
+  providers: [videoTranscoderServiceRequestsCounter],
+  exports: [videoTranscoderServiceRequestsCounter],
 })
-export class MeasureModule {}
+export class MetricsModule {}

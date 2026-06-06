@@ -12,9 +12,7 @@ import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 import { TranscoderKafkaConsumerAdapter } from './adapters';
 
 @Module({
-  imports: [],
   providers: [
-    KafkaEventConsumerHandler,
     {
       provide: EVENT_CONSUMER_PORT,
       useClass: TranscoderKafkaConsumerAdapter,
@@ -39,6 +37,7 @@ import { TranscoderKafkaConsumerAdapter } from './adapters';
           sendToDlqAfterAttempts: 5,
         }) satisfies KafkaEventConsumerHandlerConfig,
     },
+    KafkaEventConsumerHandler,
   ],
   exports: [EVENT_CONSUMER_PORT],
 })

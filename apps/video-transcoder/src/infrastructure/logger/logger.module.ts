@@ -6,7 +6,6 @@ import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-cons
 import { TranscoderConfigService } from '../config';
 
 @Module({
-  imports: [],
   providers: [
     { provide: LOGGER_PORT, useClass: LokiConsoleLogger },
     {
