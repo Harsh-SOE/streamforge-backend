@@ -1,11 +1,11 @@
-import { Inject, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
 import { TRANSCODER_QUEUE_PORT, TranscoderQueuePort } from '@transcoder/application/ports/queue';
-
+@Injectable()
 export class EventsListenerService implements OnModuleInit {
   public constructor(
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,

@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 
 import { EventListenerModule } from './presentation';
 import { AppHealthModule } from './infrastructure/health';
-import { PlatformModule } from './infrastructure/platform/platform.module';
+import { CoreModule } from './infrastructure/core/core.module';
 
 @Module({
-  imports: [PlatformModule, EventListenerModule, AppHealthModule],
+  imports: [CoreModule, EventListenerModule, AppHealthModule],
 })
 export class RootModule {}

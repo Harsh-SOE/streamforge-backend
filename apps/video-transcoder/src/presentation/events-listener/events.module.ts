@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { PlatformModule } from '@transcoder/infrastructure/platform/platform.module';
+import { BullMQTranscoderModule } from '@transcoder/infrastructure/queue/bullmq';
+import { KafkaConsumerModule } from '@transcoder/infrastructure/events-consumer/kafka';
 
 import { EventsListenerService } from './events-listener.service';
 
 @Module({
-  imports: [PlatformModule],
+  imports: [KafkaConsumerModule, BullMQTranscoderModule],
   providers: [EventsListenerService],
 })
 export class EventListenerModule {}
