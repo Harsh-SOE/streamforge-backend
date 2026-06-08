@@ -1,0 +1,165 @@
+import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+
+import { Entity } from '@app/common';
+import { KafkaClient } from '@app/clients/kafka';
+import { BufferMessage } from '@app/common/buffer';
+import { INTERNAL_BUFFER } from '@app/common/events';
+import { KafkaBufferHandler } from '@app/handlers/buffer/kafka';
+import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+
+import {
+  UsersBufferPort,
+  USER_REROSITORY_PORT,
+  UserRepositoryPort,
+} from '@users/application/ports';
+import { UserAggregate } from '@users/domain/aggregates';
+
+import { UserOnBoardedBufferMessage } from '../types';
+import { isUserOnBoardedBufferMessage } from '../guards';
+
+@Injectable()
+export class KafkaBufferAdapter implements UsersBufferPort, OnModuleInit, OnModuleDestroy {
+  private consumer: Consumer;
+  private producer: Producer;
+
+  public constructor(
+    @Inject(USER_REROSITORY_PORT)
+    private readonly userRepository: UserRepositoryPort,
+    @Inject(LOGGER_PORT)
+    private readonly logger: LoggerPort,
+    private readonly kafka: KafkaClient,
+    private readonly handler: KafkaBufferHandler,
+  ) {
+    this.consumer = this.kafka.getConsumer({ groupId: 'users' });
+    this.producer = this.kafka.getProducer({ allowAutoTopicCreation: true });
+    this.logger.alert(`Using kafka as buffer for users service`);
+  }
+
+  public async onModuleInit() {
+    await this.handler.execute(async () => await this.connect(), {
+      operationType: 'CONNECT',
+    });
+
+    await this.handler.execute(
+      async () =>
+        await this.consumer.subscribe({
+          topic: INTERNAL_BUFFER,
+          fromBeginning: false,
+        }),
+      {
+        operationType: 'CONNECT',
+      },
+    );
+
+    const startConsumerOperation = async () =>
+      await this.consumer.run({
+        eachBatch: async (payload: EachBatchPayload) => {
+          const { batch } = payload;
+
+          if (batch.topic !== INTERNAL_BUFFER) {
+            return;
+          }
+
+          await this.processUsersMessages(this.getUserBufferMessage(batch.messages));
+        },
+      });
+
+    await this.handler.execute(startConsumerOperation, { operationType: 'FLUSH' });
+  }
+
+  public async onModuleDestroy() {
+    await this.handler.execute(async () => await this.disconnect(), {
+      operationType: 'DISCONNECT',
+    });
+  }
+
+  public async connect(): Promise<void> {
+    this.logger.alert(`Kafka buffer connecting...`);
+    await this.producer.connect();
+    await this.consumer.connect();
+    this.logger.alert(`Kafka buffer connected successfully`);
+  }
+
+  public async disconnect(): Promise<void> {
+    this.logger.alert(`Kafka buffer disconnecting...`);
+    await this.producer.disconnect();
+    await this.consumer.disconnect();
+    this.logger.alert(`Kafka buffer disconnected successfully`);
+  }
+
+  public async bufferUser(user: UserAggregate): Promise<void> {
+    const {
+      id,
+      handle,
+      email,
+      userAuthId,
+      avatarUrl,
+      isPhoneNumbetVerified,
+      languagePreference,
+      notification,
+      region,
+      themePreference,
+      dob,
+      phoneNumber,
+    } = user.getUserSnapshot();
+    const userBufferMessage = new UserOnBoardedBufferMessage({
+      id,
+      handle,
+      avatarUrl,
+      email,
+      isPhoneNumbetVerified,
+      languagePreference,
+      notification,
+      region,
+      themePreference,
+      userAuthId,
+      phoneNumber,
+      dob: dob?.toISOString(),
+    });
+
+    const publishToKafkaBufferOperation = async () =>
+      await this.producer.send({
+        topic: INTERNAL_BUFFER,
+        messages: [{ value: JSON.stringify(userBufferMessage) }],
+      });
+
+    await this.handler.execute(publishToKafkaBufferOperation, {
+      operationType: 'SAVE',
+      valueToBuffer: JSON.stringify(user.getUserSnapshot()),
+    });
+  }
+
+  public getUserBufferMessage(messages: KafkaMessage[]): UserOnBoardedBufferMessage[] {
+    return messages
+      .map((message) => JSON.parse(message.value!.toString()) as BufferMessage<Entity, any>)
+      .filter(isUserOnBoardedBufferMessage);
+  }
+
+  private async processUsersMessages(messages: UserOnBoardedBufferMessage[]) {
+    const usersMessages = messages.map((message) => message.payload);
+
+    const models = usersMessages.map((message) => {
+      return UserAggregate.create({
+        id: message.id,
+        email: message.email,
+        handle: message.handle,
+        avatarUrl: message.avatarUrl,
+        userAuthId: message.userAuthId,
+        dob: message.dob ? new Date(message.dob) : undefined,
+        phoneNumber: message.phoneNumber,
+        isPhoneNumberVerified: message.isPhoneNumbetVerified,
+        notification: message.notification,
+        preferredLanguage: message.languagePreference,
+        preferredTheme: message.themePreference,
+        region: message.region,
+      });
+    });
+
+    this.logger.info(`Saving ${models.length} likes in database`);
+
+    await this.userRepository.saveManyUsers(models);
+
+    this.logger.info(`${models.length} likes saved in database`);
+  }
+}
