@@ -21,7 +21,7 @@ import {
   InvalidHandleException,
 } from '@users/domain/exceptions';
 import { UserAggregate } from '@users/domain/aggregates';
-import { UserRepositoryAdapter } from '@users/infrastructure/repository/adapters';
+import { UserRepositoryAdapter } from '@users/infrastructure/database/prisma/adapters';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption/aggregate-persistance-acl';
 
 import { PrismaClient as UserPrismaClient } from '@persistance/users';
@@ -30,10 +30,12 @@ describe('UserRepositoryAdapter (Integration)', () => {
   let container: StartedPostgreSqlContainer;
   let adapter: UserRepositoryAdapter;
 
-  jest.setTimeout(120000);
+  jest.setTimeout(300_000);
 
   beforeAll(async () => {
-    container = await new PostgreSqlContainer('postgres:latest').start();
+    container = await new PostgreSqlContainer('postgres:17-alpine')
+      .withStartupTimeout(180_000)
+      .start();
 
     const databaseUrl = container.getConnectionUri();
     process.env.DATABASE_URL = databaseUrl;
@@ -51,8 +53,11 @@ describe('UserRepositoryAdapter (Integration)', () => {
   });
 
   afterAll(async () => {
-    await container.stop();
-    console.log(`Test database shutdown successfully`);
+    if (container) {
+      await container.stop();
+      console.log(`Test database shutdown successfully`);
+    }
+    console.log(`Container not loaded...`);
   });
 
   beforeEach(async () => {

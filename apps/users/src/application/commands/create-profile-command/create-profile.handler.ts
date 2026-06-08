@@ -38,6 +38,8 @@ export class CompleteSignupCommandHandler implements ICommandHandler<CreateProfi
 
     userAggregate.commit();
 
+    // save then publish event: dangerous, use outbox pattern here...
+
     return {
       response: 'User signup successful',
       userId: userAggregate.getUserSnapshot().id,

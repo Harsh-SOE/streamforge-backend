@@ -4,7 +4,7 @@ import { LOGGER_PORT } from '@app/common/ports/logger';
 import { PrismaHandler } from '@app/handlers/database/prisma';
 
 import { PrismaDBClient } from '@app/clients/prisma';
-import { UserRepositoryAdapter } from '@users/infrastructure/repository/adapters';
+import { UserRepositoryAdapter } from '@users/infrastructure/database/prisma/adapters';
 import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption/aggregate-persistance-acl';
 
 import { UserAggregateStub } from '@test/users/stubs/aggregate';
