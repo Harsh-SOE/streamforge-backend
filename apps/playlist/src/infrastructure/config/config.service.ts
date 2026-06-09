@@ -7,7 +7,7 @@ import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { PLAYLIST_PACKAGE_NAME } from '@app/contracts/playlist';
+import { PLAYLIST_PACKAGE_NAME } from '@app/contracts/protocols/playlist';
 
 @Injectable()
 export class PlaylistConfigService {

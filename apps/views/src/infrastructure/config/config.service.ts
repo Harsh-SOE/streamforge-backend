@@ -7,7 +7,7 @@ import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
+import { VIEWS_PACKAGE_NAME } from '@app/contracts/protocols/views';
 
 @Injectable()
 export class ViewsConfigService {

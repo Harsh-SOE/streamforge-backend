@@ -6,7 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
-import { AUTH_Z_PACKAGE_NAME } from '@app/contracts/authz';
+import { AUTH_Z_PACKAGE_NAME } from '@app/contracts/protocols/authz';
 
 @Injectable()
 export class AuthzConfigService {

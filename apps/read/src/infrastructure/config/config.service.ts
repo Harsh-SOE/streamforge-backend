@@ -7,7 +7,7 @@ import { GrpcOptions, KafkaOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { READ_PACKAGE_NAME } from '@app/contracts/read';
+import { READ_PACKAGE_NAME } from '@app/contracts/protocols/read';
 
 @Injectable()
 export class ReadConfigService {

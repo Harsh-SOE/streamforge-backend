@@ -1,4 +1,4 @@
-import { DomainEvent } from '@app/common/events';
+import { DomainEvent } from '@app/contracts/events/base';
 
 export class ChannelUpdatedDomainEvent implements DomainEvent {
   public readonly eventId: string;
