@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { UserIntegrationEventHandlers } from '@users/application/events';
+import { KafkaConsumerModule } from '@users/infrastructure/events-consumer/kafka';
 
-import { EventsService } from './events-listener.service';
-import { EventsListenerService } from './event-listener.service';
+import { EventsListenerService } from './events-listener.service';
+import { EventsListenerController } from './events-listener.controller';
 
 @Module({
-  providers: [EventsService, EventsListenerService, ...UserIntegrationEventHandlers],
+  imports: [KafkaConsumerModule],
+  providers: [EventsListenerService, EventsListenerController, ...UserIntegrationEventHandlers],
 })
 export class EventsModule {}
