@@ -4,14 +4,14 @@ import { IntegrationEvent } from '@app/contracts/events/base';
 import { UserOnboardedIntegrationEvent, USER_EVENT_CAUSES } from '@app/contracts/events/users';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
-import { EventsService } from './events-listener.service';
+import { EventsListenerService } from './events-listener.service';
 
 @Injectable()
-export class EventsListenerService implements OnModuleInit {
+export class EventsListenerController implements OnModuleInit {
   public constructor(
     @Inject(EVENT_CONSUMER_PORT)
     private readonly eventConsumer: EventsConsumerPort,
-    private readonly eventsService: EventsService,
+    private readonly eventsService: EventsListenerService,
   ) {}
 
   public async onModuleInit() {
