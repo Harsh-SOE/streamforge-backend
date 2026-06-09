@@ -3,7 +3,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/common';
-import { COMMENT_SERVICE_NAME, CommentServiceClient } from '@app/contracts/comments';
+import { COMMENT_SERVICE_NAME, CommentServiceClient } from '@app/contracts/protocols/comments';
 
 import { CommentVideoResponse } from './response';
 

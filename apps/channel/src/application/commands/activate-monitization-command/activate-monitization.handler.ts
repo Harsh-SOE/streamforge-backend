@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { ChannelMonitizationActivatedResponse } from '@app/contracts/channel';
+import { ChannelMonitizationActivatedResponse } from '@app/contracts/protocols/channel';
 
 import { CHANNEL_REPOSITORY, ChannelCommandRepositoryPort } from '@channel/application/ports';
 

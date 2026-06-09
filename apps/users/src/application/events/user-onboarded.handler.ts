@@ -2,8 +2,7 @@ import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { UserProjectionEvent } from '@app/common/events/projections';
-import { UserOnboardedIntegrationEvent } from '@app/common/events/users/user-onboarded.integration-event';
+import { UserOnboardedIntegrationEvent } from '@app/contracts/events/users';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
 import { OnboardedDomainEvent } from '@users/domain/domain-events';
@@ -26,13 +25,9 @@ export class UserOnboardedIntegrationEventHandler implements IEventHandler<Onboa
 
     const onboardedIntegrationEvent = new UserOnboardedIntegrationEvent({
       eventId: onboardedDomainEvent.eventId,
-      occuredAt: onboardedDomainEvent.occurredAt.toISOString(),
+      occurredAt: onboardedDomainEvent.occurredAt.toISOString(),
       payload,
     });
-
-    const onboardedProjectionEvent = new UserProjectionEvent(payload);
-
     await this.eventPublisher.publishMessage(onboardedIntegrationEvent);
-    await this.eventPublisher.publishMessage(onboardedProjectionEvent);
   }
 }

@@ -2,7 +2,7 @@ import { Producer } from 'kafkajs';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { KafkaClient } from '@app/clients/kafka';
-import { IntegrationEvent } from '@app/common/events';
+import { IntegrationEvent } from '@app/contracts/events/base';
 import { EventsPublisherPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { KafkaEventPublisherHandler } from '@app/handlers/events-publisher/kafka';
@@ -44,13 +44,13 @@ export class ChannelKafkaPublisherAdapter
   public async publishMessage<TPayload>(message: IntegrationEvent<TPayload>): Promise<void> {
     const sendMessageOperation = async () =>
       await this.producer.send({
-        topic: message.eventName,
-        messages: [{ key: message.eventId, value: JSON.stringify(message) }],
+        topic: message.name,
+        messages: [{ key: message.id, value: JSON.stringify(message) }],
       });
 
     await this.handler.execute(sendMessageOperation, {
       operationType: 'PUBLISH',
-      topic: message.eventName,
+      topic: message.name,
       message,
     });
   }

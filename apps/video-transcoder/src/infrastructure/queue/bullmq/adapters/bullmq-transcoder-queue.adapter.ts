@@ -2,9 +2,8 @@ import { Queue } from 'bullmq';
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
-
-import { TranscoderQueuePort } from '@transcoder/application/ports/queue';
+import { TranscoderQueuePort } from '@transcoder/application/ports';
+import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 
 import { TRANSCODER_JOB_NAME, TRANSCODER_JOB_QUEUE } from '../constants';
 

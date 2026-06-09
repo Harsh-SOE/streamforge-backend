@@ -4,7 +4,6 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
 import { BufferMessage } from '@app/common/buffer';
-import { INTERNAL_BUFFER } from '@app/common/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
@@ -35,7 +34,7 @@ export class KafkaBufferAdapter implements OnModuleInit, CommentBufferPort {
   public async onModuleInit() {
     // subscribe to buffer event
     await this.consumer.subscribe({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       fromBeginning: false,
     });
 
@@ -44,7 +43,7 @@ export class KafkaBufferAdapter implements OnModuleInit, CommentBufferPort {
         const { batch } = payload;
 
         // reject all messages that are not from buffer event (optional, as the consumer itself will subscribe to topic 'INTERNAL_BUFFER')
-        if (batch.topic !== INTERNAL_BUFFER) {
+        if (batch.topic !== 'buffer') {
           return;
         }
 
@@ -75,7 +74,7 @@ export class KafkaBufferAdapter implements OnModuleInit, CommentBufferPort {
     });
 
     await this.producer.send({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       messages: [{ value: JSON.stringify(commentProjectionEvent) }],
     });
   }

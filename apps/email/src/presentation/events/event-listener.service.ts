@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { IntegrationEvent } from '@app/common/events';
-import { UserOnboardedIntegrationEvent, USER_INTEGRATION_EVENTS } from '@app/common/events/users';
+import { IntegrationEvent } from '@app/contracts/events/base';
+import { UserOnboardedIntegrationEvent, USER_EVENT_CAUSES } from '@app/contracts/events/users';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
 import { EventsService } from './events.service';
@@ -19,8 +19,8 @@ export class EventsListener implements OnModuleInit {
       // react to all relevant messages here...
       console.log(`Recieved event`, event);
 
-      switch (event.eventType) {
-        case USER_INTEGRATION_EVENTS.USER_ONBOARDED_INTEGRATION_EVENT.toString(): {
+      switch (event.cause) {
+        case USER_EVENT_CAUSES.USER_ONBOARDED_INTEGRATION_EVENT.toString(): {
           await this.eventsService.sendEMail(
             (event as UserOnboardedIntegrationEvent).payload.email,
           );

@@ -3,7 +3,7 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { EventsPublisherPort, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
-import { NotificationStatusChangedIntegrationEvent } from '@app/common/events/users';
+import { NotificationStatusChangedIntegrationEvent } from '@app/contracts/events/users';
 
 import { NotificationStatusChangedDomainEvent } from '@users/domain/domain-events';
 

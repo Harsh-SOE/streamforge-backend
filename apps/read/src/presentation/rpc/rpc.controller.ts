@@ -10,7 +10,7 @@ import {
   GetUserProfileResponse,
   ReadQueryServiceController,
   ReadQueryServiceControllerMethods,
-} from '@app/contracts/read';
+} from '@app/contracts/protocols/read';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import { GrpcFilter } from '../filters';

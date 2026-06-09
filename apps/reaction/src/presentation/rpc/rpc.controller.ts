@@ -6,7 +6,7 @@ import {
   ReactionServiceControllerMethods,
   ReactionResponse,
   VideoReactionDto,
-} from '@app/contracts/reaction';
+} from '@app/contracts/protocols/reaction';
 
 import { RpcService } from './rpc.service';
 

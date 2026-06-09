@@ -3,9 +3,9 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/common';
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
+import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/protocols/channel';
 
 import {
   CreateChannelRequestDto,

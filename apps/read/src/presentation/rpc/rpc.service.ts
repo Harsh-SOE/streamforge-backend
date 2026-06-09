@@ -8,7 +8,7 @@ import {
   GetUserProfileFromAuthIdDto,
   GetUserProfileFromIdDto,
   GetUserProfileResponse,
-} from '@app/contracts/read';
+} from '@app/contracts/protocols/read';
 
 import {
   GetUserProfileFromAuthIdQuery,

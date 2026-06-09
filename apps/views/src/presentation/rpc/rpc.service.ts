@@ -1,7 +1,7 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 
-import { ViewsVideoDto, ViewsVideoResponse } from '@app/contracts/views';
+import { ViewsVideoDto, ViewsVideoResponse } from '@app/contracts/protocols/views';
 
 import { WatchVideoCommand } from '@views/application/commands';
 

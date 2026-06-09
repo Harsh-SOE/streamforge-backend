@@ -1,4 +1,4 @@
-import { IntegrationEvent } from '@app/common/events';
+import { IntegrationEvent } from '@app/contracts/events/base';
 
 type KafkaConsumerOperations = {
   CONNECT: {

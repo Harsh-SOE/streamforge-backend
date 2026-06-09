@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
-import { VideoPublishedResponse } from '@app/contracts/videos';
+import { VideoPublishedResponse } from '@app/contracts/protocols/videos';
 
 import {
   TransportToDomainPublishEnumMapper,

@@ -14,7 +14,7 @@ import {
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 
 import { User } from '@gateway/common/decorators';
 import { VIDEO_API_ENDPOINT, VIDEO_API_VERSION } from '@gateway/common/endpoints';

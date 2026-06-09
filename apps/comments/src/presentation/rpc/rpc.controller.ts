@@ -1,6 +1,6 @@
 import { Controller, UseFilters } from '@nestjs/common';
 
-import { CommentVideoDto, CommentVideoResponse } from '@app/contracts/comments';
+import { CommentVideoDto, CommentVideoResponse } from '@app/contracts/protocols/comments';
 
 import { RpcService } from './rpc.service';
 

@@ -14,7 +14,7 @@ import {
   ChannelVerifyByIdDto,
   GetPresignedUrlDto,
   GetPreSignedUrlResponse,
-} from '@app/contracts/channel';
+} from '@app/contracts/protocols/channel';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 

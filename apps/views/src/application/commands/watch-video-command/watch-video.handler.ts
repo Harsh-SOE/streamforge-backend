@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { ViewsVideoResponse } from '@app/contracts/views';
+import { ViewsVideoResponse } from '@app/contracts/protocols/views';
 
 import {
   VIEWS_BUFFER_PORT,

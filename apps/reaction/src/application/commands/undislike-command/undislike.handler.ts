@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { ReactionResponse } from '@app/contracts/reaction';
+import { ReactionResponse } from '@app/contracts/protocols/reaction';
 
 import {
   REACTION_CACHE_PORT,

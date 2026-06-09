@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { CHANNEL_QUERY_REPOSITORY_PORT, ChannelQueryRepositoryPort } from '@read/application/ports';
 
-import { GetChannelResponse } from '@app/contracts/read';
+import { GetChannelResponse } from '@app/contracts/protocols/read';
 
 import { GetChannelFromIdQuery } from './get-channel-from-id.query';
 

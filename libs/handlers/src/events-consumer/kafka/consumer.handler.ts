@@ -292,9 +292,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,
@@ -309,9 +309,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,
@@ -327,9 +327,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,
@@ -353,9 +353,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,
@@ -381,9 +381,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,
@@ -402,9 +402,9 @@ export class KafkaEventConsumerHandler implements OnModuleInit {
             await this.publishToDlq({
               topic,
               message: {
-                key: message?.eventId,
+                key: message?.id,
                 value: JSON.stringify(message?.payload),
-                timestamp: message?.occurredAt,
+                timestamp: message?.publishedAt,
               },
               error,
               attempts,

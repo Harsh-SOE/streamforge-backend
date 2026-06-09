@@ -9,11 +9,11 @@ import {
   READ_QUERY_SERVICE_NAME,
   ReadQueryServiceClient,
   UserProfileMessage,
-} from '@app/contracts/read';
+} from '@app/contracts/protocols/read';
 import { ENVIRONMENT } from '@app/utils/enums';
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/users';
+import { USER_SERVICE_NAME, UserServiceClient } from '@app/contracts/protocols/users';
 
 import { UserProfile } from '@gateway/infrastructure/oauth/types';
 import { GatewayConfigService } from '@gateway/infrastructure/config';

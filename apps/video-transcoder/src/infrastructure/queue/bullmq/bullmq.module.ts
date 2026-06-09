@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 
-import { TRANSCODER_QUEUE_PORT } from '@transcoder/application/ports/queue';
+import { TRANSCODER_QUEUE_PORT } from '@transcoder/application/ports';
 import { TranscoderConfigModule, TranscoderConfigService } from '@transcoder/infrastructure/config';
 
 import { BullMQTranscoderWorker } from './workers';

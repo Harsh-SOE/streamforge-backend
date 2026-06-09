@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { GetPresignedUrlDto, GetPreSignedUrlResponse } from '@app/contracts/channel';
+import { GetPresignedUrlDto, GetPreSignedUrlResponse } from '@app/contracts/protocols/channel';
 
 import { CHANNEL_STORAGE_PORT, ChannelStoragePort } from '@channel/application/ports';
 

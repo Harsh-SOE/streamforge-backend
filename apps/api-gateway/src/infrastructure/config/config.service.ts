@@ -5,13 +5,13 @@ import { ConfigService } from '@nestjs/config';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { READ_PACKAGE_NAME } from '@app/contracts/read';
-import { USER_PACKAGE_NAME } from '@app/contracts/users';
-import { VIEWS_PACKAGE_NAME } from '@app/contracts/views';
-import { VIDEO_PACKAGE_NAME } from '@app/contracts/videos';
-import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
-import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
-import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
+import { READ_PACKAGE_NAME } from '@app/contracts/protocols/read';
+import { USER_PACKAGE_NAME } from '@app/contracts/protocols/users';
+import { VIEWS_PACKAGE_NAME } from '@app/contracts/protocols/views';
+import { VIDEO_PACKAGE_NAME } from '@app/contracts/protocols/videos';
+import { CHANNEL_PACKAGE_NAME } from '@app/contracts/protocols/channel';
+import { COMMENT_PACKAGE_NAME } from '@app/contracts/protocols/comments';
+import { REACTION_PACKAGE_NAME } from '@app/contracts/protocols/reaction';
 
 @Injectable()
 export class GatewayConfigService {

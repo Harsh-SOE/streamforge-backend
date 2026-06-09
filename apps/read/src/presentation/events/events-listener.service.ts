@@ -1,10 +1,13 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
-import { ChannelCreatedProjectionEvent } from '@app/common/events/projections';
+import { VIDEO_EVENT_CAUSES, VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
-import { PROJECTION_EVENTS, UserProjectionEvent } from '@app/common/events/projections';
+import { USER_EVENT_CAUSES, UserOnboardedIntegrationEvent } from '@app/contracts/events/users';
+import {
+  CHANNEL_EVENT_CAUSES,
+  ChannelCreatedIntegrationEvent,
+} from '@app/contracts/events/channel';
 
 import { UsersEventsService } from './users-events.service';
 import { VideoEventsService } from './video-events.service';
@@ -23,21 +26,23 @@ export class EventsListenerService implements OnModuleInit {
   public async onModuleInit() {
     await this.eventConsumer.consumeMessage(async (event) => {
       this.logger.info(`projection event recieved`, event);
-      switch (event.eventType) {
-        case PROJECTION_EVENTS.USER_ONBOARDED_PROJECTION_EVENT.toString(): {
-          await this.usersEventService.onUserProfileOnBoarded(event as UserProjectionEvent);
-          break;
-        }
-        case PROJECTION_EVENTS.USER_PROFILE_UPDATED_PROJECTION_EVENT.toString(): {
-          break;
-        }
-        case PROJECTION_EVENTS.CHANNEL_CREATED_PROJECTION_EVENT.toString(): {
-          await this.channelEventsService.onChannelCreated(
-            event.payload as ChannelCreatedProjectionEvent,
+      switch (event.cause) {
+        case USER_EVENT_CAUSES.USER_ONBOARDED_INTEGRATION_EVENT.toString(): {
+          await this.usersEventService.onUserProfileOnBoarded(
+            event as UserOnboardedIntegrationEvent,
           );
           break;
         }
-        case PROJECTION_EVENTS.VIDEO_PUBLISHED_PROJECTION_EVENT.toString(): {
+        case USER_EVENT_CAUSES.USER_PROFILE_UPDATED_INTEGRATION_EVENT.toString(): {
+          break;
+        }
+        case CHANNEL_EVENT_CAUSES.CHANNEL_CREATED.toString(): {
+          await this.channelEventsService.onChannelCreated(
+            event.payload as ChannelCreatedIntegrationEvent,
+          );
+          break;
+        }
+        case VIDEO_EVENT_CAUSES.VIDEO_PUBLISHED.toString(): {
           await this.videoEventsService.onVideoPublished(
             event.payload as VideoPublishedIntegrationEvent,
           );

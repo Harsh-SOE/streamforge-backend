@@ -7,7 +7,7 @@ import {
   CreateRelationDto,
   IsRelatedResponse,
   RelationCreatedResponse,
-} from '@app/contracts/authz';
+} from '@app/contracts/protocols/authz';
 
 import { GrpcFilter } from '../filter';
 import { RpcService } from './rpc.service';

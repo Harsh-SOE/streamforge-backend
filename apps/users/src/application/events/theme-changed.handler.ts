@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { ThemeChangedIntegrationEvent } from '@app/common/events/users';
+import { ThemeChangedIntegrationEvent } from '@app/contracts/events/users';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
 import { ThemeChangedDomainEvent } from '@users/domain/domain-events';

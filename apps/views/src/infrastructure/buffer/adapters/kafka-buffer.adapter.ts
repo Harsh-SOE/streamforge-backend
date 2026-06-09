@@ -4,7 +4,6 @@ import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
 import { BufferMessage } from '@app/common/buffer';
-import { INTERNAL_BUFFER } from '@app/common/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
@@ -36,7 +35,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, ViewsB
     await this.connect();
 
     await this.consumer.subscribe({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       fromBeginning: false,
     });
 
@@ -44,7 +43,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, ViewsB
       eachBatch: async (payload: EachBatchPayload) => {
         const { batch } = payload;
 
-        if (batch.topic !== INTERNAL_BUFFER) {
+        if (batch.topic !== 'buffer') {
           return;
         }
 
@@ -73,7 +72,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, ViewsB
     const viewBufferMessages = new ViewBufferMessage({ userId, videoId });
 
     await this.producer.send({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       messages: [{ value: JSON.stringify(viewBufferMessages) }],
     });
   }

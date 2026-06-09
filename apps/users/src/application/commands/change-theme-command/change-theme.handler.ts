@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UserPreferredThemeChangedResponse } from '@app/contracts/users';
+import { UserPreferredThemeChangedResponse } from '@app/contracts/protocols/users';
 
 import { UserNotFoundException } from '@users/application/exceptions';
 import { USER_REROSITORY_PORT, UserRepositoryPort } from '@users/application/ports';

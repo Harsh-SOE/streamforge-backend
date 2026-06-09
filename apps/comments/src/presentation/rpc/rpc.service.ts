@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { CommentVideoDto, CommentVideoResponse } from '@app/contracts/comments';
+import { CommentVideoDto, CommentVideoResponse } from '@app/contracts/protocols/comments';
 
 import { CreateCommentCommand } from '@comments/application/commands';
 

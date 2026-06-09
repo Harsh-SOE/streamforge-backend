@@ -17,7 +17,7 @@ import {
   UserUpdateByIdDto,
   UserUpdateProfileDto,
   UserVerifyPhoneNumberDto,
-} from '@app/contracts/users';
+} from '@app/contracts/protocols/users';
 
 import {
   ChangeLanguageCommand,

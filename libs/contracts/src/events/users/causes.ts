@@ -1,0 +1,8 @@
+export enum USER_EVENT_CAUSES {
+  USER_LANGUAGE_CHANGED_INTEGRATION_EVENT = 'user.language-changed',
+  USER_NOTIFICATION_CHANGED_INTEGRATION_EVENT = 'user.notification-changed',
+  USER_ONBOARDED_INTEGRATION_EVENT = 'user.onboarded',
+  USER_PHONE_NUMBER_UPDATED_INTEGRATION_EVENT = 'user.phone-number-verified',
+  USER_THEME_CHANGED_INTEGRATION_EVENT = 'user.theme-changed',
+  USER_PROFILE_UPDATED_INTEGRATION_EVENT = 'user.profile-updated',
+}

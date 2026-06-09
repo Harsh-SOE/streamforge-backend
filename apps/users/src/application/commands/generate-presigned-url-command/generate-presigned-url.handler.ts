@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { GetPresignedUrlDto, GetPreSignedUrlResponse } from '@app/contracts/users';
+import { GetPresignedUrlDto, GetPreSignedUrlResponse } from '@app/contracts/protocols/users';
 
 import { USERS_STORAGE_PORT, UsersStoragePort } from '@users/application/ports';
 
