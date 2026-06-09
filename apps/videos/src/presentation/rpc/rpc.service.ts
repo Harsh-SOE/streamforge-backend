@@ -8,12 +8,13 @@ import {
   VideoPublishedResponse,
   VideoUpdatedResponse,
   VideoUpdateDto,
-} from '@app/contracts/videos';
+} from '@app/contracts/protocols/videos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+
+import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
+import { PublishVideoCommand } from '@videos/application/commands/publish-video-command';
 import { GeneratePreSignedUrlVideoCommand } from '@videos/application/commands/generate-presigned-url-video-command';
 import { GeneratePreSignedUrlThumbnailCommand } from '@videos/application/commands/generate-presigned-url-thumbnail-command';
-import { PublishVideoCommand } from '@videos/application/commands/publish-video-command';
-import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
 
 @Injectable()
 export class RpcService {

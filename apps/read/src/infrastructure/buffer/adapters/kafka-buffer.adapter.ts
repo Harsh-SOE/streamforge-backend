@@ -6,7 +6,6 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
 import { BufferMessage } from '@app/common/buffer';
-import { INTERNAL_BUFFER } from '@app/common/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
@@ -43,7 +42,7 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
 
   public async onModuleInit() {
     await this.consumer.subscribe({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       fromBeginning: false,
     });
 
@@ -73,7 +72,7 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
     const userBufferMessage = new UserProjectionBufferMessage(payload);
 
     await this.producer.send({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       messages: [{ value: JSON.stringify(userBufferMessage) }],
     });
   }
@@ -82,7 +81,7 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
     const videoBufferMessage = new VideoProjectionBufferMessage(payload);
 
     await this.producer.send({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       messages: [{ value: JSON.stringify(videoBufferMessage) }],
     });
   }

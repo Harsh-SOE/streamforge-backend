@@ -6,7 +6,7 @@ import {
   ViewsVideoResponse,
   ViewsServiceController,
   ViewsServiceControllerMethods,
-} from '@app/contracts/views';
+} from '@app/contracts/protocols/views';
 
 import { RpcService } from './rpc.service';
 import { GrpcFilter } from '../filters';

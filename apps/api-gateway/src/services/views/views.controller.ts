@@ -7,7 +7,7 @@ import { COMMENT_API_VERSION, VIEWS_API_ENDPOINT } from '@gateway/common/endpoin
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 
 import { WatchService } from './views.service';
 import { ViewsVideoResponse } from './response';

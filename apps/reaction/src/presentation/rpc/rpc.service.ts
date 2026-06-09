@@ -1,9 +1,12 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ReactionResponse, ReactionType, VideoReactionDto } from '@app/contracts/reaction';
-
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import {
+  ReactionResponse,
+  ReactionType,
+  VideoReactionDto,
+} from '@app/contracts/protocols/reaction';
 
 import {
   DislikeCommand,

@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { GetPreSignedUrlResponse } from '@app/contracts/videos';
+import { GetPreSignedUrlResponse } from '@app/contracts/protocols/videos';
 
 import { STORAGE_PORT, VideosStoragePort } from '@videos/application/ports';
 

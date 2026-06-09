@@ -5,7 +5,7 @@ import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
 import { EventsConsumerPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { PROJECTION_EVENT, IntegrationEvent } from '@app/common/events';
+import { IntegrationEvent } from '@app/contracts/events/base';
 import { KafkaEventConsumerHandler } from '@app/handlers/events-consumer/kafka';
 
 import { ReadConfigService } from '@read/infrastructure/config';
@@ -39,7 +39,7 @@ export class ReadKafkaConsumerAdapter implements EventsConsumerPort, OnModuleIni
     await this.consumer.connect();
     this.logger.alert('Kafka Consumer connected successfully');
 
-    const eventsToSubscribe = [PROJECTION_EVENT];
+    const eventsToSubscribe = ['users', 'videos', 'channels', 'interactions', 'analytics'];
     await this.subscribe(eventsToSubscribe.map((event) => event.toString()));
     this.logger.info(`Kafka Consumer subscribed to events: [${eventsToSubscribe.join(', ')}]`);
   }

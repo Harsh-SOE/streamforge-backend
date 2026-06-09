@@ -2,7 +2,7 @@ import { EventBus } from '@nestjs/cqrs';
 import { Injectable } from '@nestjs/common';
 
 import { VideoTranscodedDomainEvent } from '@videos/domain/domain-events';
-import { VideoTranscodedIntegrationEvent } from '@app/common/events/videos';
+import { VideoTranscodedIntegrationEvent } from '@app/contracts/events/videos';
 
 @Injectable()
 export class EventsService {

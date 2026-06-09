@@ -6,7 +6,7 @@ import {
   UserQueryRepositoryPort,
 } from '@read/application/ports/query-repository';
 
-import { GetUserProfileResponse } from '@app/contracts/read';
+import { GetUserProfileResponse } from '@app/contracts/protocols/read';
 
 import { GetUserProfileFromAuthIdQuery } from './get-user-profile-authid.query';
 

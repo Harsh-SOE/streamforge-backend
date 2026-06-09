@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { LanguageChangedIntergrationEvent } from '@app/common/events/users';
+import { LanguageChangedIntergrationEvent } from '@app/contracts/events/users';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
 import { LanguageChangedDomainEvent } from '@users/domain/domain-events';

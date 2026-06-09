@@ -1,14 +1,14 @@
-import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { ClientGrpc } from '@nestjs/microservices';
+import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
 
-import { REACTION_SERVICE_NAME, ReactionServiceClient } from '@app/contracts/reaction';
 import { SERVICES } from '@app/common';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import { REACTION_SERVICE_NAME, ReactionServiceClient } from '@app/contracts/protocols/reaction';
 
-import { GetLikesCountForVideo, GetDislikesCountForVideo, VideoReactedResponse } from './response';
-import { ClientTransportLikeStatusEnumMapper } from './mappers/like-status';
 import { VideoReactionDto } from './request';
+import { ClientTransportLikeStatusEnumMapper } from './mappers/like-status';
+import { GetLikesCountForVideo, GetDislikesCountForVideo, VideoReactedResponse } from './response';
 
 @Injectable()
 export class ReactionService implements OnModuleInit {

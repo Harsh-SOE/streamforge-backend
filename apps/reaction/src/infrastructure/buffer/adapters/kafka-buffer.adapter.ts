@@ -1,11 +1,10 @@
 // TODO add handler here
-import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
 import { BufferMessage } from '@app/common/buffer';
-import { INTERNAL_BUFFER } from '@app/common/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
 import {
@@ -39,7 +38,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Reacti
 
   public async onModuleInit() {
     await this.consumer.subscribe({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       fromBeginning: false,
     });
 
@@ -48,7 +47,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Reacti
         const { batch } = payload;
 
         // reject all messages that comes from topics other than BUFFER_EVENT (optional)
-        if (batch.topic !== INTERNAL_BUFFER) {
+        if (batch.topic !== 'buffer') {
           return;
         }
 
@@ -81,7 +80,7 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Reacti
     });
 
     await this.producer.send({
-      topic: INTERNAL_BUFFER,
+      topic: 'buffer',
       messages: [{ value: JSON.stringify(reactionProjectionEvent) }],
     });
   }

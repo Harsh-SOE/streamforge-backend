@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { GetChannelResponse } from '@app/contracts/read';
+import { GetChannelResponse } from '@app/contracts/protocols/read';
 
 import { CHANNEL_QUERY_REPOSITORY_PORT, ChannelQueryRepositoryPort } from '@read/application/ports';
 

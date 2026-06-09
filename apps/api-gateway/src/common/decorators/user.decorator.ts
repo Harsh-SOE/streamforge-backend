@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 
 export const User = createParamDecorator(
   (data: keyof UserAuthPayload, context: ExecutionContext) => {

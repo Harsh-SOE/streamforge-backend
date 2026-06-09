@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { ChannelCreatedProjectionEvent } from '@app/common/events/projections';
+import { ChannelCreatedIntegrationEvent } from '@app/contracts/events/channel';
 
 import {
   CHANNEL_PROJECTION_REPOSITORY_PORT,
@@ -16,8 +16,7 @@ export class ChannelEventsService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async onChannelCreated(channelCreatedIntegrationEvent: ChannelCreatedProjectionEvent) {
-    this.logger.info(`saving user projection`);
+  public async onChannelCreated(channelCreatedIntegrationEvent: ChannelCreatedIntegrationEvent) {
     await this.channelProjectionRespository.saveChannel(channelCreatedIntegrationEvent.payload);
   }
 }

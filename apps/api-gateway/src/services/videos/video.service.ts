@@ -3,11 +3,11 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { SERVICES } from '@app/common';
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/videos';
-import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/channel';
-import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/read';
+import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/protocols/videos';
+import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/protocols/channel';
+import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/protocols/read';
 
 import {
   PreSignedUrlRequestResponse,

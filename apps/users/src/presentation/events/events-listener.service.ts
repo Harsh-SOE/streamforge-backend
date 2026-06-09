@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { UserOnboardedIntegrationEvent } from '@app/common/events/users';
+import { UserOnboardedIntegrationEvent } from '@app/contracts/events/users';
 
 @Injectable()
 export class EventsService {

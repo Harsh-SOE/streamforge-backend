@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { VideoUpdatedResponse } from '@app/contracts/videos';
+import { VideoUpdatedResponse } from '@app/contracts/protocols/videos';
 
 import {
   TransportToDomainPublishEnumMapper,

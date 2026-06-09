@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Patch, Post, UseGuards, Version } from '
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';

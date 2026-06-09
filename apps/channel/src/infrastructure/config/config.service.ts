@@ -7,7 +7,7 @@ import { GrpcOptions, KafkaOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { CHANNEL_PACKAGE_NAME } from '@app/contracts/channel';
+import { CHANNEL_PACKAGE_NAME } from '@app/contracts/protocols/channel';
 
 @Injectable()
 export class ChannelConfigService {

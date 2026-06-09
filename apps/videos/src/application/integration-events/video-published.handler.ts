@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
 import { VideoCreatedDomainEvent } from '@videos/domain/domain-events';

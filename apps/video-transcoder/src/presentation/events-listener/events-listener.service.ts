@@ -1,10 +1,10 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
-import { TRANSCODER_QUEUE_PORT, TranscoderQueuePort } from '@transcoder/application/ports/queue';
+import { TRANSCODER_QUEUE_PORT, TranscoderQueuePort } from '@transcoder/application/ports';
 @Injectable()
 export class EventsListenerService implements OnModuleInit {
   public constructor(
@@ -15,7 +15,7 @@ export class EventsListenerService implements OnModuleInit {
 
   public async onModuleInit() {
     await this.eventConsumer.consumeMessage(async (event) => {
-      switch (event.eventType) {
+      switch (event.cause) {
         case 'VIDEO_TRANSCODE_EVENT': {
           const transcodeEvent = event as VideoPublishedIntegrationEvent;
 

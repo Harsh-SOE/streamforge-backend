@@ -7,7 +7,7 @@ import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { REACTION_PACKAGE_NAME } from '@app/contracts/reaction';
+import { REACTION_PACKAGE_NAME } from '@app/contracts/protocols/reaction';
 
 @Injectable()
 export class ReactionConfigService {

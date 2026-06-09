@@ -1,7 +1,7 @@
 import path from 'path';
 import * as fs from 'fs/promises';
 import Ffmpeg from 'fluent-ffmpeg';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
@@ -10,8 +10,11 @@ import {
   TranscodeVideoOptions,
   TRANSCODER_STORAGE_PORT,
   TranscoderStoragePort,
+  CACHE_PORT,
+  CachePort,
 } from '@transcoder/application/ports';
 
+@Injectable()
 export class FFmpegVideoTranscoderAdapter implements TranscoderPort {
   private readonly transcodedVideoDir = '/@streamforge/transcoded-videos';
 
@@ -20,6 +23,7 @@ export class FFmpegVideoTranscoderAdapter implements TranscoderPort {
     private readonly storageAdapter: TranscoderStoragePort,
     @Inject(LOGGER_PORT)
     private readonly logger: LoggerPort,
+    @Inject(CACHE_PORT) private readonly cacheAdapter: CachePort,
   ) {}
 
   public async transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void> {
@@ -55,6 +59,12 @@ export class FFmpegVideoTranscoderAdapter implements TranscoderPort {
         })
         .on('progress', (progress) => {
           this.logger.info(`Transcoding video: ${progress.percent ?? 0}`);
+          // save the percentage in redis, but throttle the write speed, so as to reduce pressure
+          void this.cacheAdapter.setInCache(
+            `transcode:progress:${videoId}`,
+            String(progress.percent ?? 0),
+            10_000,
+          );
         })
         .save(manifestPath);
     });

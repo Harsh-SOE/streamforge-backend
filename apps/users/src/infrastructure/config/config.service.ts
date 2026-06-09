@@ -7,7 +7,7 @@ import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { USER_PACKAGE_NAME } from '@app/contracts/users';
+import { USER_PACKAGE_NAME } from '@app/contracts/protocols/users';
 
 @Injectable()
 export class UserConfigService {

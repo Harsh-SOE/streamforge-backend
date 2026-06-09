@@ -3,7 +3,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { SERVICES } from '@app/common';
-import { VIEWS_SERVICE_NAME, ViewsServiceClient } from '@app/contracts/views';
+import { VIEWS_SERVICE_NAME, ViewsServiceClient } from '@app/contracts/protocols/views';
 
 import { ViewsVideoResponse } from './response';
 

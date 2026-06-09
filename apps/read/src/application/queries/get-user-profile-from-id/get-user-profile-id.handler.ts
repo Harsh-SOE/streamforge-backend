@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { GetUserProfileResponse } from '@app/contracts/read';
+import { GetUserProfileResponse } from '@app/contracts/protocols/read';
 
 import {
   USER_QUERY_REPOSITORY_PORT,

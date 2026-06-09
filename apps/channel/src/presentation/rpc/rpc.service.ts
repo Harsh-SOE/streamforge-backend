@@ -12,7 +12,7 @@ import {
   ChannelVerifyByIdDto,
   GetPresignedUrlDto,
   GetPreSignedUrlResponse,
-} from '@app/contracts/channel';
+} from '@app/contracts/protocols/channel';
 
 import {
   ActivateMonitizationCommand,

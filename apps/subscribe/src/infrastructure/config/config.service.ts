@@ -6,7 +6,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
-import { SUBSCRIBE_PACKAGE_NAME } from '@app/contracts/subscribe';
+import { SUBSCRIBE_PACKAGE_NAME } from '@app/contracts/protocols/subscribe';
 
 @Injectable()
 export class SubscribeConfigService {

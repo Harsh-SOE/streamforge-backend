@@ -7,7 +7,7 @@ import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { HealthImplementation, protoPath as HealthCheckProto } from 'grpc-health-check';
 
 import { ENVIRONMENT } from '@app/utils/enums';
-import { COMMENT_PACKAGE_NAME } from '@app/contracts/comments';
+import { COMMENT_PACKAGE_NAME } from '@app/contracts/protocols/comments';
 
 @Injectable()
 export class CommentsConfigService {

@@ -10,7 +10,7 @@ import {
   VideoServiceControllerMethods,
   VideoUpdatedResponse,
   VideoUpdateDto,
-} from '@app/contracts/videos';
+} from '@app/contracts/protocols/videos';
 
 import { RpcService } from './rpc.service';
 import { GrpcFilter } from '../filters';

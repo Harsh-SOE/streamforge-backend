@@ -5,7 +5,7 @@ import {
   CreateRelationDto,
   IsRelatedResponse,
   RelationCreatedResponse,
-} from '@app/contracts/authz';
+} from '@app/contracts/protocols/authz';
 
 import { AUTHORIZE_PORT, AuthorizePort } from '@authz/application/ports/auth';
 

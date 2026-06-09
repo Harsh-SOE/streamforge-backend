@@ -19,7 +19,7 @@ import {
   UserProfileCreatedResponse,
   GetPresignedUrlDto,
   GetPreSignedUrlResponse,
-} from '@app/contracts/users';
+} from '@app/contracts/protocols/users';
 
 import { GrpcFilter } from '../filters';
 import { RpcService } from './rpc.service';

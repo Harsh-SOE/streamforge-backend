@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CommentVideoResponse } from '@app/contracts/comments';
+import { CommentVideoResponse } from '@app/contracts/protocols/comments';
 
 import {
   COMMENTS_BUFFER_PORT,

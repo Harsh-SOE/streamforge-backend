@@ -3,9 +3,9 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 
 import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
+import { IntegrationEvent } from '@app/contracts/events/base';
 import { EventsConsumerPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { AGGREGATE_EVENT, IntegrationEvent } from '@app/common/events';
 import { KafkaEventConsumerHandler } from '@app/handlers/events-consumer/kafka';
 
 import { TranscoderConfigService } from '@transcoder/infrastructure/config';
@@ -40,7 +40,7 @@ export class TranscoderKafkaConsumerAdapter
   public async connect(): Promise<void> {
     await this.consumer.connect();
     this.logger.alert('Kafka Consumer connected successfully');
-    const eventsToSubscribe = [AGGREGATE_EVENT];
+    const eventsToSubscribe = ['videos'];
     await this.subscribe(eventsToSubscribe.map((e) => e.toString()));
     this.logger.info('Kafka Consumer subscribed to events: ' + eventsToSubscribe.join(', '));
   }

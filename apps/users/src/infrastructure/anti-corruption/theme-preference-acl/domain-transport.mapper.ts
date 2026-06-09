@@ -1,4 +1,4 @@
-import { UserGrpcThemePreferences } from '@app/contracts/users';
+import { UserGrpcThemePreferences } from '@app/contracts/protocols/users';
 
 import { DomainThemePreference } from '@users/domain/enums';
 

@@ -1,4 +1,4 @@
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 
 export interface TranscoderQueuePort {
   enqueueTranscodeJob(payload: VideoPublishedIntegrationEvent): Promise<void>;

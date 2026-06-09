@@ -1,4 +1,4 @@
-import { UserCreateProfileDto } from '@app/contracts/users';
+import { UserCreateProfileDto } from '@app/contracts/protocols/users';
 
 export class CreateProfileCommand {
   public constructor(public readonly userCreateProfileDto: UserCreateProfileDto) {}

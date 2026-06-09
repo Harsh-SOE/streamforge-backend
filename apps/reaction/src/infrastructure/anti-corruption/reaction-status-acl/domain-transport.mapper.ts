@@ -1,4 +1,4 @@
-import { ReactionType } from '@app/contracts/reaction';
+import { ReactionType } from '@app/contracts/protocols/reaction';
 
 import { ReactionDomainStatus } from '@reaction/domain/enums';
 

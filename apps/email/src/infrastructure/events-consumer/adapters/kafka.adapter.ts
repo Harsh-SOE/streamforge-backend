@@ -4,7 +4,7 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
 import { EventsConsumerPort } from '@app/common/ports/events';
-import { AGGREGATE_EVENT, IntegrationEvent } from '@app/common/events';
+import { IntegrationEvent } from '@app/contracts/events/base';
 import { KafkaEventConsumerHandler } from '@app/handlers/events-consumer/kafka';
 
 import { EmailConfigService } from '@email/infrastructure/config';
@@ -41,7 +41,7 @@ export class EmailKafkaEventsConsumerAdapter
     await this.consumer.connect();
     this.logger.alert('Kafka Consumer connected successfully');
 
-    const eventsToSubscribe = [AGGREGATE_EVENT];
+    const eventsToSubscribe = ['users'];
     await this.subscribe(eventsToSubscribe.map((event) => event.toString()));
     this.logger.info(`Kafka Consumer subscribed to events: [${eventsToSubscribe.join(', ')}]`);
   }

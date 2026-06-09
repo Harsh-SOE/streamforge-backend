@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 
-import { UserPreferredLanguageChangedResponse } from '@app/contracts/users';
+import { UserPreferredLanguageChangedResponse } from '@app/contracts/protocols/users';
 
 import { UserNotFoundException } from '@users/application/exceptions';
 import { USER_REROSITORY_PORT, UserRepositoryPort } from '@users/application/ports';

@@ -1,4 +1,4 @@
-import { VideoTransportPublishStatus } from '@app/contracts/videos';
+import { VideoTransportPublishStatus } from '@app/contracts/protocols/videos';
 
 import { VideoDomainPublishStatus } from '@videos/domain/enums';
 

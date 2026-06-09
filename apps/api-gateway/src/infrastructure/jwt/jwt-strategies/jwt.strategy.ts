@@ -7,7 +7,7 @@ import { Inject, Injectable, OnModuleInit, UnauthorizedException } from '@nestjs
 
 import { SERVICES } from '@app/common';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/read';
+import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/protocols/read';
 
 import { GatewayConfigService } from '@gateway/infrastructure/config';
 

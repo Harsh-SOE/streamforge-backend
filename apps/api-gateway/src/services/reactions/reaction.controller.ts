@@ -2,7 +2,7 @@ import { Body, Controller, Param, Post, Query, UseGuards, Version } from '@nestj
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Counter } from 'prom-client';
 
-import { UserAuthPayload } from '@app/contracts/auth';
+import { UserAuthPayload } from '@app/common/dtos';
 
 import { User } from '@gateway/common/decorators';
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';

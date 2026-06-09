@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { VideoPublishedIntegrationEvent } from '@app/common/events/videos';
+import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
 
 import {
   VIDEO_PROJECTION_REPOSITORY_PORT,

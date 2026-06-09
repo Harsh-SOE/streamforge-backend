@@ -1,4 +1,4 @@
-import { ChannelActivateMonitizationDto } from '@app/contracts/channel';
+import { ChannelActivateMonitizationDto } from '@app/contracts/protocols/channel';
 
 export class ActivateMonitizationCommand {
   public constructor(

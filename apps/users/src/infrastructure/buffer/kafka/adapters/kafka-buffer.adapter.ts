@@ -4,7 +4,6 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
 import { BufferMessage } from '@app/common/buffer';
-import { INTERNAL_BUFFER } from '@app/common/events';
 import { KafkaBufferHandler } from '@app/handlers/buffer/kafka';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
@@ -44,7 +43,7 @@ export class KafkaBufferAdapter implements UsersBufferPort, OnModuleInit, OnModu
     await this.handler.execute(
       async () =>
         await this.consumer.subscribe({
-          topic: INTERNAL_BUFFER,
+          topic: 'buffer',
           fromBeginning: false,
         }),
       {
@@ -57,7 +56,7 @@ export class KafkaBufferAdapter implements UsersBufferPort, OnModuleInit, OnModu
         eachBatch: async (payload: EachBatchPayload) => {
           const { batch } = payload;
 
-          if (batch.topic !== INTERNAL_BUFFER) {
+          if (batch.topic !== 'buffer') {
             return;
           }
 
@@ -120,7 +119,7 @@ export class KafkaBufferAdapter implements UsersBufferPort, OnModuleInit, OnModu
 
     const publishToKafkaBufferOperation = async () =>
       await this.producer.send({
-        topic: INTERNAL_BUFFER,
+        topic: 'buffer',
         messages: [{ value: JSON.stringify(userBufferMessage) }],
       });
 
