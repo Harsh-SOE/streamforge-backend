@@ -4,9 +4,11 @@ export interface VideoBufferMessagePayload {
   channelId: string;
   title: string;
   description?: string;
-  videoFileIdentifier: string;
-  videoThumbnailIdentifier: string;
   videoCategories: string[];
-  publishStatus: string;
-  visibilityStatus: string;
+  state: string;
+  videoFileIdentifier?: string;
+  videoThumbnailIdentifier?: string;
+  visibilityState: string;
+  hlsManifestKey?: string;
+  failureReason?: string;
 }

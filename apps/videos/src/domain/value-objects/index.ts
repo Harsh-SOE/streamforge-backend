@@ -6,5 +6,5 @@ export * from './video/thumbnail-file-identifier.vo';
 export * from './video/video-file-identifier.vo';
 export * from './video/categories.vo';
 export * from './video/description.vo';
-export * from './video/publish-status.vo';
+export * from './video/video-state';
 export * from './video/visibility.vo';

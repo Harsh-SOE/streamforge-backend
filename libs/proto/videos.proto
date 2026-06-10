@@ -2,15 +2,18 @@ syntax = "proto3";
 
 package Video;
 
-enum VideoTransportPublishStatus {
-  TRANSPORT_PENDING = 0;
-  TRANSPORT_PROCESSING = 1;
-  TRANSPORT_PROCESSED = 2;
-  TRANSPORT_PUBLISHED = 3;
-  TRANSPORT_FAILED = 4;
+enum VideoState {
+  TRANSPORT_DRAFT = 0;
+  TRANSPORT_PENDING_UPLOAD = 1;
+  TRANSPORT_UPLOADED = 2;
+  TRANSPORT_PROCESSING = 3;
+  TRANSPORT_TRANSCODING = 4;
+  TRANSPORT_READY_TO_PUBLISH = 5;
+  TRANSPORT_PUBLISHED = 6;
+  TRANSPORT_FAILED = 7;
 }
 
-enum VideoTransportVisibilityStatus {
+enum VideoVisibilityState {
   TRANSPORT_PRIVATE = 0;
   TRANSPORT_PUBLIC = 1;
   TRANSPORT_UNLISTED = 2;
@@ -27,38 +30,44 @@ message GetPresignedUrlDto {
   string userId = 2;
 }
 
-message VideoCreateDto {
+message VideoSaveDraftDto {
   string userId = 1;
   string channelId = 2;
-  string title = 5;
-  string videoFileIdentifier = 6;
-  string videoThumbnailIdentifier = 7;
-  repeated string categories = 8;
-  optional string description = 9;
-  VideoTransportPublishStatus videoTransportPublishStatus = 10;
-  VideoTransportVisibilityStatus videoTransportVisibilityStatus = 11;
+  string title = 3;
+  repeated string categories = 4;
+  optional string description = 5;
+}
+
+message CheckUploadedVideoDto {
+  string id = 1;
 }
 
 message VideoUpdateDto {
   string id = 1;
   optional string title = 2;
-  optional string videoFileIdentifier = 3;
-  optional string videoThumbnailIdentifier = 4;
+  optional string fileIdentifier = 3;
+  optional string thumbnailIdentifier = 4;
   repeated string categories = 5;
   optional string description = 6;
-  optional VideoTransportPublishStatus videoTransportPublishStatus = 7;
-  optional VideoTransportVisibilityStatus videoTransportVisibilityStatus = 8;
+  optional VideoVisibilityState videoVisibilityState = 7;
 }
 
-message GetPreSignedUrlResponse {
-  string response = 1;
-  string presignedUrl = 2;
-  string fileIdentifier = 3;
+message VideoDraftSavedResponse {
+  string id = 1;
+  string fileIdentifier = 2;
+  string thumbnailIdentifier = 3;
+  optional string expiresAt = 4;
 }
 
-message VideoPublishedResponse {
+message CheckUploadedVideoResponse {
+  string id = 1;
+  bool uploaded = 2;
+}
+
+message VideoVisibilityChangedResponse {
   string response = 1;
   string videoId = 2;
+  string visibility = 3;
 }
 
 message VideoUpdatedResponse {
@@ -69,8 +78,7 @@ message VideoUpdatedResponse {
 message Empty {}
 
 service VideoService {
-  rpc getPresignedUrlForVideoFileUpload(GetPresignedUrlDto) returns (GetPreSignedUrlResponse) {}
-  rpc getPresignedUrlForThumbnailFileUpload(GetPresignedUrlDto) returns (GetPreSignedUrlResponse) {}
-  rpc save(VideoCreateDto) returns (VideoPublishedResponse) {}
+  rpc saveDraft(VideoSaveDraftDto) returns (VideoDraftSavedResponse) {}
+  rpc checkUploadedVideo(CheckUploadedVideoDto) returns (CheckUploadedVideoResponse) {}
   rpc update(VideoUpdateDto) returns (VideoUpdatedResponse) {}
 }

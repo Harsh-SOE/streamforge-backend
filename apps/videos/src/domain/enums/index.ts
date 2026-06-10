@@ -1,2 +1,2 @@
-export * from './video-domain-publish-status.enum';
-export * from './video-domain-visibility-status.enum';
+export * from './domain-video-state.enum';
+export * from './domain-video-visibility-state.enum';

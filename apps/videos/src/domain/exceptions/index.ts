@@ -8,3 +8,4 @@ export * from './invalid-description.exception';
 export * from './invalid-categories.exception';
 export * from './invalid-publish-status.exception';
 export * from './invalid-visibility-status.exception';
+export * from './invalid-video-state-transition.exception';

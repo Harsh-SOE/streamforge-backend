@@ -3,11 +3,11 @@ import z from 'zod';
 import { InvalidVideoThumbnailIndentifierException } from '@videos/domain/exceptions';
 
 export class VideoThumbnailFileIdentifier {
-  private static VideoThumbnailIdentifierValidationSchema = z.string();
+  private static VideoThumbnailIdentifierValidationSchema = z.string().optional();
 
-  public constructor(private readonly value: string) {}
+  public constructor(private readonly value?: string) {}
 
-  public static create(value: string) {
+  public static create(value?: string) {
     const parsedVideoThumbnailIdentifier =
       this.VideoThumbnailIdentifierValidationSchema.safeParse(value);
     if (!parsedVideoThumbnailIdentifier.success) {

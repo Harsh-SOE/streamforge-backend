@@ -49,7 +49,7 @@ if (!allowedServices.includes(serviceName)) {
 
 const protoRoot = join(__dirname, '..', 'libs', 'proto');
 const protoPath = join(protoRoot, `${serviceName}.proto`);
-const outPath = join(__dirname, '..', 'libs', 'contracts', 'src', `protocol`);
+const outPath = join(__dirname, '..', 'libs', 'contracts', 'src', `protocols`);
 
 console.log(
   boxen(

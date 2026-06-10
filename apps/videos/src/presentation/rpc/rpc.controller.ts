@@ -2,10 +2,10 @@ import { Observable } from 'rxjs';
 import { Controller, UseFilters } from '@nestjs/common';
 
 import {
-  GetPresignedUrlDto,
-  GetPreSignedUrlResponse,
-  VideoCreateDto,
-  VideoPublishedResponse,
+  CheckUploadedVideoDto,
+  CheckUploadedVideoResponse,
+  VideoDraftSavedResponse,
+  VideoSaveDraftDto,
   VideoServiceController,
   VideoServiceControllerMethods,
   VideoUpdatedResponse,
@@ -21,35 +21,27 @@ import { GrpcFilter } from '../filters';
 export class RpcController implements VideoServiceController {
   constructor(private readonly videoService: RpcService) {}
 
-  getPresignedUrlForVideoFileUpload(
-    getPresignedUrlDto: GetPresignedUrlDto,
+  saveDraft(
+    videoSaveDraftDto: VideoSaveDraftDto,
   ):
-    | Promise<GetPreSignedUrlResponse>
-    | Observable<GetPreSignedUrlResponse>
-    | GetPreSignedUrlResponse {
-    return this.videoService.generatePreSignedVideoUrl(getPresignedUrlDto);
+    | Promise<VideoDraftSavedResponse>
+    | Observable<VideoDraftSavedResponse>
+    | VideoDraftSavedResponse {
+    return this.videoService.saveDraft(videoSaveDraftDto);
   }
 
-  getPresignedUrlForThumbnailFileUpload(
-    getPresignedUrlDto: GetPresignedUrlDto,
+  checkUploadedVideo(
+    checkUploadedVideoDto: CheckUploadedVideoDto,
   ):
-    | Promise<GetPreSignedUrlResponse>
-    | Observable<GetPreSignedUrlResponse>
-    | GetPreSignedUrlResponse {
-    return this.videoService.generatePreSignedVideoUrl(getPresignedUrlDto);
+    | Promise<CheckUploadedVideoResponse>
+    | Observable<CheckUploadedVideoResponse>
+    | CheckUploadedVideoResponse {
+    return this.videoService.verifyUploadedVideo(checkUploadedVideoDto);
   }
 
-  save(
-    videoCreateDto: VideoCreateDto,
-  ): Promise<VideoPublishedResponse> | Observable<VideoPublishedResponse> | VideoPublishedResponse {
-    return this.videoService.create(videoCreateDto);
-  }
-
-  update(videoUpdateDto: VideoUpdateDto): Promise<VideoUpdatedResponse> {
+  update(
+    videoUpdateDto: VideoUpdateDto,
+  ): Promise<VideoUpdatedResponse> | Observable<VideoUpdatedResponse> | VideoUpdatedResponse {
     return this.videoService.update(videoUpdateDto);
-  }
-
-  remove(id: string) {
-    return this.videoService.remove(id);
   }
 }

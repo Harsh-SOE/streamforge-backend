@@ -7,7 +7,7 @@ import { PrismaHandler } from '@app/handlers/database/prisma';
 import { VideoAggregate } from '@videos/domain/aggregates';
 import { VideoRepositoryPort } from '@videos/application/ports';
 import { VideoAggregatePersistanceACL } from '@videos/infrastructure/anti-corruption';
-import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
+import { DomainVideoState, DomainVideoVisibiltyState } from '@videos/domain/enums';
 
 import { PrismaClient as VideoPrismaClient } from '@persistance/videos';
 
@@ -54,12 +54,12 @@ export class VideoRepositoryAdapter implements VideoRepositoryPort {
 
   public async updateVideoPublishStatusById(
     id: string,
-    updatedPublishStatus: VideoDomainPublishStatus,
+    updatedPublishStatus: DomainVideoState,
   ): Promise<VideoAggregate> {
     const updatePublishStatusOperation = async () =>
       await this.prisma.client.video.update({
         where: { id },
-        data: { videoPublishStatus: updatedPublishStatus },
+        data: { state: updatedPublishStatus },
       });
 
     const updatedLike = await this.prismaDatabaseHandler.execute(updatePublishStatusOperation, {
@@ -73,12 +73,12 @@ export class VideoRepositoryAdapter implements VideoRepositoryPort {
 
   public async updateVideoVisibilityStatusById(
     id: string,
-    updatedVisibilityStatus: VideoDomainVisibiltyStatus,
+    updatedVisibilityStatus: DomainVideoVisibiltyState,
   ): Promise<VideoAggregate> {
     const updateVisibilityOperation = async () =>
       await this.prisma.client.video.update({
         where: { id },
-        data: { videoVisibiltyStatus: updatedVisibilityStatus },
+        data: { visibilityState: updatedVisibilityStatus },
       });
 
     const updatedLike = await this.prismaDatabaseHandler.execute(updateVisibilityOperation, {
@@ -114,12 +114,12 @@ export class VideoRepositoryAdapter implements VideoRepositoryPort {
       await this.prisma.client.video.update({
         where: { id },
         data: {
-          videoFileIdentifier: videoEntity.getVideoFileIdentifier(),
-          videoThumbnailIdentifer: videoEntity.getVideoThumbnailIdentifier(),
+          originalFileIdentifier: videoEntity.getVideoFileIdentifier(),
+          thumbnailIdentifier: videoEntity.getVideoThumbnailIdentifier(),
           categories: videoEntity.getCategories(),
           description: videoEntity.getDescription(),
-          videoPublishStatus: videoEntity.getPublishStatus(),
-          videoVisibiltyStatus: videoEntity.getVisibiltyStatus(),
+          state: videoEntity.getVideoState(),
+          visibilityState: videoEntity.getVisibiltyState(),
           title: videoEntity.getTitle(),
         },
       });

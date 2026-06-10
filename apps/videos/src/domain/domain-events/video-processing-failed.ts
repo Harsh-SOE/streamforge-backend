@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { DomainEvent } from '@app/contracts/events/base';
 
-export class VideoCreatedDomainEvent implements DomainEvent {
+export class VideoProcessingFailedDomainEvent implements DomainEvent {
   public readonly eventId: string = uuidv4();
   public readonly occurredAt: Date = new Date();
 
@@ -11,12 +11,7 @@ export class VideoCreatedDomainEvent implements DomainEvent {
       videoId: string;
       userId: string;
       channelId: string;
-      title: string;
-      fileIdentifier: string;
-      thumbnailIdentifier: string;
-      categories: Array<string>;
-      visibility: string;
-      description?: string;
+      reason: string;
     },
   ) {}
 }

@@ -7,7 +7,11 @@ export class VideoTranscodedDomainEvent implements DomainEvent {
   public readonly occurredAt: Date = new Date();
 
   public constructor(
-    public readonly videoId: string,
-    public readonly newIdentifier: string,
+    public readonly payload: {
+      videoId: string;
+      userId: string;
+      channelId: string;
+      hlsManifestIdentifier: string;
+    },
   ) {}
 }

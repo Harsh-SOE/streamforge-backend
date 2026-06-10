@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 
 import { TranscoderQueuePort } from '@transcoder/application/ports';
-import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
+import { VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
 
 import { TRANSCODER_JOB_NAME, TRANSCODER_JOB_QUEUE } from '../constants';
 
@@ -12,7 +12,7 @@ export class BullMQTranscoderQueueAdapter implements TranscoderQueuePort {
   public constructor(@InjectQueue(TRANSCODER_JOB_QUEUE) private readonly queue: Queue) {}
 
   public async enqueueTranscodeJob(
-    transcodeVideoMessage: VideoPublishedIntegrationEvent,
+    transcodeVideoMessage: VideoDraftSavedIntegrationEvent,
   ): Promise<void> {
     await this.queue.add(TRANSCODER_JOB_NAME, transcodeVideoMessage, {
       jobId: transcodeVideoMessage.payload.videoId,

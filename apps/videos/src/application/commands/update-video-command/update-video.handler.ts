@@ -3,10 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { VideoUpdatedResponse } from '@app/contracts/protocols/videos';
 
-import {
-  TransportToDomainPublishEnumMapper,
-  TransportToDomainVisibilityEnumMapper,
-} from '@videos/infrastructure/anti-corruption';
+import { TransportToDomainVisibilityEnumMapper } from '@videos/infrastructure/anti-corruption';
 import { VideoNotFoundException } from '@videos/application/exceptions';
 import { VIDEOS_RESPOSITORY_PORT, VideoRepositoryPort } from '@videos/application/ports';
 
@@ -25,17 +22,13 @@ export class UpdateVideoHandler implements ICommandHandler<UpdateVideoCommand> {
       title,
       description,
       categories,
-      videoFileIdentifier,
-      videoThumbnailIdentifier,
-      videoTransportPublishStatus,
-      videoTransportVisibilityStatus,
+      fileIdentifier,
+      thumbnailIdentifier,
+      videoVisibilityState,
     } = updateVideoDto;
 
-    const domainPublishStatus = videoTransportPublishStatus
-      ? TransportToDomainPublishEnumMapper[videoTransportPublishStatus]
-      : undefined;
-    const domainVisibiltyStatus = videoTransportVisibilityStatus
-      ? TransportToDomainVisibilityEnumMapper[videoTransportVisibilityStatus]
+    const domainVisibiltyState = videoVisibilityState
+      ? TransportToDomainVisibilityEnumMapper[videoVisibilityState]
       : undefined;
 
     const videoAggregate = await this.videoRepoAdapter.findOneVideoById(id);
@@ -47,11 +40,10 @@ export class UpdateVideoHandler implements ICommandHandler<UpdateVideoCommand> {
     videoAggregate.updateVideo({
       newTitle: title,
       newDescription: description,
-      newPublishStatus: domainPublishStatus,
-      newVisibilityStatus: domainVisibiltyStatus,
+      newVisibilityState: domainVisibiltyState,
       newCategories: categories,
-      newFileIdentifier: videoFileIdentifier,
-      newThumbnailIdentifier: videoThumbnailIdentifier,
+      newFileIdentifier: fileIdentifier,
+      newThumbnailIdentifier: thumbnailIdentifier,
     });
 
     await this.videoRepoAdapter.updateOneVideoById(id, videoAggregate);

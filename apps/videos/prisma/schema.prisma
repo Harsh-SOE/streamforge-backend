@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
@@ -15,36 +9,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum VideoPersistancePublishStatus {
-  PENDING    @map("PENDING")
-  PROCESSING @map("PROCESSING")
-  PROCESSED  @map("PROCESSED")
-  PUBLISHED  @map("PUBLISHED")
-  FAILED     @map("FAILED")
+enum VideoState {
+  DRAFT
+  PENDING_UPLOAD
+  UPLOADED
+  PROCESSING
+  TRANSCODING
+  READY_TO_PUBLISH
+  PUBLISHED
+  FAILED
 }
 
-enum VideoPersistanceVisibilityStatus {
-  PUBLIC   @map("PUBLIC")
-  PRIVATE  @map("PRIVATE")
-  UNLISTED @map("UNLISTED")
+enum VisibilityState {
+  PUBLIC
+  PRIVATE
+  UNLISTED
 }
 
 model Video {
-  id                      String                           @id @default(uuid())
-  ownerId                 String
-  channelId               String
-  title                   String
-  videoThumbnailIdentifer String
-  videoFileIdentifier     String
-  description             String?
-  categories              String[]
-  videoPublishStatus      VideoPersistancePublishStatus    @default(PENDING)
-  videoVisibiltyStatus    VideoPersistanceVisibilityStatus @default(PRIVATE)
-  publishedAt             DateTime                         @default(now())
-  updatedAt               DateTime                         @updatedAt
+  id                     String          @id @default(uuid())
+
+  ownerId                String
+  channelId              String
+
+  title                  String
+  description            String?
+  categories             String[]        @default([])
+
+  state                  VideoState      @default(PENDING_UPLOAD)
+  visibilityState        VisibilityState @default(PRIVATE)
+
+  originalFileIdentifier String?
+  thumbnailIdentifier    String?
+  hlsManifestIdentifier  String?
+
+  durationSeconds        Int?
+  width                  Int?
+  height                 Int?
+  sizeBytes              BigInt?
+  mimeType               String?
+
+  failureReason          String?
+
+  uploadedAt             DateTime?
+  transcodingStartedAt   DateTime?
+  transcodedAt           DateTime?
+  publishedAt            DateTime?
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
 
   @@index([ownerId])
   @@index([channelId])
-  @@index([categories], type: Gin)
+  @@index([state])
+  @@index([visibilityState])
   @@index([publishedAt])
+  @@index([categories], type: Gin)
 }

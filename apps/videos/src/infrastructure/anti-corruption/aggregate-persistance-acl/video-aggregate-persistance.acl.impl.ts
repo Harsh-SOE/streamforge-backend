@@ -6,40 +6,61 @@ import { VideoAggregate } from '@videos/domain/aggregates';
 
 import { Video } from '@persistance/videos';
 
+type VideoAggregatePersistence = Pick<
+  Video,
+  | 'id'
+  | 'ownerId'
+  | 'channelId'
+  | 'title'
+  | 'description'
+  | 'categories'
+  | 'state'
+  | 'visibilityState'
+  | 'originalFileIdentifier'
+  | 'thumbnailIdentifier'
+  | 'hlsManifestIdentifier'
+  | 'failureReason'
+>;
+
 @Injectable()
 export class VideoAggregatePersistanceACL implements IAggregatePersistanceACL<
   VideoAggregate,
-  Omit<Video, 'publishedAt' | 'updatedAt'>
+  VideoAggregatePersistence
 > {
-  public toAggregate(persistance: Omit<Video, 'publishedAt' | 'updatedAt'>): VideoAggregate {
-    // TODO mapper for enums 'PERSISTANCE' -> 'DOMAIN'...
-    return VideoAggregate.create({
+  public toAggregate(persistance: VideoAggregatePersistence): VideoAggregate {
+    return VideoAggregate.rehydrate({
       id: persistance.id,
       userId: persistance.ownerId,
       channelId: persistance.channelId,
       title: persistance.title,
-      videoThumbnailIdentifier: persistance.videoThumbnailIdentifer,
-      videoFileIdentifier: persistance.videoFileIdentifier,
       categories: persistance.categories,
-      publishStatus: persistance.videoPublishStatus.toString(),
-      visibilityStatus: persistance.videoVisibiltyStatus.toString(),
       description: persistance.description ?? undefined,
+
+      videoFileIdentifier: persistance.originalFileIdentifier ?? undefined,
+      videoThumbnailIdentifier: persistance.thumbnailIdentifier ?? undefined,
+      hlsManifestIdentifier: persistance.hlsManifestIdentifier ?? undefined,
+
+      state: persistance.state,
+      visibilityState: persistance.visibilityState,
+      failureReason: persistance.failureReason ?? undefined,
     });
   }
 
-  public toPersistance(aggregate: VideoAggregate): Omit<Video, 'publishedAt' | 'updatedAt'> {
+  public toPersistance(aggregate: VideoAggregate): VideoAggregatePersistence {
     const videoEntity = aggregate.getVideoEntity();
     return {
       id: videoEntity.getId(),
       ownerId: videoEntity.getOwnerId(),
       channelId: videoEntity.getChannelId(),
       title: videoEntity.getTitle(),
-      videoFileIdentifier: videoEntity.getVideoFileIdentifier(),
-      videoThumbnailIdentifer: videoEntity.getVideoThumbnailIdentifier(),
+      originalFileIdentifier: videoEntity.getVideoFileIdentifier() ?? null,
+      thumbnailIdentifier: videoEntity.getVideoThumbnailIdentifier() ?? null,
+      hlsManifestIdentifier: videoEntity.getHlsManifestIdentifier() ?? null,
       categories: videoEntity.getCategories(),
       description: videoEntity.getDescription() ?? null,
-      videoPublishStatus: videoEntity.getPublishStatus(),
-      videoVisibiltyStatus: videoEntity.getVisibiltyStatus(),
+      state: videoEntity.getVideoState(),
+      visibilityState: videoEntity.getVisibiltyState(),
+      failureReason: videoEntity.getFailureReason?.() ?? null,
     };
   }
 }

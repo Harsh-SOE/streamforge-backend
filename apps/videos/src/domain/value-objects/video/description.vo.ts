@@ -7,7 +7,7 @@ export class VideoDescription {
 
   public constructor(private readonly value?: string) {}
 
-  public static create(value: string | undefined) {
+  public static create(value?: string) {
     const parsedVideoDescription = this.VideoDescriptionValidationSchema.safeParse(value);
     if (!parsedVideoDescription.success) {
       const errorMessage = parsedVideoDescription.error.message;

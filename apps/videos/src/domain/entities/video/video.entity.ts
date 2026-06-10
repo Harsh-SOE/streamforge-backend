@@ -1,11 +1,11 @@
-import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
+import { DomainVideoState, DomainVideoVisibiltyState } from '@videos/domain/enums';
 
 import {
   VideoDescription,
   VideoTitle,
   VideoFileIdentifier,
   VideoVisibilty,
-  VideoPublish,
+  VideoState,
   VideoCategories,
   VideoThumbnailFileIdentifier,
   VideoId,
@@ -24,12 +24,14 @@ export class VideoEntity {
       userId,
       channelId,
       categories,
-      publishStatus,
+      state = DomainVideoState.PENDING_UPLOAD,
       title,
       videoFileIdentifier,
       videoThumbnailIdentifier,
-      visibilityStatus,
+      hlsManifestIdentifier,
+      visibilityState = DomainVideoVisibiltyState.PRIVATE,
       description,
+      failureReason,
     } = data;
 
     return new VideoEntity({
@@ -38,11 +40,19 @@ export class VideoEntity {
       ownerId: VideoOwnerId.create(userId),
       categories: VideoCategories.create(categories),
       title: VideoTitle.create(title),
-      publishStatus: VideoPublish.create(publishStatus),
-      videoFileIdentifier: VideoFileIdentifier.create(videoFileIdentifier),
-      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(videoThumbnailIdentifier),
-      visibilityStatus: VideoVisibilty.create(visibilityStatus),
       description: VideoDescription.create(description),
+      state: VideoState.create(state),
+      visibilityState: VideoVisibilty.create(visibilityState),
+      videoFileIdentifier: videoFileIdentifier
+        ? VideoFileIdentifier.create(videoFileIdentifier)
+        : undefined,
+      videoThumbnailIdentifer: videoThumbnailIdentifier
+        ? VideoThumbnailFileIdentifier.create(videoThumbnailIdentifier)
+        : undefined,
+      hlsManifestIdentifier: hlsManifestIdentifier
+        ? VideoFileIdentifier.create(hlsManifestIdentifier)
+        : undefined,
+      failureReason,
     });
   }
 
@@ -62,12 +72,16 @@ export class VideoEntity {
     return this.videoProps.title.getValue();
   }
 
-  public getVideoFileIdentifier(): string {
-    return this.videoProps.videoFileIdentifier.getValue();
+  public getVideoFileIdentifier(): string | undefined {
+    return this.videoProps.videoFileIdentifier?.getValue();
   }
 
-  public getVideoThumbnailIdentifier(): string {
-    return this.videoProps.videoThumbnailIdentifer.getValue();
+  public getVideoThumbnailIdentifier(): string | undefined {
+    return this.videoProps.videoThumbnailIdentifer?.getValue();
+  }
+
+  public getHlsManifestIdentifier(): string | undefined {
+    return this.videoProps.hlsManifestIdentifier?.getValue();
   }
 
   public getDescription(): string | undefined {
@@ -78,12 +92,20 @@ export class VideoEntity {
     return this.videoProps.categories.getValue();
   }
 
-  public getPublishStatus(): VideoDomainPublishStatus {
-    return this.videoProps.publishStatus.getValue();
+  public getVideoState(): DomainVideoState {
+    return this.videoProps.state.getValue();
   }
 
-  public getVisibiltyStatus(): VideoDomainVisibiltyStatus {
-    return this.videoProps.visibilityStatus.getValue();
+  public getVisibiltyState(): DomainVideoVisibiltyState {
+    return this.videoProps.visibilityState.getValue();
+  }
+
+  public hasUploadedMedia(): boolean {
+    return Boolean(this.videoProps.videoFileIdentifier && this.videoProps.videoThumbnailIdentifer);
+  }
+
+  public getFailureReason() {
+    return this.videoProps.failureReason;
   }
 
   public getSnapShot(): VideoSnapshot {
@@ -92,12 +114,13 @@ export class VideoEntity {
       ownerId: this.videoProps.ownerId.getValue(),
       channelId: this.videoProps.channelId.getValue(),
       title: this.videoProps.title.getValue(),
-      videoFileIdentifier: this.videoProps.videoFileIdentifier.getValue(),
-      videoThumbnailIdentifier: this.videoProps.videoThumbnailIdentifer.getValue(),
+      videoFileIdentifier: this.videoProps.videoFileIdentifier?.getValue(),
+      videoThumbnailIdentifier: this.videoProps.videoThumbnailIdentifer?.getValue(),
+      hlsManifestIdentifier: this.videoProps.hlsManifestIdentifier?.getValue(),
       categories: this.videoProps.categories.getValue(),
       description: this.videoProps.description?.getValue(),
-      publishStatus: this.videoProps.publishStatus.getValue(),
-      visibilityStatus: this.videoProps.visibilityStatus.getValue(),
+      state: this.videoProps.state.getValue(),
+      visibilityState: this.videoProps.visibilityState.getValue(),
     };
   }
 
@@ -108,6 +131,10 @@ export class VideoEntity {
 
   public updateVideoFileIdentifier(newFileIdentifier: string): void {
     this.videoProps.videoFileIdentifier = VideoFileIdentifier.create(newFileIdentifier);
+  }
+
+  public updateHlsManifestIdentifier(newHlsManifestIdentifier: string): void {
+    this.videoProps.hlsManifestIdentifier = VideoFileIdentifier.create(newHlsManifestIdentifier);
   }
 
   public updateTitle(newTitle: string): void {
@@ -122,11 +149,32 @@ export class VideoEntity {
     this.videoProps.description = VideoDescription.create(newDescription);
   }
 
-  public updatePublishStatus(newStatus: string): void {
-    this.videoProps.publishStatus = VideoPublish.create(newStatus);
+  public updateVideoState(newStatus: string): void {
+    this.videoProps.state = VideoState.create(newStatus);
   }
 
-  public updateVisibiltyStatus(newVisibiltyStatus: string): void {
-    this.videoProps.visibilityStatus = VideoVisibilty.create(newVisibiltyStatus);
+  public updateVisibiltyState(newVisibiltyStatus: string): void {
+    this.videoProps.visibilityState = VideoVisibilty.create(newVisibiltyStatus);
+  }
+
+  public markAsUploaded(): void {
+    this.updateVideoState(DomainVideoState.UPLOADED);
+  }
+
+  public markAsTranscoding(): void {
+    this.updateVideoState(DomainVideoState.TRANSCODING);
+  }
+
+  public markAsReadyToPublish(): void {
+    this.updateVideoState(DomainVideoState.READY_TO_PUBLISH);
+  }
+
+  public markAsPublished(): void {
+    this.updateVideoState(DomainVideoState.PUBLISHED);
+  }
+
+  public markAsFailed(reason: string): void {
+    this.updateVideoState(DomainVideoState.FAILED);
+    this.videoProps.failureReason = reason;
   }
 }

@@ -14,16 +14,18 @@ export class VideoTranscodedEventHandler implements IEventHandler<VideoTranscode
   ) {}
 
   public async handle(videoTranscodedDomainEvent: VideoTranscodedDomainEvent) {
-    const { videoId, newIdentifier } = videoTranscodedDomainEvent;
+    const { payload } = videoTranscodedDomainEvent;
 
-    const videoAggregate = await this.videoRepoAdapter.findOneVideoById(videoId);
+    const videoAggregate = await this.videoRepoAdapter.findOneVideoById(payload.videoId);
 
     if (!videoAggregate) {
-      throw new VideoNotFoundException({ message: `Video with id:${videoId} was not found` });
+      throw new VideoNotFoundException({
+        message: `Video with id:${payload.videoId} was not found`,
+      });
     }
 
-    videoAggregate.updateVideo({ newFileIdentifier: newIdentifier });
+    videoAggregate.updateVideo({ newFileIdentifier: payload.hlsManifestIdentifier });
 
-    await this.videoRepoAdapter.updateOneVideoById(videoId, videoAggregate);
+    await this.videoRepoAdapter.updateOneVideoById(payload.videoId, videoAggregate);
   }
 }

@@ -3,11 +3,11 @@ import z from 'zod';
 import { InvalidVideoFileIndentifierException } from '@videos/domain/exceptions';
 
 export class VideoFileIdentifier {
-  private static VideoFileIdentifierValidationSchema = z.string();
+  private static VideoFileIdentifierValidationSchema = z.string().optional();
 
-  public constructor(private readonly value: string) {}
+  public constructor(private readonly value?: string) {}
 
-  public static create(value: string) {
+  public static create(value?: string) {
     const parsedVideoFileIdentifier = this.VideoFileIdentifierValidationSchema.safeParse(value);
     if (!parsedVideoFileIdentifier.success) {
       const errorMessage = parsedVideoFileIdentifier.error.message;

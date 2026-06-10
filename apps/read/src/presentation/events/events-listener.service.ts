@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { VIDEO_EVENT_CAUSES, VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
+import { VIDEO_EVENT_CAUSES, VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 import { USER_EVENT_CAUSES, UserOnboardedIntegrationEvent } from '@app/contracts/events/users';
 import {
@@ -44,7 +44,7 @@ export class EventsListenerService implements OnModuleInit {
         }
         case VIDEO_EVENT_CAUSES.VIDEO_PUBLISHED.toString(): {
           await this.videoEventsService.onVideoPublished(
-            event.payload as VideoPublishedIntegrationEvent,
+            event.payload as VideoDraftSavedIntegrationEvent,
           );
           break;
         }

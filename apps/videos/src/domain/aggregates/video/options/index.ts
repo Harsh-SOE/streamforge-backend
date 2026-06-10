@@ -1,12 +1,21 @@
-export interface VideoAggregateOptions {
+export interface CreateVideoDraftAggregateOptions {
   id?: string;
   userId: string;
   channelId: string;
   title: string;
-  videoThumbnailIdentifier: string;
-  videoFileIdentifier: string;
   categories: string[];
   description?: string;
-  publishStatus: string;
-  visibilityStatus: string;
+  videoThumbnailIdentifier?: string;
+  videoFileIdentifier?: string;
+  hlsManifestIdentifier?: string;
+  state?: string;
+  visibilityState?: string;
+}
+
+export interface RehydrateVideoAggregateOptions extends CreateVideoDraftAggregateOptions {
+  videoThumbnailIdentifier?: string;
+  videoFileIdentifier?: string;
+  hlsManifestIdentifier?: string;
+  state?: string;
+  failureReason?: string;
 }

@@ -72,11 +72,13 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Videos
       channelId,
       ownerId,
       categories,
-      publishStatus,
+      state,
       title,
       videoFileIdentifier,
       videoThumbnailIdentifier,
-      visibilityStatus,
+      visibilityState,
+      hlsManifestIdentifier,
+      failureReason,
       description,
     } = video.getSnapshot();
 
@@ -85,12 +87,14 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Videos
       channelId,
       description,
       ownerId,
-      publishStatus,
+      state,
       title,
       videoCategories: categories,
       videoFileIdentifier,
-      videoThumbnailIdentifier,
-      visibilityStatus,
+      videoThumbnailIdentifier: videoThumbnailIdentifier,
+      visibilityState,
+      hlsManifestKey: hlsManifestIdentifier,
+      failureReason,
     });
 
     await this.producer.send({
@@ -120,9 +124,10 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Videos
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,
         videoFileIdentifier: message.videoFileIdentifier,
         categories: message.videoCategories,
-        publishStatus: message.publishStatus,
-        visibilityStatus: message.visibilityStatus,
+        state: message.state,
+        visibilityState: message.visibilityState,
         description: message.description,
+        hlsManifestIdentifier: message.hlsManifestKey,
       });
     });
 

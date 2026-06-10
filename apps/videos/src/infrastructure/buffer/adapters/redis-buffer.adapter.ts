@@ -154,8 +154,8 @@ export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,
         videoFileIdentifier: message.videoFileIdentifier,
         categories: message.videoCategories,
-        publishStatus: message.publishStatus,
-        visibilityStatus: message.visibilityStatus,
+        state: message.state,
+        visibilityState: message.visibilityState,
         description: message.description,
       });
     });

@@ -1,39 +1,28 @@
 import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
-import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
+import { VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
-import { VideoCreatedDomainEvent } from '@videos/domain/domain-events';
+import { VideoDraftCreatedDomainEvent } from '@videos/domain/domain-events';
 
-@EventsHandler(VideoCreatedDomainEvent)
-export class VideoPublishedEventHandler implements IEventHandler<VideoCreatedDomainEvent> {
+@EventsHandler(VideoDraftCreatedDomainEvent)
+export class VideoPublishedEventHandler implements IEventHandler<VideoDraftCreatedDomainEvent> {
   constructor(@Inject(EVENT_PUBLISHER_PORT) private eventConsumer: EventsPublisherPort) {}
 
-  public async handle(videoCreatedDomainEvent: VideoCreatedDomainEvent) {
-    const {
-      videoId,
-      userId,
-      channelId,
-      title,
-      description,
-      fileIdentifier,
-      thumbnailIdentifier,
-      categories,
-      visibility,
-    } = videoCreatedDomainEvent.payload;
+  public async handle(videoDraftCreatedDomainEvent: VideoDraftCreatedDomainEvent) {
+    const { videoId, userId, channelId, title, description, categories, visibility } =
+      videoDraftCreatedDomainEvent.payload;
 
-    const videoPublishedIntegrationEvent = new VideoPublishedIntegrationEvent({
-      eventId: videoCreatedDomainEvent.eventId,
-      occurredAt: videoCreatedDomainEvent.occurredAt.toISOString(),
+    const videoPublishedIntegrationEvent = new VideoDraftSavedIntegrationEvent({
+      eventId: videoDraftCreatedDomainEvent.eventId,
+      occurredAt: videoDraftCreatedDomainEvent.occurredAt.toISOString(),
       payload: {
         videoId,
         userId,
         channelId,
         title,
         description,
-        fileIdentifier,
-        thumbnailIdentifier,
         categories,
         visibility,
       },
