@@ -15,11 +15,11 @@
 
 ---
 
-## ✨ Overview
+## Overview
 
 Streamforge is a **fully distributed backend system** inspired by platforms like YouTube.
 
-This project focuses on **how large-scale backend systems are actually engineered**, not just on delivering APIs.
+This project focuses on **how large-scale backend systems are actually engineered**.
 
 It emphasizes:
 
@@ -53,7 +53,7 @@ Each microservice follows **Hexagonal Architecture (Ports & Adapters)**.
 
 The core idea:
 
-> Business logic must not depend on frameworks, databases, or transport layers.
+> Business logic must not depend on databases, transport layers or underlying infrastructure.
 
 **Layered flow inside every service:**
 
@@ -71,15 +71,15 @@ Adapters (DB, Kafka, External APIs)
 
 **Key rules enforced:**
 
-- Domain layer has zero NestJS imports
-- Infrastructure details are replaceable
+- Domain layer is completely blind to underlying infrastructure and tools, and uses a pragmatic nestjs style
+- Infrastructure details are replaceable using ports and adapters at runtime
 - Application layer orchestrates all use-cases
 - Adapters implement ports, never the other way around
 
 This provides:
 
 - High testability
-- Framework independence
+- Dependencies independence in business logic
 - Long-term maintainability
 
 ---
@@ -90,24 +90,25 @@ CQRS is applied at the **system boundary**, not merely as folder separation.
 
 The system distinguishes between:
 
-- **Write side → owns truth**
-- **Read side → owns representation**
+- **Write side (command service) → owns truth**
+- **Read side (projection service) → owns representation**
 
 #### Write Side
 
 - Handles commands
 - Enforces domain invariants
 - Executes business rules
-- Emits domain events
+- Emits domain events in business layer
+- Translates those domain events to integration events
 
 #### Read Side
 
-- Consumes domain events
+- Consumes integration events
 - Builds projections
 - Stores denormalized view models
 - Serves optimized queries
 
-> The read service never performs writes and contains no domain logic.
+> The read service never performs direct writes and contains no domain logic.
 
 There is:
 
@@ -143,81 +144,6 @@ This enables:
 - Independent deployment
 - Horizontal scalability
 - Fault isolation
-
----
-
-## 🏗️ High-Level System Architecture
-
-```
-                          ┌────────────────────┐
-                          │      Clients       │
-                          │  Web / Mobile App  │
-                          └─────────┬──────────┘
-                                    │
-                                    ▼
-                          ┌────────────────────┐
-                          │     API Gateway    │
-                          │ (Auth, Routing)    │
-                          └─────────┬──────────┘
-                                    │
-        ┌───────────────────────────┼───────────────────────────┐
-        │                           │                           │
-        ▼                           ▼                           ▼
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│   User Service   │     │  Video Service   │     │ Interaction Svc  │
-│ (commands only)  │     │ (commands only)  │     │ (commands only)  │
-└─────────┬────────┘     └─────────┬────────┘     └─────────┬────────┘
-          │                          │                          │
-          └──────────────┬───────────┴───────────┬─────────────┘
-                         ▼                       ▼
-                ┌────────────────────────────────────┐
-                │               Kafka                │
-                │         (Domain Events Bus)        │
-                └──────────────┬─────────────────────┘
-                               │
-                               ▼
-                     ┌────────────────────┐
-                     │     Read Service   │
-                     │  (Queries Only)    │
-                     └────────────────────┘
-```
-
----
-
-## 📦 Repository Structure
-
-```
-backend/
-│
-├── apps/
-│   ├── gateway/                 # API Gateway (HTTP entrypoint)
-│   ├── user/                    # User write service
-│   ├── video/                   # Video write service
-│   ├── interaction/             # Likes, comments, views
-│   ├── read/                    # Query + projection service
-│
-├── libs/
-│   ├── common/                  # Shared infrastructure
-│   │   ├── kafka/               # Kafka producers & consumers
-│   │   ├── logger/              # Centralized logging
-│   │   ├── exceptions/          # Global exception handling
-│   │   └── decorators/          # Custom decorators
-│   │
-│   ├── contracts/               # Domain event contracts
-│   └── config/                  # Environment configuration
-│
-├── infra/
-│   ├── docker/                  # Service Dockerfiles
-│   ├── kafka/                   # Kafka & Zookeeper setup
-│   ├── prometheus/              # Metrics
-│   └── grafana/                 # Observability dashboards
-│
-├── Tiltfile                     # Local orchestration
-├── docker-compose.yml           # Infrastructure services
-├── package.json
-├── yarn.lock
-└── README.md
-```
 
 ---
 
@@ -278,7 +204,7 @@ yarn test:cov
 
 ## 📌 Why This Project Exists
 
-This repository is built as a **long-term backend engineering system**, not a demo.
+This repository is built as a **long-term backend engineering system**
 
 It is used to:
 
@@ -286,12 +212,6 @@ It is used to:
 - Understand CQRS at scale
 - Learn event-driven consistency
 - Explore production architecture patterns
-
----
-
-## 📜 License
-
-MIT License
 
 ---
 
