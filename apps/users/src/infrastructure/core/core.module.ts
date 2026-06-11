@@ -3,14 +3,12 @@
 import { CqrsModule } from '@nestjs/cqrs';
 import { Global, Module } from '@nestjs/common';
 
-import { PrismaDBClient } from '@app/clients/prisma';
 import { KAFKA_CLIENT_CONFIG, KafkaClient, KafkaClientConfig } from '@app/clients/kafka';
 import { REDIS_CLIENT_CONFIG, RedisClient, RedisClientConfig } from '@app/clients/redis';
 
 import { UserConfigModule, UserConfigService } from '@users/infrastructure/config';
 import { PrometheusMetricsModule } from '@users/infrastructure/metrics/prometheus';
 import { REDIS_BUFFER_CONFIG, RedisBufferConfig } from '@users/infrastructure/buffer/redis';
-import { UserAggregatePersistanceACL } from '@users/infrastructure/anti-corruption/aggregate-persistance-acl';
 
 import { LoggerModule } from '../logger/loki';
 
@@ -38,8 +36,6 @@ import { LoggerModule } from '../logger/loki';
         }) satisfies RedisBufferConfig,
     },
 
-    PrismaDBClient,
-
     KafkaClient,
     {
       provide: KAFKA_CLIENT_CONFIG,
@@ -54,18 +50,7 @@ import { LoggerModule } from '../logger/loki';
           accessCert: configService.ACCESS_CERT,
         }) satisfies KafkaClientConfig,
     },
-
-    UserAggregatePersistanceACL,
   ],
-  exports: [
-    PrometheusMetricsModule,
-    CqrsModule,
-    UserAggregatePersistanceACL,
-    LoggerModule,
-
-    KafkaClient,
-    RedisClient,
-    PrismaDBClient,
-  ],
+  exports: [PrometheusMetricsModule, CqrsModule, LoggerModule, KafkaClient, RedisClient],
 })
 export class CoreModule {}

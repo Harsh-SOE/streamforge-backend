@@ -17,15 +17,7 @@ export class UpdateVideoHandler implements ICommandHandler<UpdateVideoCommand> {
   ) {}
 
   public async execute({ updateVideoDto }: UpdateVideoCommand): Promise<VideoUpdatedResponse> {
-    const {
-      id,
-      title,
-      description,
-      categories,
-      fileIdentifier,
-      thumbnailIdentifier,
-      videoVisibilityState,
-    } = updateVideoDto;
+    const { id, title, description, categories, videoVisibilityState } = updateVideoDto;
 
     const domainVisibiltyState = videoVisibilityState
       ? TransportToDomainVisibilityEnumMapper[videoVisibilityState]
@@ -37,13 +29,11 @@ export class UpdateVideoHandler implements ICommandHandler<UpdateVideoCommand> {
       throw new VideoNotFoundException({ message: `Video with id:${id} was not found` });
     }
 
-    videoAggregate.updateVideo({
-      newTitle: title,
-      newDescription: description,
-      newVisibilityState: domainVisibiltyState,
-      newCategories: categories,
-      newFileIdentifier: fileIdentifier,
-      newThumbnailIdentifier: thumbnailIdentifier,
+    videoAggregate.updateDetails({
+      title,
+      description,
+      categories,
+      visibilityState: domainVisibiltyState,
     });
 
     await this.videoRepoAdapter.updateOneVideoById(id, videoAggregate);

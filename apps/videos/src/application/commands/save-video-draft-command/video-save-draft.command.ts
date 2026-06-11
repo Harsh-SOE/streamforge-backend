@@ -1,5 +1,5 @@
-import { VideoSaveDraftDto } from '@app/contracts/protocols/videos';
+import { SaveVideoDraftDto } from '@app/contracts/protocols/videos';
 
 export class VideoSaveDraftCommand {
-  constructor(public readonly videoSaveDraftDto: VideoSaveDraftDto) {}
+  constructor(public readonly videoSaveDraftDto: SaveVideoDraftDto) {}
 }

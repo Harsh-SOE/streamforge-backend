@@ -43,7 +43,7 @@ export class EventsListenerService implements OnModuleInit {
           break;
         }
         case VIDEO_EVENT_CAUSES.VIDEO_PUBLISHED.toString(): {
-          await this.videoEventsService.onVideoPublished(
+          await this.videoEventsService.onVideoDraftSaved(
             event.payload as VideoDraftSavedIntegrationEvent,
           );
           break;

@@ -1,3 +1,4 @@
+// TODO: Fix this video draft event consumption for projection saving
 import { Inject } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
@@ -15,9 +16,21 @@ export class VideoEventsService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  public async onVideoPublished(videoPublishedIntegrationEvent: VideoDraftSavedIntegrationEvent) {
+  public async onVideoDraftSaved(videoPublishedIntegrationEvent: VideoDraftSavedIntegrationEvent) {
     // Implementation for handling video uploaded projection event
     this.logger.info(`saving video projection`);
-    await this.videoProjectionRespository.saveVideo(videoPublishedIntegrationEvent.payload);
+    const { title, userId, videoId, channelId, visibility, description, categories } =
+      videoPublishedIntegrationEvent.payload;
+    await this.videoProjectionRespository.saveVideo({
+      title,
+      videoId,
+      userId,
+      channelId,
+      categories,
+      thumbnailIdentifier: '',
+      fileIdentifier: '',
+      visibility,
+      description,
+    });
   }
 }

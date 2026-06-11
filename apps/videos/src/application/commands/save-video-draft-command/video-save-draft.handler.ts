@@ -36,9 +36,9 @@ export class VideoSaveDraftHandler implements ICommandHandler<VideoSaveDraftComm
       .presignedUrl;
 
     const videoAggregate = this.eventPublisher.mergeObjectContext(
-      VideoAggregate.create({
+      VideoAggregate.createFromDraft({
         id,
-        userId,
+        ownerId: userId,
         channelId,
         title,
         categories,
