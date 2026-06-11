@@ -1,8 +1,7 @@
 export const VIDEO_API_ENDPOINT = {
   ROOT: 'video',
-  PRESIGNED_URL_FOR_VIDEO_FILE: 'upload-url',
-  PRESIGNED_URL_FOR_VIDEO_THUMBNAIL: 'thumbnail/upload-url',
-  PUBLISH_VIDEO: '',
+  DRAFT: 'draft',
+  PUBLISH: 'publish',
   FIND_A_VIDEO: ':videoid',
   UPDATE_A_VIDEO: ':videoid',
   FIND_ALL_VIDEOS: 'all',

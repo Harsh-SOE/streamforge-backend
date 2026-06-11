@@ -1,6 +1,3 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { CreateVideoRequestDto } from './create-video-request.dto';
+import { CreateVideoDraftRequestDto } from './create-video-draft-request.dto';
 
-export class UpdateVideoRequestDto extends PartialType(
-  OmitType(CreateVideoRequestDto, ['videoFileIdentifier']),
-) {}
+export class UpdateVideoRequestDto extends CreateVideoDraftRequestDto {}

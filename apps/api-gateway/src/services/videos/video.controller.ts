@@ -21,17 +21,11 @@ import { VIDEO_API_ENDPOINT, VIDEO_API_VERSION } from '@gateway/common/endpoints
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 
+import { CreateVideoDraftRequestDto, ListVideosQueryDto, UpdateVideoRequestDto } from './request';
 import {
-  CreateVideoRequestDto,
-  ListVideosQueryDto,
-  PreSignedUrlRequestDto,
-  UpdateVideoRequestDto,
-} from './request';
-import {
-  PublishedVideoRequestResponse,
+  VideoDraftSavedRequestResponse,
   FoundVideoRequestResponse,
   UpdatedVideoRequestResponse,
-  PreSignedUrlRequestResponse,
 } from './response';
 import { VideoService } from './video.service';
 
@@ -43,40 +37,20 @@ export class VideoController {
     @InjectMetric(REQUESTS_COUNTER) private readonly counter: Counter,
   ) {}
 
-  @Get(VIDEO_API_ENDPOINT.PRESIGNED_URL_FOR_VIDEO_FILE)
+  @Post(VIDEO_API_ENDPOINT.DRAFT)
   @Version(VIDEO_API_VERSION.VERSION_1)
-  getPresignedUrlForVideoFile(
-    @Body() FileMetaDataDto: PreSignedUrlRequestDto,
-    @User('id') userId: string,
-  ): Promise<PreSignedUrlRequestResponse> {
+  createVideoDraft(
+    @Body() createVideoDraftRequestDto: CreateVideoDraftRequestDto,
+    @User() user: UserAuthPayload,
+  ): Promise<VideoDraftSavedRequestResponse> {
     this.counter.inc();
-    return this.videoService.getPresignedUploadVideoUrl(FileMetaDataDto, userId);
-  }
-
-  @Post(VIDEO_API_ENDPOINT.PRESIGNED_URL_FOR_VIDEO_THUMBNAIL)
-  @Version(VIDEO_API_VERSION.VERSION_1)
-  getPresignedUrlForVideoThumbnail(
-    @Body() FileMetaDataDto: PreSignedUrlRequestDto,
-    @User('id') userId: string,
-  ): Promise<PreSignedUrlRequestResponse> {
-    this.counter.inc();
-    return this.videoService.getPresignedUploadThumbnailUrl(FileMetaDataDto, userId);
+    return this.videoService.createVideoDraft(createVideoDraftRequestDto, user);
   }
 
   @Get(VIDEO_API_ENDPOINT.FIND_A_VIDEO)
   @Version(VIDEO_API_VERSION.VERSION_1)
   findOneVideo(@Param('videoid') id: string): Promise<FoundVideoRequestResponse> {
     throw new NotImplementedException(`Implement 'findOneVideo' method first`);
-  }
-
-  @Post(VIDEO_API_ENDPOINT.PUBLISH_VIDEO)
-  @Version(VIDEO_API_VERSION.VERSION_1)
-  createVideo(
-    @Body() createBookDto: CreateVideoRequestDto,
-    @User() user: UserAuthPayload,
-  ): Promise<PublishedVideoRequestResponse> {
-    this.counter.inc();
-    return this.videoService.createVideo(createBookDto, user);
   }
 
   @Patch(VIDEO_API_ENDPOINT.UPDATE_A_VIDEO)

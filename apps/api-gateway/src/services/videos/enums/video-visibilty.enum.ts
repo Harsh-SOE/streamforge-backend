@@ -1,4 +1,4 @@
-export enum VideoRequestVisibilityStatus {
+export enum VideoRequestVisibilityState {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE',
   UNLISTED = 'UNLISTED',
