@@ -1,6 +1,6 @@
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateVideoDraftRequestDto {
+export class SaveVideoDraftRequestDto {
   @IsNotEmpty()
   @IsString()
   title: string;

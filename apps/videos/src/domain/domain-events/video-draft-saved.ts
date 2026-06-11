@@ -9,7 +9,7 @@ export class VideoDraftCreatedDomainEvent implements DomainEvent {
   public constructor(
     public readonly payload: {
       videoId: string;
-      userId: string;
+      ownerId: string;
       channelId: string;
       title: string;
       categories: Array<string>;

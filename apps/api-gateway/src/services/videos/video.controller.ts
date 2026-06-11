@@ -21,13 +21,14 @@ import { VIDEO_API_ENDPOINT, VIDEO_API_VERSION } from '@gateway/common/endpoints
 import { REQUESTS_COUNTER } from '@gateway/infrastructure/measure';
 import { GatewayJwtGuard } from '@gateway/infrastructure/jwt/guard';
 
-import { CreateVideoDraftRequestDto, ListVideosQueryDto, UpdateVideoRequestDto } from './request';
+import { SaveVideoDraftRequestDto, ListVideosQueryDto, UpdateVideoRequestDto } from './request';
 import {
   VideoDraftSavedRequestResponse,
   FoundVideoRequestResponse,
   UpdatedVideoRequestResponse,
 } from './response';
 import { VideoService } from './video.service';
+import { VideoUploadVerifiedRequestResponse } from './response/video-upload-verified-request.response';
 
 @UseGuards(GatewayJwtGuard)
 @Controller(VIDEO_API_ENDPOINT.ROOT)
@@ -40,11 +41,17 @@ export class VideoController {
   @Post(VIDEO_API_ENDPOINT.DRAFT)
   @Version(VIDEO_API_VERSION.VERSION_1)
   createVideoDraft(
-    @Body() createVideoDraftRequestDto: CreateVideoDraftRequestDto,
+    @Body() createVideoDraftRequestDto: SaveVideoDraftRequestDto,
     @User() user: UserAuthPayload,
   ): Promise<VideoDraftSavedRequestResponse> {
     this.counter.inc();
     return this.videoService.createVideoDraft(createVideoDraftRequestDto, user);
+  }
+
+  @Get(VIDEO_API_ENDPOINT.VERIFY_UPLOAD)
+  @Version(VIDEO_API_VERSION.VERSION_1)
+  verifyVideoUpload(@Param('videoid') id: string): Promise<VideoUploadVerifiedRequestResponse> {
+    return this.videoService.verifyVideoUpload(id);
   }
 
   @Get(VIDEO_API_ENDPOINT.FIND_A_VIDEO)

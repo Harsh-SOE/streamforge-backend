@@ -3,17 +3,17 @@ import { Controller, UseFilters } from '@nestjs/common';
 
 import {
   CheckUploadedVideoDto,
-  CheckUploadedVideoResponse,
+  SaveVideoDraftDto,
+  UpdateVideoDto,
   VideoDraftSavedResponse,
-  VideoSaveDraftDto,
   VideoServiceController,
   VideoServiceControllerMethods,
   VideoUpdatedResponse,
-  VideoUpdateDto,
+  VideoUploadedVerifiedResponse,
 } from '@app/contracts/protocols/videos';
 
-import { RpcService } from './rpc.service';
 import { GrpcFilter } from '../filters';
+import { RpcService } from './rpc.service';
 
 @UseFilters(GrpcFilter)
 @VideoServiceControllerMethods()
@@ -22,7 +22,7 @@ export class RpcController implements VideoServiceController {
   constructor(private readonly videoService: RpcService) {}
 
   saveDraft(
-    videoSaveDraftDto: VideoSaveDraftDto,
+    videoSaveDraftDto: SaveVideoDraftDto,
   ):
     | Promise<VideoDraftSavedResponse>
     | Observable<VideoDraftSavedResponse>
@@ -33,14 +33,14 @@ export class RpcController implements VideoServiceController {
   checkUploadedVideo(
     checkUploadedVideoDto: CheckUploadedVideoDto,
   ):
-    | Promise<CheckUploadedVideoResponse>
-    | Observable<CheckUploadedVideoResponse>
-    | CheckUploadedVideoResponse {
+    | Promise<VideoUploadedVerifiedResponse>
+    | Observable<VideoUploadedVerifiedResponse>
+    | VideoUploadedVerifiedResponse {
     return this.videoService.verifyUploadedVideo(checkUploadedVideoDto);
   }
 
   update(
-    videoUpdateDto: VideoUpdateDto,
+    videoUpdateDto: UpdateVideoDto,
   ): Promise<VideoUpdatedResponse> | Observable<VideoUpdatedResponse> | VideoUpdatedResponse {
     return this.videoService.update(videoUpdateDto);
   }

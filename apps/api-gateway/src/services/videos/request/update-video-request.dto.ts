@@ -1,3 +1,3 @@
-import { CreateVideoDraftRequestDto } from './create-video-draft-request.dto';
+import { SaveVideoDraftRequestDto } from './save-video-draft-request.dto';
 
-export class UpdateVideoRequestDto extends CreateVideoDraftRequestDto {}
+export class UpdateVideoRequestDto extends SaveVideoDraftRequestDto {}

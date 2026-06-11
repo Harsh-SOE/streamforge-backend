@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidChannelIdException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoChannelId {
   private static VideoChannelIdValidationSchema = z.uuid();
@@ -11,7 +11,7 @@ export class VideoChannelId {
     const parsedVideoChannelId = this.VideoChannelIdValidationSchema.safeParse(value);
     if (!parsedVideoChannelId.success) {
       const errorMessage = parsedVideoChannelId.error.message;
-      throw new InvalidChannelIdException({
+      throw new InvalidValueObjectException({
         message: `Video channelId validation has failed. Reason: ${errorMessage}`,
       });
     }

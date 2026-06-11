@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidDescriptionException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoDescription {
   private static VideoDescriptionValidationSchema = z.string().optional();
@@ -11,7 +11,7 @@ export class VideoDescription {
     const parsedVideoDescription = this.VideoDescriptionValidationSchema.safeParse(value);
     if (!parsedVideoDescription.success) {
       const errorMessage = parsedVideoDescription.error.message;
-      throw new InvalidDescriptionException({
+      throw new InvalidValueObjectException({
         message: `VideoDescription validation has failed. Reason: ${errorMessage}`,
       });
     }

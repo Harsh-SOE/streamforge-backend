@@ -12,13 +12,11 @@ export const protobufPackage = 'Video';
 
 export enum VideoState {
   TRANSPORT_DRAFT = 0,
-  TRANSPORT_PENDING_UPLOAD = 1,
-  TRANSPORT_UPLOADED = 2,
-  TRANSPORT_PROCESSING = 3,
-  TRANSPORT_TRANSCODING = 4,
-  TRANSPORT_READY_TO_PUBLISH = 5,
-  TRANSPORT_PUBLISHED = 6,
-  TRANSPORT_FAILED = 7,
+  TRANSPORT_UPLOADED = 1,
+  TRANSPORT_PROCESSING = 2,
+  TRANSPORT_READY_TO_PUBLISH = 3,
+  TRANSPORT_PUBLISHED = 4,
+  TRANSPORT_FAILED = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -29,19 +27,7 @@ export enum VideoVisibilityState {
   UNRECOGNIZED = -1,
 }
 
-export enum VideoTransportSortOption {
-  TRANSPORT_NEWEST = 0,
-  TRANSPORT_OLDEST = 1,
-  TRANSPORT_POPULAR = 2,
-  UNRECOGNIZED = -1,
-}
-
-export interface GetPresignedUrlDto {
-  fileName?: string | undefined;
-  userId: string;
-}
-
-export interface VideoSaveDraftDto {
+export interface SaveVideoDraftDto {
   userId: string;
   channelId: string;
   title: string;
@@ -49,15 +35,17 @@ export interface VideoSaveDraftDto {
   description?: string | undefined;
 }
 
+export interface VerifyVideoUploadedDto {
+  id: string;
+}
+
 export interface CheckUploadedVideoDto {
   id: string;
 }
 
-export interface VideoUpdateDto {
+export interface UpdateVideoDto {
   id: string;
   title?: string | undefined;
-  fileIdentifier?: string | undefined;
-  thumbnailIdentifier?: string | undefined;
   categories: string[];
   description?: string | undefined;
   videoVisibilityState?: VideoVisibilityState | undefined;
@@ -70,7 +58,7 @@ export interface VideoDraftSavedResponse {
   expiresAt?: string | undefined;
 }
 
-export interface CheckUploadedVideoResponse {
+export interface VideoUploadedVerifiedResponse {
   id: string;
   uploaded: boolean;
 }
@@ -91,16 +79,16 @@ export interface Empty {}
 export const VIDEO_PACKAGE_NAME = 'Video';
 
 export interface VideoServiceClient {
-  saveDraft(request: VideoSaveDraftDto): Observable<VideoDraftSavedResponse>;
+  saveDraft(request: SaveVideoDraftDto): Observable<VideoDraftSavedResponse>;
 
-  checkUploadedVideo(request: CheckUploadedVideoDto): Observable<CheckUploadedVideoResponse>;
+  checkUploadedVideo(request: CheckUploadedVideoDto): Observable<VideoUploadedVerifiedResponse>;
 
-  update(request: VideoUpdateDto): Observable<VideoUpdatedResponse>;
+  update(request: UpdateVideoDto): Observable<VideoUpdatedResponse>;
 }
 
 export interface VideoServiceController {
   saveDraft(
-    request: VideoSaveDraftDto,
+    request: SaveVideoDraftDto,
   ):
     | Promise<VideoDraftSavedResponse>
     | Observable<VideoDraftSavedResponse>
@@ -109,12 +97,12 @@ export interface VideoServiceController {
   checkUploadedVideo(
     request: CheckUploadedVideoDto,
   ):
-    | Promise<CheckUploadedVideoResponse>
-    | Observable<CheckUploadedVideoResponse>
-    | CheckUploadedVideoResponse;
+    | Promise<VideoUploadedVerifiedResponse>
+    | Observable<VideoUploadedVerifiedResponse>
+    | VideoUploadedVerifiedResponse;
 
   update(
-    request: VideoUpdateDto,
+    request: UpdateVideoDto,
   ): Promise<VideoUpdatedResponse> | Observable<VideoUpdatedResponse> | VideoUpdatedResponse;
 }
 

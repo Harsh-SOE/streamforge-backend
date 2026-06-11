@@ -11,8 +11,15 @@ export class VideoPublishedEventHandler implements IEventHandler<VideoDraftCreat
   constructor(@Inject(EVENT_PUBLISHER_PORT) private eventConsumer: EventsPublisherPort) {}
 
   public async handle(videoDraftCreatedDomainEvent: VideoDraftCreatedDomainEvent) {
-    const { videoId, userId, channelId, title, description, categories, visibility } =
-      videoDraftCreatedDomainEvent.payload;
+    const {
+      videoId,
+      ownerId: userId,
+      channelId,
+      title,
+      description,
+      categories,
+      visibility,
+    } = videoDraftCreatedDomainEvent.payload;
 
     const videoPublishedIntegrationEvent = new VideoDraftSavedIntegrationEvent({
       eventId: videoDraftCreatedDomainEvent.eventId,

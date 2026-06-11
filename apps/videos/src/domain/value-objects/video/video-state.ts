@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidPublishStatusException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 import { DomainVideoState } from '../../enums';
 
@@ -16,7 +16,7 @@ export class VideoState {
     const parsedVideoState = this.VideoStateValidationSchema.safeParse(value);
     if (!parsedVideoState.success) {
       const errorMessage = parsedVideoState.error.message;
-      throw new InvalidPublishStatusException({
+      throw new InvalidValueObjectException({
         message: `VideoPublishStatus validation has failed. Reason: ${errorMessage}`,
       });
     }

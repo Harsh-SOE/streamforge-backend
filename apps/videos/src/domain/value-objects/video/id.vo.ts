@@ -1,7 +1,7 @@
 import z from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 
-import { InvalidVideoIdException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoId {
   private static VideoIdValidationSchema = z.uuid();
@@ -17,7 +17,7 @@ export class VideoId {
 
     if (!parsedVideoId.success) {
       const errorMessage = parsedVideoId.error.message;
-      throw new InvalidVideoIdException({
+      throw new InvalidValueObjectException({
         message: `Video id validation has failed. Reason: ${errorMessage}`,
       });
     }

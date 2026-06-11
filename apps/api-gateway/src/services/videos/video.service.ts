@@ -1,6 +1,6 @@
 import { firstValueFrom } from 'rxjs';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
 
 import { SERVICES } from '@app/common';
 import { UserAuthPayload } from '@app/common/dtos';
@@ -10,7 +10,8 @@ import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/proto
 import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/protocols/read';
 
 import { VideoDraftSavedRequestResponse, UpdatedVideoRequestResponse } from './response';
-import { CreateVideoDraftRequestDto, UpdateVideoRequestDto } from './request';
+import { SaveVideoDraftRequestDto, UpdateVideoRequestDto } from './request';
+import { VideoUploadVerifiedRequestResponse } from './response/video-upload-verified-request.response';
 
 @Injectable()
 export class VideoService implements OnModuleInit {
@@ -32,7 +33,7 @@ export class VideoService implements OnModuleInit {
   }
 
   async createVideoDraft(
-    video: CreateVideoDraftRequestDto,
+    video: SaveVideoDraftRequestDto,
     user: UserAuthPayload,
   ): Promise<VideoDraftSavedRequestResponse> {
     const channel$ = this.queryService.getChannelFromUserId({
@@ -57,6 +58,13 @@ export class VideoService implements OnModuleInit {
       presignedFileIndentifier: response.fileIdentifier,
       presignedThumbnailIndentifier: response.thumbnailIdentifier,
     };
+  }
+
+  async verifyVideoUpload(videoId: string): Promise<VideoUploadVerifiedRequestResponse> {
+    await new Promise(() => {});
+    throw new NotImplementedException(
+      `Implement 'verifyVideoUpload' method first to verify upload status for ${videoId}`,
+    );
   }
 
   async updateOneVideo(

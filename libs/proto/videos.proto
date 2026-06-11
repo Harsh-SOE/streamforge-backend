@@ -4,13 +4,11 @@ package Video;
 
 enum VideoState {
   TRANSPORT_DRAFT = 0;
-  TRANSPORT_PENDING_UPLOAD = 1;
-  TRANSPORT_UPLOADED = 2;
-  TRANSPORT_PROCESSING = 3;
-  TRANSPORT_TRANSCODING = 4;
-  TRANSPORT_READY_TO_PUBLISH = 5;
-  TRANSPORT_PUBLISHED = 6;
-  TRANSPORT_FAILED = 7;
+  TRANSPORT_UPLOADED = 1;
+  TRANSPORT_PROCESSING = 2;
+  TRANSPORT_READY_TO_PUBLISH = 3;
+  TRANSPORT_PUBLISHED = 4;
+  TRANSPORT_FAILED = 5;
 }
 
 enum VideoVisibilityState {
@@ -19,18 +17,7 @@ enum VideoVisibilityState {
   TRANSPORT_UNLISTED = 2;
 }
 
-enum VideoTransportSortOption {
-  TRANSPORT_NEWEST = 0;
-  TRANSPORT_OLDEST = 1;
-  TRANSPORT_POPULAR = 2;
-}
-
-message GetPresignedUrlDto {
-  optional string fileName = 1;
-  string userId = 2;
-}
-
-message VideoSaveDraftDto {
+message SaveVideoDraftDto {
   string userId = 1;
   string channelId = 2;
   string title = 3;
@@ -38,18 +25,20 @@ message VideoSaveDraftDto {
   optional string description = 5;
 }
 
+message VerifyVideoUploadedDto {
+  string id = 1;
+}
+
 message CheckUploadedVideoDto {
   string id = 1;
 }
 
-message VideoUpdateDto {
+message UpdateVideoDto {
   string id = 1;
   optional string title = 2;
-  optional string fileIdentifier = 3;
-  optional string thumbnailIdentifier = 4;
-  repeated string categories = 5;
-  optional string description = 6;
-  optional VideoVisibilityState videoVisibilityState = 7;
+  repeated string categories = 3;
+  optional string description = 4;
+  optional VideoVisibilityState videoVisibilityState = 5;
 }
 
 message VideoDraftSavedResponse {
@@ -59,7 +48,7 @@ message VideoDraftSavedResponse {
   optional string expiresAt = 4;
 }
 
-message CheckUploadedVideoResponse {
+message VideoUploadedVerifiedResponse {
   string id = 1;
   bool uploaded = 2;
 }
@@ -78,7 +67,7 @@ message VideoUpdatedResponse {
 message Empty {}
 
 service VideoService {
-  rpc saveDraft(VideoSaveDraftDto) returns (VideoDraftSavedResponse) {}
-  rpc checkUploadedVideo(CheckUploadedVideoDto) returns (CheckUploadedVideoResponse) {}
-  rpc update(VideoUpdateDto) returns (VideoUpdatedResponse) {}
+  rpc saveDraft(SaveVideoDraftDto) returns (VideoDraftSavedResponse) {}
+  rpc checkUploadedVideo(CheckUploadedVideoDto) returns (VideoUploadedVerifiedResponse) {}
+  rpc update(UpdateVideoDto) returns (VideoUpdatedResponse) {}
 }

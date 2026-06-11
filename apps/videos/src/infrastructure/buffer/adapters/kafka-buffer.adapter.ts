@@ -116,9 +116,9 @@ export class KafkaBufferAdapter implements OnModuleInit, OnModuleDestroy, Videos
     const videoPayload = messages.map((message) => message.payload);
 
     const models = videoPayload.map((message) => {
-      return VideoAggregate.create({
+      return VideoAggregate.createFromSnapshot({
         id: message.id,
-        userId: message.ownerId,
+        ownerId: message.ownerId,
         channelId: message.channelId,
         title: message.title,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,

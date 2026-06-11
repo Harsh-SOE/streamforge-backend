@@ -146,9 +146,9 @@ export class RedisStreamBufferAdapter implements VideosBufferPort, OnModuleInit,
 
   public async processMessages(ids: string[], messages: VideoBufferMessagePayload[]) {
     const models = messages.map((message) => {
-      return VideoAggregate.create({
+      return VideoAggregate.createFromSnapshot({
         id: message.id,
-        userId: message.ownerId,
+        ownerId: message.ownerId,
         channelId: message.channelId,
         title: message.title,
         videoThumbnailIdentifier: message.videoThumbnailIdentifier,

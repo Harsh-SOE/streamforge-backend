@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidCategoriesException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoCategories {
   private static VideoCategoriesValidationSchema = z.array(
@@ -13,7 +13,7 @@ export class VideoCategories {
     const parsedVideoCategoriesId = this.VideoCategoriesValidationSchema.safeParse(value);
     if (!parsedVideoCategoriesId.success) {
       const errorMessage = parsedVideoCategoriesId.error.message;
-      throw new InvalidCategoriesException({
+      throw new InvalidValueObjectException({
         message: `Video categories validation has failed. Reason: ${errorMessage}`,
       });
     }

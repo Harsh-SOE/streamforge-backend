@@ -119,7 +119,7 @@ export class VideoRepositoryAdapter implements VideoRepositoryPort {
           categories: videoEntity.getCategories(),
           description: videoEntity.getDescription(),
           state: videoEntity.getVideoState(),
-          visibilityState: videoEntity.getVisibiltyState(),
+          visibilityState: videoEntity.getVisibilityState(),
           title: videoEntity.getTitle(),
         },
       });

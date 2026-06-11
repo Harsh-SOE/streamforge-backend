@@ -2,314 +2,260 @@ import { AggregateRoot } from '@nestjs/cqrs';
 
 import {
   VideoDraftCreatedDomainEvent,
-  VideoProcessingFailedDomainEvent,
   VideoPublishedDomainEvent,
   VideoTranscodedDomainEvent,
-  VideoTranscodingStartedDomainEvent,
   VideoUploadCompletedDomainEvent,
+  // VideoProcessingFailedDomainEvent,
+  // VideoTranscodingStartedDomainEvent,
 } from '@videos/domain/domain-events';
-import { DomainVideoState } from '@videos/domain/enums';
-import { InvalidVideoStateTransitionException } from '@videos/domain/exceptions';
+import { DomainVideoState, DomainVideoVisibiltyState } from '@videos/domain/enums';
 
 import { VideoEntity } from '../../entities';
-import { CreateVideoDraftAggregateOptions, RehydrateVideoAggregateOptions } from './options';
+import {
+  CompleteVideoUploadOptions,
+  CreateVideoFromDraftOptions,
+  FailVideoProcessingOptions,
+  MarkVideoTranscodedOptions,
+  VideoSnapshotOptions,
+  UpdateVideoDetails,
+} from './options';
 
 export class VideoAggregate extends AggregateRoot {
   private constructor(public videoEntity: VideoEntity) {
     super();
   }
 
-  public static create(aggregateProps: CreateVideoDraftAggregateOptions) {
-    const {
-      id,
-      userId,
-      channelId,
-      title,
-      videoThumbnailIdentifier,
-      videoFileIdentifier,
-      hlsManifestIdentifier,
-      categories,
-      state,
-      visibilityState,
-      description,
-    } = aggregateProps;
-
-    const videoEntity = VideoEntity.create({
-      id,
-      userId,
-      channelId,
-      title,
-      videoThumbnailIdentifier,
-      videoFileIdentifier,
-      hlsManifestIdentifier,
-      categories,
-      state,
-      visibilityState,
-      description,
-    });
-
-    const videoAggregate = new VideoAggregate(videoEntity);
-
-    videoAggregate.apply(
-      new VideoDraftCreatedDomainEvent({
-        videoId: videoAggregate.getSnapshot().id,
-        userId,
-        channelId,
-        title,
-        categories,
-        description,
-        visibility: videoAggregate.getSnapshot().visibilityState,
-        state: videoAggregate.getSnapshot().state,
-      }),
-    );
-
-    return videoAggregate;
+  public static createFromSnapshot(data: VideoSnapshotOptions): VideoAggregate {
+    const videoEntity = VideoEntity.create(data);
+    return new VideoAggregate(videoEntity);
   }
 
-  public static rehydrate(aggregateProps: RehydrateVideoAggregateOptions) {
-    const videoEntity = VideoEntity.create(aggregateProps);
-    return new VideoAggregate(videoEntity);
+  public getVideoEntity(): VideoEntity {
+    return this.videoEntity;
   }
 
   public getSnapshot() {
     return this.videoEntity.getSnapShot();
   }
 
-  public getVideoEntity() {
-    return this.videoEntity;
+  private ensureState(expectedState: DomainVideoState, message: string): void {
+    if (this.videoEntity.getVideoState() !== expectedState) {
+      throw new Error(message);
+    }
   }
 
-  public updateVideo(data: {
-    newTitle?: string;
-    newFileIdentifier?: string;
-    newVisibilityState?: string;
-    newCategories?: string[];
-    newDescription?: string;
-    videoState?: string;
-    newThumbnailIdentifier?: string;
-  }) {
-    const videoEntity = this.getVideoEntity();
+  private ensureVideoCanBePublished() {
+    const {
+      videoFileIdentifier,
+      videoThumbnailIdentifier,
+      hlsManifestIdentifier,
+      durationSeconds,
+    } = this.videoEntity.getSnapShot();
 
-    if (data.newTitle) videoEntity.updateTitle(data.newTitle);
-    if (data.newDescription) videoEntity.updateDescription(data.newDescription);
-    if (data.videoState) videoEntity.updateVideoState(data.videoState);
-    if (data.newVisibilityState) videoEntity.updateVisibiltyState(data.newVisibilityState);
-    if (data.newFileIdentifier) videoEntity.updateVideoFileIdentifier(data.newFileIdentifier);
-    if (data.newThumbnailIdentifier)
-      videoEntity.updateVideoThumbnailIdentifier(data.newThumbnailIdentifier);
-    if (data.newCategories) videoEntity.updateCategories(data.newCategories);
-
-    return videoEntity;
-  }
-
-  public updateVideoVisibilityState(newState: string) {
-    this.getVideoEntity().updateVisibiltyState(newState);
-  }
-
-  public updateVideoState(newState: string) {
-    this.getVideoEntity().updateVideoState(newState);
-  }
-
-  public addCategoriesToVideo(addedCategories: Array<string>) {
-    const videoEntity = this.getVideoEntity();
-
-    const currentCategories = videoEntity.getCategories();
-
-    currentCategories.push(
-      ...addedCategories.filter((category) => !currentCategories.includes(category)),
-    );
-
-    videoEntity.updateCategories(currentCategories);
-  }
-
-  public removeCategoriesFromVideo(removedCategories: Array<string>) {
-    const videoEntity = this.getVideoEntity();
-
-    const currentCategories = videoEntity.getCategories();
-
-    const catergories = currentCategories.filter(
-      (category) => !removedCategories.includes(category),
-    );
-
-    videoEntity.updateCategories(catergories);
-  }
-
-  public completeUpload(data: {
-    videoFileIdentifier: string;
-    videoThumbnailIdentifier: string;
-  }): void {
-    const videoEntity = this.getVideoEntity();
-    const currentStatus = videoEntity.getVideoState();
-
-    if (currentStatus !== DomainVideoState.PENDING_UPLOAD) {
-      throw new InvalidVideoStateTransitionException({
-        message: `Only videos pending upload can complete upload. Current status: ${currentStatus}`,
-      });
+    if (!videoFileIdentifier) {
+      throw new Error('Video file identifier is required before publishing');
     }
 
-    videoEntity.updateVideoFileIdentifier(data.videoFileIdentifier);
-    videoEntity.updateVideoThumbnailIdentifier(data.videoThumbnailIdentifier);
-    videoEntity.markAsUploaded();
+    if (!videoThumbnailIdentifier) {
+      throw new Error('Video thumbnail identifier is required before publishing');
+    }
 
-    const snapshot = this.getSnapshot();
+    if (!hlsManifestIdentifier) {
+      throw new Error('HLS manifest identifier is required before publishing');
+    }
+
+    if (!durationSeconds) {
+      throw new Error('Video duration is required before publishing');
+    }
+
+    return {
+      videoFileIdentifier,
+      videoThumbnailIdentifier,
+      hlsManifestIdentifier,
+      durationSeconds,
+    };
+  }
+
+  public static createFromDraft(data: CreateVideoFromDraftOptions): VideoAggregate {
+    const { id, ownerId, channelId, title, categories, description } = data;
+
+    const videoEntity = VideoEntity.create({
+      id,
+      ownerId,
+      channelId,
+      title,
+      categories,
+      description,
+      visibilityState: DomainVideoVisibiltyState.PRIVATE,
+      state: DomainVideoState.DRAFT,
+
+      videoFileIdentifier: undefined,
+      videoThumbnailIdentifier: undefined,
+      hlsManifestIdentifier: undefined,
+
+      durationSeconds: undefined,
+      width: undefined,
+      height: undefined,
+      sizeBytes: undefined,
+      mimeType: undefined,
+
+      failureReason: undefined,
+
+      uploadedAt: undefined,
+      processingStartedAt: undefined,
+      transcodedAt: undefined,
+      publishedAt: undefined,
+    });
+
+    const aggregate = new VideoAggregate(videoEntity);
+
+    aggregate.apply(
+      new VideoDraftCreatedDomainEvent({
+        videoId: videoEntity.getId(),
+        title: videoEntity.getTitle(),
+        ownerId: videoEntity.getOwnerId(),
+        state: videoEntity.getVideoState(),
+        channelId: videoEntity.getChannelId(),
+        categories: videoEntity.getCategories(),
+        description: videoEntity.getDescription(),
+        visibility: videoEntity.getVisibilityState(),
+      }),
+    );
+
+    return aggregate;
+  }
+
+  public updateDetails(updateVideoDetails: UpdateVideoDetails): void {
+    const { title, categories, description, visibilityState } = updateVideoDetails;
+
+    if (title) this.videoEntity.updateTitle(title);
+    if (description) this.videoEntity.updateDescription(description);
+    if (categories) this.videoEntity.updateCategories(categories);
+    if (visibilityState) this.videoEntity.updateVisibilityState(visibilityState);
+
+    // this.apply(
+    //   new VideoDetailsUpdatedDomainEvent({
+    //     videoId: this.videoEntity.getId(),
+    //     ownerId: this.videoEntity.getOwnerId(),
+    //     channelId: this.videoEntity.getChannelId(),
+    //     title: this.videoEntity.getTitle(),
+    //     description: this.videoEntity.getDescription(),
+    //     categories: this.videoEntity.getCategories(),
+    //     visibilityState: this.videoEntity.getVisibiltyState(),
+    //   }),
+    // );
+  }
+
+  /**
+   * Called:
+   * Client uploads original video + thumbnail, and makes a request to backend.
+   */
+  public completeUpload(data: CompleteVideoUploadOptions): void {
+    this.ensureState(DomainVideoState.DRAFT, 'Only pending-upload videos can complete upload');
+
+    this.videoEntity.updateVideoFileIdentifier(data.videoFileIdentifier);
+    this.videoEntity.updateVideoThumbnailIdentifier(data.videoThumbnailIdentifier);
+
+    const now = new Date();
+
+    this.videoEntity.updateUploadedAt(now);
+    this.videoEntity.updateProcesssingStartedAt(now);
+    this.videoEntity.updateVideoState(DomainVideoState.PROCESSING);
 
     this.apply(
       new VideoUploadCompletedDomainEvent({
-        videoId: snapshot.id,
-        userId: snapshot.ownerId,
-        channelId: snapshot.channelId,
+        videoId: this.videoEntity.getId(),
+        userId: this.videoEntity.getOwnerId(),
+        channelId: this.videoEntity.getChannelId(),
         fileIdentifier: data.videoFileIdentifier,
         thumbnailIdentifier: data.videoThumbnailIdentifier,
       }),
     );
   }
 
-  public startTranscoding(): void {
-    const videoEntity = this.getVideoEntity();
-    const currentStatus = videoEntity.getVideoState();
-
-    if (currentStatus !== DomainVideoState.UPLOADED) {
-      throw new InvalidVideoStateTransitionException({
-        message: `Only uploaded videos can start transcoding. Current status: ${currentStatus}`,
-      });
-    }
-
-    const fileIdentifier = this.getRequiredFileIdentifier();
-
-    videoEntity.markAsTranscoding();
-
-    const snapshot = this.getSnapshot();
-
-    this.apply(
-      new VideoTranscodingStartedDomainEvent({
-        videoId: snapshot.id,
-        userId: snapshot.ownerId,
-        channelId: snapshot.channelId,
-        fileIdentifier,
-        durationSeconds: 0,
-      }),
+  /**
+   * Called when videos service consumes VideoTranscodedIntegrationEvent from the transcoder service.
+   */
+  public markTranscoded(markVideoTranscodedOptions: MarkVideoTranscodedOptions): void {
+    this.ensureState(
+      DomainVideoState.PROCESSING,
+      'Only processing videos can be marked as transcoded',
     );
-  }
 
-  public markTranscoded(data: { hlsManifestIdentifier: string }): void {
-    const videoEntity = this.getVideoEntity();
-    const currentStatus = videoEntity.getVideoState();
+    const { height, width, sizeBytes, mimeType, hlsManifestIdentifier, durationSeconds } =
+      markVideoTranscodedOptions;
 
-    if (
-      currentStatus !== DomainVideoState.TRANSCODING &&
-      currentStatus !== DomainVideoState.UPLOADED
-    ) {
-      throw new InvalidVideoStateTransitionException({
-        message: `Only uploaded/transcoding videos can be marked transcoded. Current status: ${currentStatus}`,
-      });
-    }
+    this.videoEntity.updateHlsManifestIdentifier(hlsManifestIdentifier);
+    this.videoEntity.updateVideoFileDurationInSeconds(durationSeconds);
 
-    this.assertMediaIsAttached();
-
-    videoEntity.updateHlsManifestIdentifier(data.hlsManifestIdentifier);
-    videoEntity.markAsReadyToPublish();
-
-    const snapshot = this.getSnapshot();
+    this.videoEntity.updateVideoFileWidth(width);
+    this.videoEntity.updateVideoFileHeight(height);
+    this.videoEntity.updateVideoFileMimetype(mimeType);
+    this.videoEntity.updateVideoFileSizeInBytes(sizeBytes);
+    this.videoEntity.updateTranscodedAt(new Date());
+    this.videoEntity.updateVideoState(DomainVideoState.READY_TO_PUBLISH);
 
     this.apply(
       new VideoTranscodedDomainEvent({
-        videoId: snapshot.id,
-        userId: snapshot.ownerId,
-        channelId: snapshot.channelId,
-        hlsManifestIdentifier: data.hlsManifestIdentifier,
+        videoId: this.videoEntity.getId(),
+        userId: this.videoEntity.getOwnerId(),
+        channelId: this.videoEntity.getChannelId(),
+        hlsManifestIdentifier: hlsManifestIdentifier,
+        durationSeconds: durationSeconds,
+        width: width,
+        height: height,
       }),
     );
   }
 
+  /**
+   * Called when transcoder service reports failure.
+   */
+  public failProcessing(failVideoProcessingOptions: FailVideoProcessingOptions): void {
+    this.ensureState(DomainVideoState.PROCESSING, 'Only processing videos can fail processing');
+
+    this.videoEntity.updateVideoState(DomainVideoState.FAILED);
+    console.log(failVideoProcessingOptions);
+
+    /**
+     * Add updateFailureReason() to VideoEntity.
+     */
+    // this.videoEntity.updateFailureReason(data.reason);
+
+    // this.apply(
+    //   new VideoProcessingFailedDomainEvent({
+    //     videoId: this.videoEntity.getId(),
+    //     ownerId: this.videoEntity.getOwnerId(),
+    //     channelId: this.videoEntity.getChannelId(),
+    //     reason: data.reason,
+    //   }),
+    // );
+  }
+
+  /**
+   * Called when user explicitly publishes the video.
+   */
   public publish(): void {
-    const videoEntity = this.getVideoEntity();
-    const currentStatus = videoEntity.getVideoState();
+    this.ensureState(
+      DomainVideoState.READY_TO_PUBLISH,
+      'Only ready-to-publish videos can be published',
+    );
 
-    if (currentStatus !== DomainVideoState.READY_TO_PUBLISH) {
-      throw new InvalidVideoStateTransitionException({
-        message: `Only ready-to-publish videos can be published. Current status: ${currentStatus}`,
-      });
-    }
+    const { hlsManifestIdentifier } = this.ensureVideoCanBePublished();
 
-    this.assertMediaIsAttached();
+    const publishedAt = new Date();
 
-    const hlsManifestIdentifier = videoEntity.getHlsManifestIdentifier();
-
-    if (!hlsManifestIdentifier) {
-      throw new InvalidVideoStateTransitionException({
-        message: 'Video cannot be published without HLS manifest',
-      });
-    }
-
-    videoEntity.markAsPublished();
-
-    const snapshot = this.getSnapshot();
+    this.videoEntity.updatePublishedAt(publishedAt);
+    this.videoEntity.updateVideoState(DomainVideoState.PUBLISHED);
 
     this.apply(
       new VideoPublishedDomainEvent({
-        videoId: snapshot.id,
-        userId: snapshot.ownerId,
-        channelId: snapshot.channelId,
-        visibility: snapshot.visibilityState,
+        videoId: this.videoEntity.getId(),
+        userId: this.videoEntity.getOwnerId(),
+        channelId: this.videoEntity.getChannelId(),
         hlsManifestIdentifier: hlsManifestIdentifier,
+        visibility: this.videoEntity.getVisibilityState(),
       }),
     );
-  }
-
-  public failProcessing(reason: string): void {
-    const videoEntity = this.getVideoEntity();
-    const currentStatus = videoEntity.getVideoState();
-
-    if (
-      currentStatus !== DomainVideoState.UPLOADED &&
-      currentStatus !== DomainVideoState.TRANSCODING
-    ) {
-      throw new InvalidVideoStateTransitionException({
-        message: `Only uploaded/transcoding videos can fail processing. Current status: ${currentStatus}`,
-      });
-    }
-
-    videoEntity.markAsFailed(reason);
-
-    const snapshot = this.getSnapshot();
-
-    this.apply(
-      new VideoProcessingFailedDomainEvent({
-        videoId: snapshot.id,
-        userId: snapshot.ownerId,
-        channelId: snapshot.channelId,
-        reason,
-      }),
-    );
-  }
-
-  private assertEditable(): void {
-    const currentStatus = this.videoEntity.getVideoState();
-
-    if (currentStatus === DomainVideoState.PUBLISHED) {
-      throw new InvalidVideoStateTransitionException({
-        message: 'Published video details cannot be edited here',
-      });
-    }
-  }
-
-  private assertMediaIsAttached(): void {
-    if (!this.videoEntity.hasUploadedMedia()) {
-      throw new InvalidVideoStateTransitionException({
-        message: 'Video file and thumbnail must be attached before this transition',
-      });
-    }
-  }
-
-  private getRequiredFileIdentifier(): string {
-    const fileIdentifier = this.videoEntity.getVideoFileIdentifier();
-
-    if (!fileIdentifier) {
-      throw new InvalidVideoStateTransitionException({
-        message: 'Video file identifier is missing',
-      });
-    }
-
-    return fileIdentifier;
   }
 }

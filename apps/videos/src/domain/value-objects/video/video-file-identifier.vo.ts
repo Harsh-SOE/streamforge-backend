@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidVideoFileIndentifierException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoFileIdentifier {
   private static VideoFileIdentifierValidationSchema = z.string().optional();
@@ -11,7 +11,7 @@ export class VideoFileIdentifier {
     const parsedVideoFileIdentifier = this.VideoFileIdentifierValidationSchema.safeParse(value);
     if (!parsedVideoFileIdentifier.success) {
       const errorMessage = parsedVideoFileIdentifier.error.message;
-      throw new InvalidVideoFileIndentifierException({
+      throw new InvalidValueObjectException({
         message: `Video fileIdentifier validation has failed. Reason: ${errorMessage}`,
       });
     }

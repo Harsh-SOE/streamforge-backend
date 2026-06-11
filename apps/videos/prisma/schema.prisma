@@ -11,10 +11,8 @@ datasource db {
 
 enum VideoState {
   DRAFT
-  PENDING_UPLOAD
   UPLOADED
   PROCESSING
-  TRANSCODING
   READY_TO_PUBLISH
   PUBLISHED
   FAILED
@@ -36,7 +34,7 @@ model Video {
   description            String?
   categories             String[]        @default([])
 
-  state                  VideoState      @default(PENDING_UPLOAD)
+  state                  VideoState      @default(DRAFT)
   visibilityState        VisibilityState @default(PRIVATE)
 
   originalFileIdentifier String?
@@ -50,9 +48,9 @@ model Video {
   mimeType               String?
 
   failureReason          String?
-
+  
   uploadedAt             DateTime?
-  transcodingStartedAt   DateTime?
+  processingStartedAt    DateTime?
   transcodedAt           DateTime?
   publishedAt            DateTime?
 

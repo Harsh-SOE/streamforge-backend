@@ -12,6 +12,9 @@ export class VideoTranscodedDomainEvent implements DomainEvent {
       userId: string;
       channelId: string;
       hlsManifestIdentifier: string;
+      durationSeconds: number;
+      width: number;
+      height: number;
     },
   ) {}
 }

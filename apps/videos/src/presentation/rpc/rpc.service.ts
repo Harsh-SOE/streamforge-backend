@@ -4,11 +4,11 @@ import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import {
   CheckUploadedVideoDto,
-  CheckUploadedVideoResponse,
+  SaveVideoDraftDto,
+  UpdateVideoDto,
   VideoDraftSavedResponse,
-  VideoSaveDraftDto,
   VideoUpdatedResponse,
-  VideoUpdateDto,
+  VideoUploadedVerifiedResponse,
 } from '@app/contracts/protocols/videos';
 
 import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
@@ -21,7 +21,7 @@ export class RpcService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  async saveDraft(videoSaveDraftDto: VideoSaveDraftDto): Promise<VideoDraftSavedResponse> {
+  async saveDraft(videoSaveDraftDto: SaveVideoDraftDto): Promise<VideoDraftSavedResponse> {
     return await this.commandBus.execute<VideoSaveDraftCommand, VideoDraftSavedResponse>(
       new VideoSaveDraftCommand({
         userId: videoSaveDraftDto.userId,
@@ -35,16 +35,14 @@ export class RpcService {
 
   async verifyUploadedVideo(
     checkUploadedVideoDto: CheckUploadedVideoDto,
-  ): Promise<CheckUploadedVideoResponse> {
-    return new Promise((resolve) => {
-      resolve({
-        id: checkUploadedVideoDto.id,
-        uploaded: true,
-      });
-    });
+  ): Promise<VideoUploadedVerifiedResponse> {
+    await new Promise(() => {});
+    throw new NotImplementedException(
+      `remove with id:${checkUploadedVideoDto.id} is not implemented`,
+    );
   }
 
-  async update(videoUpdateDto: VideoUpdateDto): Promise<VideoUpdatedResponse> {
+  async update(videoUpdateDto: UpdateVideoDto): Promise<VideoUpdatedResponse> {
     return await this.commandBus.execute<UpdateVideoCommand, VideoUpdatedResponse>(
       new UpdateVideoCommand(videoUpdateDto),
     );

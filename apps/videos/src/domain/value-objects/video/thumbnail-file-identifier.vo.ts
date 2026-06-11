@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvalidVideoThumbnailIndentifierException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 export class VideoThumbnailFileIdentifier {
   private static VideoThumbnailIdentifierValidationSchema = z.string().optional();
@@ -12,7 +12,7 @@ export class VideoThumbnailFileIdentifier {
       this.VideoThumbnailIdentifierValidationSchema.safeParse(value);
     if (!parsedVideoThumbnailIdentifier.success) {
       const errorMessage = parsedVideoThumbnailIdentifier.error.message;
-      throw new InvalidVideoThumbnailIndentifierException({
+      throw new InvalidValueObjectException({
         message: `Video thumbnailIdentifier validation has failed. Reason: ${errorMessage}`,
       });
     }

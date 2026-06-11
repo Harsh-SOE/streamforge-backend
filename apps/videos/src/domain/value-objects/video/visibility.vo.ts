@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { InvalidVisibilityStatusException } from '@videos/domain/exceptions';
+import { InvalidValueObjectException } from '@videos/domain/exceptions';
 
 import { DomainVideoVisibiltyState } from '../../enums';
 
@@ -16,7 +16,7 @@ export class VideoVisibilty {
     const parsedVisibilityState = this.VideoVisibilityStatusValidationSchema.safeParse(value);
     if (!parsedVisibilityState.success) {
       const errorMessage = parsedVisibilityState.error.message;
-      throw new InvalidVisibilityStatusException({
+      throw new InvalidValueObjectException({
         message: `VideoVisibilityStatus validation has failed. Reason: ${errorMessage}`,
       });
     }

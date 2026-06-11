@@ -54,7 +54,7 @@ import { VideoAggregatePersistanceACL } from '@videos/infrastructure/anti-corrup
 import { PrismaClient as VideoPrismaClient } from '@persistance/videos';
 
 import { VideosKafkaPublisherAdapter } from '../events-publisher/adapters';
-import { VideosKafkaConsumerAdapter } from '../events-consumers/adapters';
+import { VideosKafkaConsumerAdapter } from '../events-consumer/adapters';
 
 @Global()
 @Module({

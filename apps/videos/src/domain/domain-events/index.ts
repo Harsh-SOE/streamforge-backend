@@ -1,4 +1,4 @@
-export * from './video-draft-created';
+export * from './video-draft-saved';
 export * from './video-processing-failed';
 export * from './video-published';
 export * from './video-transcoded';
