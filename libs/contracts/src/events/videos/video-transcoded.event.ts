@@ -3,7 +3,12 @@ import { IntegrationEvent, TOPICS } from '../base';
 
 export interface VideoTranscodedIntegrationEventPayload {
   videoId: string;
-  newIdentifier: string;
+  hlsManifestIdentifier: string;
+  durationSeconds: number;
+  sizeBytes: bigint;
+  height: number;
+  width: number;
+  mimeType: string;
 }
 
 export class VideoTranscodedIntegrationEvent implements IntegrationEvent<VideoTranscodedIntegrationEventPayload> {
@@ -25,7 +30,15 @@ export class VideoTranscodedIntegrationEvent implements IntegrationEvent<VideoTr
     const {
       eventId,
       occurredAt,
-      payload: { videoId, newIdentifier },
+      payload: {
+        videoId,
+        hlsManifestIdentifier,
+        durationSeconds,
+        height,
+        mimeType,
+        sizeBytes,
+        width,
+      },
     } = config;
 
     this.id = eventId;
@@ -35,7 +48,12 @@ export class VideoTranscodedIntegrationEvent implements IntegrationEvent<VideoTr
     this.publishedAt = occurredAt;
     this.payload = {
       videoId,
-      newIdentifier,
+      hlsManifestIdentifier,
+      durationSeconds,
+      height,
+      mimeType,
+      sizeBytes,
+      width,
     };
   }
 }

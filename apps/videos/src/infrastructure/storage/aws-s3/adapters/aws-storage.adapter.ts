@@ -1,5 +1,5 @@
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
@@ -9,8 +9,11 @@ import { VideosConfigService } from '@videos/infrastructure/config';
 
 @Injectable()
 export class AwsS3StorageAdapter implements OnModuleInit, VideosStoragePort {
-  private readonly AWS_S3_RAW_VIDEOS_PATH = 'raw-videos';
-  private readonly AWS_S3_RAW_THUMBNAIL_PATH = 'raw-thumbnail';
+  private readonly VIDEOS_ROOT_DIR = 'videos';
+  private readonly THUMBNAIL_ROOT_DIR = 'thumbails';
+
+  private readonly RAW_DIR = 'raw';
+
   private s3Client: S3Client;
 
   public constructor(
@@ -29,10 +32,10 @@ export class AwsS3StorageAdapter implements OnModuleInit, VideosStoragePort {
   }
 
   public async getPresignedUrlForVideo(
-    videoFileName: string,
+    videoId: string,
     expiresIn?: number,
   ): Promise<{ presignedUrl: string; fileIdentifier: string }> {
-    const key = `${this.AWS_S3_RAW_VIDEOS_PATH.toString()}/${videoFileName}`;
+    const key = `${this.VIDEOS_ROOT_DIR.toString()}/${this.RAW_DIR}/${videoId}`;
 
     this.logger.info(`Generating presigned url for key:${key}`);
 
@@ -48,10 +51,10 @@ export class AwsS3StorageAdapter implements OnModuleInit, VideosStoragePort {
   }
 
   async getPresignedUrlForThumbnail(
-    thumbnailFileIdentifier: string,
+    videoId: string,
     expiresIn?: number,
   ): Promise<{ presignedUrl: string; fileIdentifier: string }> {
-    const key = `${this.AWS_S3_RAW_THUMBNAIL_PATH.toString()}/${thumbnailFileIdentifier}`;
+    const key = `${this.THUMBNAIL_ROOT_DIR.toString()}/${this.RAW_DIR}/${videoId}`;
 
     this.logger.info(`Generating presigned url for key:${key}`);
 
@@ -64,5 +67,27 @@ export class AwsS3StorageAdapter implements OnModuleInit, VideosStoragePort {
       expiresIn,
     });
     return { presignedUrl, fileIdentifier: key };
+  }
+
+  async verifyRawMedia(videoId: string): Promise<{ exists: boolean }> {
+    const videosKey = `${this.VIDEOS_ROOT_DIR.toString()}/${this.RAW_DIR}/${videoId}`;
+    const thumbnailKey = `${this.THUMBNAIL_ROOT_DIR.toString()}/${this.RAW_DIR}/${videoId}`;
+
+    const getVideoMetadataCommand = new HeadObjectCommand({
+      Bucket: this.configService.AWS_BUCKET,
+      Key: videosKey,
+    });
+
+    const getThumbnailMetadataCommand = new HeadObjectCommand({
+      Bucket: this.configService.AWS_BUCKET,
+      Key: thumbnailKey,
+    });
+
+    const videoMetadata = await this.s3Client.send(getVideoMetadataCommand);
+    const thumbnailMetadata = await this.s3Client.send(getThumbnailMetadataCommand);
+
+    return {
+      exists: videoMetadata && thumbnailMetadata ? true : false,
+    };
   }
 }

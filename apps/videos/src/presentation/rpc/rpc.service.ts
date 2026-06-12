@@ -13,6 +13,7 @@ import {
 
 import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
 import { VideoSaveDraftCommand } from '@videos/application/commands/save-video-draft-command';
+import { VerifyUploadedMediaCommand } from '@videos/application/commands/verify-uploaded-media-command';
 
 @Injectable()
 export class RpcService {
@@ -36,9 +37,8 @@ export class RpcService {
   async verifyUploadedVideo(
     checkUploadedVideoDto: CheckUploadedVideoDto,
   ): Promise<VideoUploadedVerifiedResponse> {
-    await new Promise(() => {});
-    throw new NotImplementedException(
-      `remove with id:${checkUploadedVideoDto.id} is not implemented`,
+    return await this.commandBus.execute<VerifyUploadedMediaCommand, VideoUploadedVerifiedResponse>(
+      new VerifyUploadedMediaCommand(checkUploadedVideoDto),
     );
   }
 

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { EventListenerModule } from './presentation';
+import { EventsListenerModule } from './presentation';
 import { AppHealthModule } from './infrastructure/health';
 import { CoreModule } from './infrastructure/core/core.module';
 
 @Module({
-  imports: [CoreModule, EventListenerModule, AppHealthModule],
+  imports: [CoreModule, EventsListenerModule, AppHealthModule],
 })
 export class RootModule {}

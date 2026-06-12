@@ -1,7 +1,5 @@
-import { TranscodeVideoOptions } from './options/transcode-video.options';
-
-export interface TranscoderPort {
-  transcodeVideo(transcodeVideoOptions: TranscodeVideoOptions): Promise<void>;
+export interface VideosProcessorPort {
+  processVideo(videoId: string): Promise<void>;
 }
 
-export const TRANSCODER_PORT = Symbol('TRANSCODER_PORT');
+export const PROCESSOR_PORT = Symbol('TRANSCODER_PORT');

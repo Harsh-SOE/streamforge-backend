@@ -1,7 +1,7 @@
-import { VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
+import { VideoVerifiedIntegrationEvent } from '@app/contracts/events/videos';
 
-export interface TranscoderQueuePort {
-  enqueueTranscodeJob(payload: VideoDraftSavedIntegrationEvent): Promise<void>;
+export interface ProcessorQueuePort {
+  enqueueProcessingJob(payload: VideoVerifiedIntegrationEvent): Promise<void>;
 }
 
 export const TRANSCODER_QUEUE_PORT = Symbol('TRANSCODER_QUEUE_PORT');

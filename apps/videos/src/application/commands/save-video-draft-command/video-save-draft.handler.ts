@@ -4,13 +4,13 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 
 import { VideoDraftSavedResponse } from '@app/contracts/protocols/videos';
 
-import { VideoAggregate } from '@videos/domain/aggregates';
 import {
   STORAGE_PORT,
   VIDEOS_RESPOSITORY_PORT,
   VideoRepositoryPort,
   VideosStoragePort,
 } from '@videos/application/ports';
+import { VideoAggregate } from '@videos/domain/aggregates';
 
 import { VideoSaveDraftCommand } from './video-save-draft.command';
 
@@ -18,7 +18,7 @@ import { VideoSaveDraftCommand } from './video-save-draft.command';
 export class VideoSaveDraftHandler implements ICommandHandler<VideoSaveDraftCommand> {
   constructor(
     @Inject(VIDEOS_RESPOSITORY_PORT)
-    private readonly video: VideoRepositoryPort,
+    private readonly videoRepository: VideoRepositoryPort,
     @Inject(STORAGE_PORT) private readonly storage: VideosStoragePort,
     private readonly eventPublisher: EventPublisher,
   ) {}
@@ -26,14 +26,6 @@ export class VideoSaveDraftHandler implements ICommandHandler<VideoSaveDraftComm
   async execute({ videoSaveDraftDto }: VideoSaveDraftCommand): Promise<VideoDraftSavedResponse> {
     const { userId, channelId, title, categories, description } = videoSaveDraftDto;
     const id = uuidv4();
-
-    // create presigned URL
-
-    const thumbnailIdentifier = (
-      await this.storage.getPresignedUrlForThumbnail(`/videos/original/${id}`)
-    ).presignedUrl;
-    const fileIdentifier = (await this.storage.getPresignedUrlForVideo(`/videos/original/${id}`))
-      .presignedUrl;
 
     const videoAggregate = this.eventPublisher.mergeObjectContext(
       VideoAggregate.createFromDraft({
@@ -46,14 +38,20 @@ export class VideoSaveDraftHandler implements ICommandHandler<VideoSaveDraftComm
       }),
     );
 
-    await this.video.saveVideo(videoAggregate);
+    await this.videoRepository.saveVideo(videoAggregate);
+
+    const videoPresignedResponse = await this.storage.getPresignedUrlForVideo(id);
+    const thumbnailPresignedResponse = await this.storage.getPresignedUrlForThumbnail(id);
+
+    const videoPresignedUrl = videoPresignedResponse.presignedUrl;
+    const thumbnailPresignedUrl = thumbnailPresignedResponse.presignedUrl;
 
     videoAggregate.commit();
 
     return {
       id,
-      fileIdentifier,
-      thumbnailIdentifier,
+      videoFilePresignedUrl: videoPresignedUrl,
+      thumbnailFilePresignedUrl: thumbnailPresignedUrl,
     };
   }
 }

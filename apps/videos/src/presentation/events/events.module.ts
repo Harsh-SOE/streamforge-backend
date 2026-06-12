@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { EVENT_CONSUMER_PORT } from '@app/common/ports/events';
 
-import { VideosEventsHandler } from '@videos/application/events';
+import { VideosEventsHandler } from '@videos/application/event-handlers';
 import { VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
 import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
 import { VideosKafkaConsumerAdapter } from '@videos/infrastructure/events-consumer/kafka';

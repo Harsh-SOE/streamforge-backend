@@ -1,6 +1,6 @@
 import { firstValueFrom } from 'rxjs';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { SERVICES } from '@app/common';
 import { UserAuthPayload } from '@app/common/dtos';
@@ -55,16 +55,18 @@ export class VideoService implements OnModuleInit {
 
     return {
       videoId: response.id,
-      presignedFileIndentifier: response.fileIdentifier,
-      presignedThumbnailIndentifier: response.thumbnailIdentifier,
+      videoPresignedUrl: response.videoFilePresignedUrl,
+      thumbnailPresignedUrl: response.thumbnailFilePresignedUrl,
     };
   }
 
   async verifyVideoUpload(videoId: string): Promise<VideoUploadVerifiedRequestResponse> {
-    await new Promise(() => {});
-    throw new NotImplementedException(
-      `Implement 'verifyVideoUpload' method first to verify upload status for ${videoId}`,
-    );
+    const response$ = this.videoService.checkUploadedVideo({ id: videoId });
+    const response = await firstValueFrom(response$);
+    return {
+      videoId: response.id,
+      isVerified: response.uploaded,
+    };
   }
 
   async updateOneVideo(

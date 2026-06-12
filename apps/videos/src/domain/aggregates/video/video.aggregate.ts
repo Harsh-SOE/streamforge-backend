@@ -1,7 +1,7 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 
 import {
-  VideoDraftCreatedDomainEvent,
+  VideoDraftSavedDomainEvent,
   VideoPublishedDomainEvent,
   VideoTranscodedDomainEvent,
   VideoUploadCompletedDomainEvent,
@@ -110,7 +110,7 @@ export class VideoAggregate extends AggregateRoot {
     const aggregate = new VideoAggregate(videoEntity);
 
     aggregate.apply(
-      new VideoDraftCreatedDomainEvent({
+      new VideoDraftSavedDomainEvent({
         videoId: videoEntity.getId(),
         title: videoEntity.getTitle(),
         ownerId: videoEntity.getOwnerId(),

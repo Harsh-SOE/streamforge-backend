@@ -43,8 +43,8 @@ message UpdateVideoDto {
 
 message VideoDraftSavedResponse {
   string id = 1;
-  string fileIdentifier = 2;
-  string thumbnailIdentifier = 3;
+  string videoFilePresignedUrl = 2;
+  string thumbnailFilePresignedUrl = 3;
   optional string expiresAt = 4;
 }
 

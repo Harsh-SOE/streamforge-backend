@@ -16,4 +16,6 @@ export class IntegrationEventsConsumer {
     console.log(`Video with id:${videoTranscodedIntegratedEvent.id} was transcoded successfully`);
     await new Promise(() => {});
   }
+
+  public async onVideoMetadataSavedEventConsumer() {}
 }

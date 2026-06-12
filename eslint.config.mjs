@@ -1,15 +1,33 @@
 // @ts-check
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
+import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { globalIgnores } from 'eslint/config';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default tseslint.config(
+  globalIgnores([
+    'eslint.config.mjs',
+
+    '**/node_modules/',
+    '**/.git/',
+    '**/dist/',
+    '**/build/',
+    '**/coverage/',
+    '**/.turbo/',
+    '**/.nx/',
+    '**/.cache/',
+
+    '**/generated/',
+    '**/.prisma/',
+    '**/prisma/generated/',
+    '**/*.generated.ts',
+    '**/*.proto.ts',
+    '**/*.d.ts',
+  ]),
+
   {
-    ignores: ['eslint.config.mjs', '**/dist/**', '**/build/**', '**/generated/**', '**/.prisma/**'],
-  },
-  {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['{apps,libs}/**/*.ts', '{apps,libs}/**/*.tsx'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
@@ -32,14 +50,26 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'warn',
     },
   },
+
   {
-    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
-    extends: [eslint.configs.recommended, eslintPluginPrettierRecommended],
+    files: ['*.js', '*.cjs'],
+    extends: [eslint.configs.recommended],
     languageOptions: {
       globals: {
         ...globals.node,
       },
       sourceType: 'commonjs',
+    },
+  },
+
+  {
+    files: ['*.mjs'],
+    extends: [eslint.configs.recommended],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+      sourceType: 'module',
     },
   },
 );

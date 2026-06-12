@@ -1,13 +1,12 @@
 export interface VideosStoragePort {
-  getPresignedUrlForVideo(
-    filePathKey: string,
-    expiresIn?: number,
-  ): Promise<{ presignedUrl: string; fileIdentifier: string }>;
+  getPresignedUrlForVideo(videoId: string, expiresIn?: number): Promise<{ presignedUrl: string }>;
 
   getPresignedUrlForThumbnail(
-    filePathKey: string,
+    videoId: string,
     expiresIn?: number,
-  ): Promise<{ presignedUrl: string; fileIdentifier: string }>;
+  ): Promise<{ presignedUrl: string }>;
+
+  verifyRawMedia(videoId: string): Promise<{ exists: boolean }>;
 }
 
 export const STORAGE_PORT = Symbol('STORAGE_PORT');

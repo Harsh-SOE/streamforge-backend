@@ -53,8 +53,8 @@ export interface UpdateVideoDto {
 
 export interface VideoDraftSavedResponse {
   id: string;
-  fileIdentifier: string;
-  thumbnailIdentifier: string;
+  videoFilePresignedUrl: string;
+  thumbnailFilePresignedUrl: string;
   expiresAt?: string | undefined;
 }
 

@@ -4,13 +4,13 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
-import { VideoDraftCreatedDomainEvent } from '@videos/domain/domain-events';
+import { VideoDraftSavedDomainEvent } from '@videos/domain/domain-events';
 
-@EventsHandler(VideoDraftCreatedDomainEvent)
-export class VideoPublishedEventHandler implements IEventHandler<VideoDraftCreatedDomainEvent> {
+@EventsHandler(VideoDraftSavedDomainEvent)
+export class VideoDraftSavedEventHandler implements IEventHandler<VideoDraftSavedDomainEvent> {
   constructor(@Inject(EVENT_PUBLISHER_PORT) private eventPublisher: EventsPublisherPort) {}
 
-  public async handle(videoDraftCreatedDomainEvent: VideoDraftCreatedDomainEvent) {
+  public async handle(videoDraftCreatedDomainEvent: VideoDraftSavedDomainEvent) {
     const {
       videoId,
       ownerId: userId,
@@ -21,7 +21,7 @@ export class VideoPublishedEventHandler implements IEventHandler<VideoDraftCreat
       visibility,
     } = videoDraftCreatedDomainEvent.payload;
 
-    const videoPublishedIntegrationEvent = new VideoDraftSavedIntegrationEvent({
+    const videoDraftSavedIntegrationEvent = new VideoDraftSavedIntegrationEvent({
       eventId: videoDraftCreatedDomainEvent.eventId,
       occurredAt: videoDraftCreatedDomainEvent.occurredAt.toISOString(),
       payload: {
@@ -35,6 +35,6 @@ export class VideoPublishedEventHandler implements IEventHandler<VideoDraftCreat
       },
     });
 
-    await this.eventPublisher.publishMessage(videoPublishedIntegrationEvent);
+    await this.eventPublisher.publishMessage(videoDraftSavedIntegrationEvent);
   }
 }

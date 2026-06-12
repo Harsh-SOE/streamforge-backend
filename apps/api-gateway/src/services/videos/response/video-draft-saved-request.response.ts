@@ -1,5 +1,5 @@
 export class VideoDraftSavedRequestResponse {
   videoId: string;
-  presignedFileIndentifier: string;
-  presignedThumbnailIndentifier: string;
+  videoPresignedUrl: string;
+  thumbnailPresignedUrl: string;
 }

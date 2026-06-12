@@ -1,2 +1,2 @@
-export const TRANSCODER_JOB_QUEUE = 'video-transcoder:transcode';
-export const TRANSCODER_JOB_NAME = 'transcode-video';
+export const PROCESSOR_JOB_QUEUE = 'video-processor:processor';
+export const PROCESSING_JOB_NAME = 'process-video';
