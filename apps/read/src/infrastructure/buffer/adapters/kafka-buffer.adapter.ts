@@ -1,7 +1,7 @@
 // todo: remove user buffer message type and use user projection payload??
 // todo: make a handler for kafka buffer handler
 import { Consumer, EachBatchPayload, KafkaMessage, Producer } from 'kafkajs';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, NotImplementedException, OnModuleInit } from '@nestjs/common';
 
 import { Entity } from '@app/common';
 import { KafkaClient } from '@app/clients/kafka';
@@ -51,7 +51,7 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
         const { batch } = payload;
 
         await this.handleUserBatch(this.getUsersBufferMessages(batch.messages));
-        await this.handleVideoBatch(this.getVideoBufferMessages(batch.messages));
+        // await this.handleVideoBatch(this.getVideoBufferMessages(batch.messages));
       },
     });
   }
@@ -94,11 +94,14 @@ export class KafkaBufferAdapter implements OnModuleInit, ProjectionBufferPort {
     }
   }
 
-  private async handleVideoBatch(messages: VideoProjectionBufferMessage[]) {
-    const payload = messages.map((message) => message.payload);
-    if (messages.length > 0) {
-      this.logger.info(`Saving ${messages.length} videos to projection`);
-      await this.videoProjectionRepo.saveManyVideos(payload);
-    }
+  private handleVideoBatch(messages: VideoProjectionBufferMessage[]) {
+    // const payload = messages.map((message) => message.payload);
+    // if (messages.length > 0) {
+    //   this.logger.info(`Saving ${messages.length} videos to projection`);
+    //   await this.videoProjectionRepo.saveManyVideos(payload);
+    // }
+    throw new NotImplementedException(
+      `Handle videos in batch is not implemented: ${JSON.stringify(messages)}...`,
+    );
   }
 }
