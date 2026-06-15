@@ -2,34 +2,22 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { VideoPublishedProjection } from '@read/application/payload/projection';
-
 import { VideoProjectionRepositoryPort } from '@read/application/ports';
-import { VideoProjectionACL } from '@read/infrastructure/anti-corruption';
+import { VideoIntegrationToProjectionACL } from '@read/infrastructure/anti-corruption';
 import { VideoWatchReadMongooseModel } from '@read/infrastructure/repository/models';
+
+import { VideoCreatorReadModel } from '../../models/videos';
 
 @Injectable()
 export class VideoProjectionRepository implements VideoProjectionRepositoryPort {
   constructor(
     @InjectModel(VideoWatchReadMongooseModel.name)
     private readonly videoProjectionModel: Model<VideoWatchReadMongooseModel>,
-    private readonly videoProjectionACL: VideoProjectionACL,
+    private readonly videoIntegrationToProjectionACL: VideoIntegrationToProjectionACL,
   ) {}
 
-  public async saveVideo(data: VideoPublishedProjection): Promise<boolean> {
-    await this.videoProjectionModel.create(
-      this.videoProjectionACL.videoUploadedEventToProjectionModel(data),
-    );
-
+  public async saveCreatorVideo(data: VideoCreatorReadModel): Promise<boolean> {
+    await this.videoProjectionModel.create(data);
     return true;
-  }
-
-  async saveManyVideos(event: VideoPublishedProjection[]): Promise<number> {
-    const data = event.map((data) =>
-      this.videoProjectionACL.videoUploadedEventToProjectionModel(data),
-    );
-    const savedCards = await this.videoProjectionModel.insertMany(data);
-
-    return savedCards.length;
   }
 }
