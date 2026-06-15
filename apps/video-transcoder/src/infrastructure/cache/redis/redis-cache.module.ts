@@ -6,7 +6,7 @@ import { REDIS_CACHE_HANDLER_CONFIG, RedisCacheHandlerConfig } from '@app/handle
 
 import { TranscoderConfigModule, TranscoderConfigService } from '@transcoder/infrastructure/config';
 
-import { RedisCacheAdapter } from './adapters';
+import { RedisCacheAdapter } from './redis-cache.adapter';
 
 @Module({
   imports: [

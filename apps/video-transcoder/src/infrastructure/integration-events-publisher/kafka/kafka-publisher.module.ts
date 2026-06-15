@@ -5,16 +5,16 @@ import {
   KafkaEventPublisherHandler,
   KafkaEventPublisherHandlerConfig,
 } from '@app/handlers/events-publisher/kafka';
-import { EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import { INTEGRATION_EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
 
 import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 
-import { TranscoderKafkaPublisherAdapter } from './adapters';
+import { TranscoderKafkaPublisherAdapter } from './kafka.adapter';
 
 @Module({
   providers: [
     {
-      provide: EVENT_PUBLISHER_PORT,
+      provide: INTEGRATION_EVENT_PUBLISHER_PORT,
       useClass: TranscoderKafkaPublisherAdapter,
     },
     {
@@ -39,6 +39,6 @@ import { TranscoderKafkaPublisherAdapter } from './adapters';
     },
     KafkaEventPublisherHandler,
   ],
-  exports: [EVENT_PUBLISHER_PORT],
+  exports: [INTEGRATION_EVENT_PUBLISHER_PORT],
 })
 export class KafkaPublisherModule {}

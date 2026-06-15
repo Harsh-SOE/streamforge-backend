@@ -37,7 +37,10 @@ import {
   KafkaEventPublisherHandlerConfig,
 } from '@app/handlers/events-publisher/kafka';
 import { LOGGER_PORT } from '@app/common/ports/logger';
-import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+} from '@app/common/ports/events';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 import { REDIS_CLIENT_CONFIG, RedisClient, RedisClientConfig } from '@app/clients/redis';
 import { KAFKA_CLIENT_CONFIG, KafkaClient, KafkaClientConfig } from '@app/clients/kafka';
@@ -73,11 +76,11 @@ import { REDIS_STREAM_CONFIG, RedisStreamBufferAdapter, StreamConfig } from '../
 
     // ports and adapters
     {
-      provide: EVENT_PUBLISHER_PORT,
+      provide: INTEGRATION_EVENT_PUBLISHER_PORT,
       useClass: ViewsKafkaPublisherAdapter,
     },
     {
-      provide: EVENT_CONSUMER_PORT,
+      provide: INTEGRATION_EVENT_CONSUMER_PORT,
       useClass: ViewsKafkaConsumerAdapter,
     },
     { provide: VIEWS_BUFFER_PORT, useClass: RedisStreamBufferAdapter },
@@ -248,8 +251,8 @@ import { REDIS_STREAM_CONFIG, RedisStreamBufferAdapter, StreamConfig } from '../
     LOGGER_PORT,
     VIEWS_CACHE_PORT,
     VIEWS_BUFFER_PORT,
-    EVENT_CONSUMER_PORT,
-    EVENT_PUBLISHER_PORT,
+    INTEGRATION_EVENT_CONSUMER_PORT,
+    INTEGRATION_EVENT_PUBLISHER_PORT,
     VIEWS_REPOSITORY_PORT,
 
     PRISMA_CLIENT,

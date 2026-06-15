@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 
 import { LOGGER_PORT } from '@app/common/ports/logger';
-import { EVENT_CONSUMER_PORT } from '@app/common/ports/events';
+import { INTEGRATION_EVENT_CONSUMER_PORT } from '@app/common/ports/events';
 import {
   KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
   KafkaEventConsumerHandler,
@@ -24,7 +24,7 @@ import { MailerSendEmailAdapter } from '../email';
     KafkaEventConsumerHandler,
     KafkaClient,
     {
-      provide: EVENT_CONSUMER_PORT,
+      provide: INTEGRATION_EVENT_CONSUMER_PORT,
       useClass: EmailKafkaEventsConsumerAdapter,
     },
     { provide: LOGGER_PORT, useClass: LokiConsoleLogger },
@@ -76,7 +76,7 @@ import { MailerSendEmailAdapter } from '../email';
   exports: [
     KafkaEventConsumerHandler,
     KafkaClient,
-    EVENT_CONSUMER_PORT,
+    INTEGRATION_EVENT_CONSUMER_PORT,
     LOGGER_PORT,
     LOKI_CONFIG,
     KAFKA_CLIENT_CONFIG,

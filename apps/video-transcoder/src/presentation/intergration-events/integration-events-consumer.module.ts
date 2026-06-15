@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+} from '@app/common/ports/events';
 
 import { RedisCacheAdapter } from '@transcoder/infrastructure/cache/redis';
 import { AwsS3StorageAdapter } from '@transcoder/infrastructure/storage/aws-s3';
@@ -25,11 +28,11 @@ import { IntegrationEventsListenerService } from './integration-events-consumer.
   providers: [
     IntegrationEventsListenerService,
     {
-      provide: EVENT_CONSUMER_PORT,
+      provide: INTEGRATION_EVENT_CONSUMER_PORT,
       useClass: TranscoderKafkaConsumerAdapter,
     },
     {
-      provide: EVENT_PUBLISHER_PORT,
+      provide: INTEGRATION_EVENT_PUBLISHER_PORT,
       useClass: TranscoderKafkaPublisherAdapter,
     },
     {

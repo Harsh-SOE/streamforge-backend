@@ -3,7 +3,10 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { ProfileUpdatedIntegrationEvent } from '@app/contracts/events/users';
-import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+  IntegrationEventsPublisherPort,
+} from '@app/common/ports/events';
 
 import { ProfileUpdatedDomainEvent } from '@users/domain/domain-events';
 
@@ -12,8 +15,8 @@ export class UserProfileUpdatedIntegrationEventHandler implements IEventHandler<
   public constructor(
     @Inject(LOGGER_PORT)
     private readonly logger: LoggerPort,
-    @Inject(EVENT_PUBLISHER_PORT)
-    private readonly eventPublisher: EventsPublisherPort,
+    @Inject(INTEGRATION_EVENT_PUBLISHER_PORT)
+    private readonly eventPublisher: IntegrationEventsPublisherPort,
   ) {}
 
   public async handle(profileUpdatedDomainEvent: ProfileUpdatedDomainEvent) {

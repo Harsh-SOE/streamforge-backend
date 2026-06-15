@@ -2,7 +2,10 @@ import { Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { EventsPublisherPort, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import {
+  IntegrationEventsPublisherPort,
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+} from '@app/common/ports/events';
 import { NotificationStatusChangedIntegrationEvent } from '@app/contracts/events/users';
 
 import { NotificationStatusChangedDomainEvent } from '@users/domain/domain-events';
@@ -12,8 +15,8 @@ export class NotificationStatusChangedIntegrationEventHandler implements IEventH
   public constructor(
     @Inject(LOGGER_PORT)
     private readonly logger: LoggerPort,
-    @Inject(EVENT_PUBLISHER_PORT)
-    private readonly eventPublisher: EventsPublisherPort,
+    @Inject(INTEGRATION_EVENT_PUBLISHER_PORT)
+    private readonly eventPublisher: IntegrationEventsPublisherPort,
   ) {}
 
   public async handle(notificationStatusChangedDomainEvent: NotificationStatusChangedDomainEvent) {

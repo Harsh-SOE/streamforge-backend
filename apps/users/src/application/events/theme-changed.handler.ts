@@ -3,7 +3,10 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { ThemeChangedIntegrationEvent } from '@app/contracts/events/users';
-import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+  IntegrationEventsPublisherPort,
+} from '@app/common/ports/events';
 
 import { ThemeChangedDomainEvent } from '@users/domain/domain-events';
 
@@ -12,8 +15,8 @@ export class ThemeChangedIntegrationEventHandler implements IEventHandler<ThemeC
   public constructor(
     @Inject(LOGGER_PORT)
     private readonly logger: LoggerPort,
-    @Inject(EVENT_PUBLISHER_PORT)
-    private readonly eventPublisher: EventsPublisherPort,
+    @Inject(INTEGRATION_EVENT_PUBLISHER_PORT)
+    private readonly eventPublisher: IntegrationEventsPublisherPort,
   ) {}
 
   public async handle(themeChangedDomainEvent: ThemeChangedDomainEvent) {

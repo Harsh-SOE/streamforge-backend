@@ -8,7 +8,7 @@ import {
 
 import { VideosConfigService } from '@videos/infrastructure/config';
 import { VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
-import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
+import { VideoPrismaRepositoryAdapter } from '@videos/infrastructure/database/prisma';
 
 @Module({
   providers: [
@@ -24,7 +24,7 @@ import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
           resilienceOptions: { maxRetries: 3, circuitBreakerThreshold: 10, halfOpenAfterMs: 1500 },
         }) satisfies KafkaBufferHandlerConfig,
     },
-    { provide: VIDEOS_RESPOSITORY_PORT, useClass: VideoRepositoryAdapter },
+    { provide: VIDEOS_RESPOSITORY_PORT, useClass: VideoPrismaRepositoryAdapter },
     KafkaBufferHandler,
   ],
 })

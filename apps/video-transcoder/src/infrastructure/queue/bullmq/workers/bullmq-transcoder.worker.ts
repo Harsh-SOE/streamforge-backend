@@ -7,7 +7,10 @@ import {
   VideoProcessedIntegrationEvent,
   VideoUploadVerifiedIntegrationEvent,
 } from '@app/contracts/events/videos';
-import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+  IntegrationEventsPublisherPort,
+} from '@app/common/ports/events';
 
 import { PROCESSOR_PORT, VideosProcessorPort } from '@transcoder/application/ports';
 
@@ -18,7 +21,8 @@ import { PROCESSING_JOB_NAME, PROCESSOR_JOB_QUEUE } from '../constants';
 export class BullMQTranscoderWorker extends WorkerHost {
   public constructor(
     @Inject(PROCESSOR_PORT) private readonly processor: VideosProcessorPort,
-    @Inject(EVENT_PUBLISHER_PORT) private readonly integrationEventPublisher: EventsPublisherPort,
+    @Inject(INTEGRATION_EVENT_PUBLISHER_PORT)
+    private readonly integrationEventPublisher: IntegrationEventsPublisherPort,
   ) {
     super();
   }

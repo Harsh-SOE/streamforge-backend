@@ -1,3 +1,3 @@
 export * from './constant';
-export * from './adapters';
+export * from './kafka.adapter';
 export * from './kafka-publisher.module';

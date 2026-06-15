@@ -3,13 +3,13 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 
 import { KafkaClient } from '@app/clients/kafka';
 import { IntegrationEvent } from '@app/contracts/events/base';
-import { EventsPublisherPort } from '@app/common/ports/events';
+import { IntegrationEventsPublisherPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { KafkaEventPublisherHandler } from '@app/handlers/events-publisher/kafka';
 
 @Injectable()
 export class ReadKafkaPublisherAdapter
-  implements EventsPublisherPort, OnModuleInit, OnModuleDestroy
+  implements IntegrationEventsPublisherPort, OnModuleInit, OnModuleDestroy
 {
   private readonly producer: Producer;
 

@@ -5,7 +5,10 @@ import {
   ChannelCreatedIntegrationEvent,
 } from '@app/contracts/events/channel';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
-import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  IntegrationEventsConsumerPort,
+} from '@app/common/ports/events';
 import { USER_EVENT_CAUSES, UserOnboardedIntegrationEvent } from '@app/contracts/events/users';
 import { VIDEO_EVENT_CAUSES, VideoDraftSavedIntegrationEvent } from '@app/contracts/events/videos';
 
@@ -18,7 +21,8 @@ import {
 @Injectable()
 export class IntergrationEventsListenerService implements OnModuleInit {
   constructor(
-    @Inject(EVENT_CONSUMER_PORT) private readonly eventConsumer: EventsConsumerPort,
+    @Inject(INTEGRATION_EVENT_CONSUMER_PORT)
+    private readonly eventConsumer: IntegrationEventsConsumerPort,
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
     private readonly usersIntergrationEventsHandler: UsersIntergrationEventsHandler,
     private readonly channelIntegrationEventsHandler: ChannelIntegrationEventsHandler,

@@ -5,16 +5,16 @@ import {
   KafkaEventConsumerHandler,
   KafkaEventConsumerHandlerConfig,
 } from '@app/handlers/events-consumer/kafka';
-import { EVENT_CONSUMER_PORT } from '@app/common/ports/events';
+import { INTEGRATION_EVENT_CONSUMER_PORT } from '@app/common/ports/events';
 
 import { TranscoderConfigService } from '@transcoder/infrastructure/config';
 
-import { TranscoderKafkaConsumerAdapter } from './adapters';
+import { TranscoderKafkaConsumerAdapter } from './kafka.adapter';
 
 @Module({
   providers: [
     {
-      provide: EVENT_CONSUMER_PORT,
+      provide: INTEGRATION_EVENT_CONSUMER_PORT,
       useClass: TranscoderKafkaConsumerAdapter,
     },
     {
@@ -39,6 +39,6 @@ import { TranscoderKafkaConsumerAdapter } from './adapters';
     },
     KafkaEventConsumerHandler,
   ],
-  exports: [EVENT_CONSUMER_PORT],
+  exports: [INTEGRATION_EVENT_CONSUMER_PORT],
 })
 export class KafkaConsumerModule {}

@@ -1,9 +1,11 @@
 import { Readable } from 'stream';
 
 export interface TranscoderStoragePort {
-  getRawVideoFileAsReadableStream(fileIdentifier: string): Promise<Readable>;
+  getTranscodedFileKey(videoId: string): string;
 
-  getTranscodedFileIdentifier(videoId: string): string;
+  getRawFileKey(videoId: string): string;
+
+  getRawVideoFileAsReadableStream(videoId: string): Promise<Readable>;
 
   uploadTranscodedVideoDirectory(options: {
     videoId: string;

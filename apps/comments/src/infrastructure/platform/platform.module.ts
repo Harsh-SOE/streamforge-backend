@@ -19,7 +19,10 @@ import {
 } from '@app/handlers/database/prisma';
 import { LOGGER_PORT } from '@app/common/ports/logger';
 import { REDIS_CLIENT_CONFIG, RedisClientConfig, RedisClient } from '@app/clients/redis';
-import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+} from '@app/common/ports/events';
 import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 import { PRISMA_CLIENT, PRISMA_CLIENT_NAME, PrismaDBClient } from '@app/clients/prisma';
 import {
@@ -79,8 +82,8 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandler } from '@app/handlers/b
       useClass: PrismaMongoDBRepositoryAdapter,
     },
     { provide: COMMENTS_CACHE_PORT, useClass: RedisCacheAdapter },
-    { provide: EVENT_PUBLISHER_PORT, useClass: KafkaEventPublisherHandler },
-    { provide: EVENT_CONSUMER_PORT, useClass: KafkaEventConsumerHandler },
+    { provide: INTEGRATION_EVENT_PUBLISHER_PORT, useClass: KafkaEventPublisherHandler },
+    { provide: INTEGRATION_EVENT_CONSUMER_PORT, useClass: KafkaEventConsumerHandler },
     { provide: COMMENTS_BUFFER_PORT, useClass: RedisStreamBufferAdapter },
     {
       provide: LOGGER_PORT,
@@ -272,9 +275,9 @@ import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandler } from '@app/handlers/b
     KAFKA_EVENT_PUBLISHER_HANDLER_CONFIG,
 
     LOGGER_PORT,
-    EVENT_CONSUMER_PORT,
+    INTEGRATION_EVENT_CONSUMER_PORT,
     COMMENTS_CACHE_PORT,
-    EVENT_PUBLISHER_PORT,
+    INTEGRATION_EVENT_PUBLISHER_PORT,
     COMMENTS_BUFFER_PORT,
     COMMENTS_REPOSITORY_PORT,
 

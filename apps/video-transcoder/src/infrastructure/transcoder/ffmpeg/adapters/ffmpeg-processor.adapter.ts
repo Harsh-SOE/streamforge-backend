@@ -30,8 +30,7 @@ export class FFmpegVideoProcessorAdapter implements VideosProcessorPort {
   ) {}
 
   public async downloadRawFileFromS3(videoId: string): Promise<string> {
-    const fileIdentifier = `videos/raw/${videoId}`;
-    const rawFileStream = await this.storageAdapter.getRawVideoFileAsReadableStream(fileIdentifier);
+    const rawFileStream = await this.storageAdapter.getRawVideoFileAsReadableStream(videoId);
 
     const filePath = `${this.ROOT_VIDEOS_FILE_DIR}/${this.RAW_VIDEOS_FILE_DIR}/${videoId}`;
 

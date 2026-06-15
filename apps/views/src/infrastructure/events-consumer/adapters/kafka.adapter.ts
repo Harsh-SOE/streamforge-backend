@@ -4,7 +4,7 @@ import { Inject, Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { ENVIRONMENT } from '@app/utils/enums';
 import { KafkaClient } from '@app/clients/kafka';
 import { IntegrationEvent } from '@app/contracts/events/base';
-import { EventsConsumerPort } from '@app/common/ports/events';
+import { IntegrationEventsConsumerPort } from '@app/common/ports/events';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 import { KafkaEventConsumerHandler } from '@app/handlers/events-consumer/kafka';
 
@@ -12,7 +12,7 @@ import { ViewsConfigService } from '@views/infrastructure/config';
 
 @Injectable()
 export class ViewsKafkaConsumerAdapter
-  implements EventsConsumerPort, OnModuleInit, OnModuleDestroy
+  implements IntegrationEventsConsumerPort, OnModuleInit, OnModuleDestroy
 {
   private readonly consumer: Consumer;
 

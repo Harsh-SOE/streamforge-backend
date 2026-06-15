@@ -4,13 +4,13 @@ import { Global, Module } from '@nestjs/common';
 import { REDIS_CLIENT_CONFIG, RedisClient, RedisClientConfig } from '@app/clients/redis';
 import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/clients/kafka';
 
-import { LoggerModule } from '../logger';
-import { MetricsModule } from '../metrics';
+import { LokiLoggerModule } from '../logger/loki';
+import { PrometheusMetricsModule } from '../metrics/prometheus';
 import { TranscoderConfigModule, TranscoderConfigService } from '../config';
 
 @Global()
 @Module({
-  imports: [CqrsModule, MetricsModule, TranscoderConfigModule, LoggerModule],
+  imports: [CqrsModule, PrometheusMetricsModule, TranscoderConfigModule, LokiLoggerModule],
   providers: [
     // clients and config
     KafkaClient,
@@ -40,8 +40,8 @@ import { TranscoderConfigModule, TranscoderConfigService } from '../config';
   exports: [
     CqrsModule,
     TranscoderConfigModule,
-    MetricsModule,
-    LoggerModule,
+    PrometheusMetricsModule,
+    LokiLoggerModule,
     KafkaClient,
     RedisClient,
   ],

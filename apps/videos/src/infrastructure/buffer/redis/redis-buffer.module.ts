@@ -8,9 +8,9 @@ import {
 
 import { VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
 import { VideosConfigService } from '@videos/infrastructure/config';
+import { VideoPrismaRepositoryAdapter } from '@videos/infrastructure/database/prisma';
 
-import { StreamConfig, VIDEOS_REDIS_STREAM_CONFIG } from './adapters';
-import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
+import { StreamConfig, VIDEOS_REDIS_STREAM_CONFIG } from './redis-buffer.adapter';
 
 @Module({
   providers: [
@@ -26,7 +26,7 @@ import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
           resilienceOptions: { maxRetries: 3, circuitBreakerThreshold: 10, halfOpenAfterMs: 1500 },
         }) satisfies RedisBufferHandlerConfig,
     },
-    { provide: VIDEOS_RESPOSITORY_PORT, useClass: VideoRepositoryAdapter },
+    { provide: VIDEOS_RESPOSITORY_PORT, useClass: VideoPrismaRepositoryAdapter },
     {
       provide: VIDEOS_REDIS_STREAM_CONFIG,
       inject: [VideosConfigService],

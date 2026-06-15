@@ -2,15 +2,18 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { IntegrationEvent } from '@app/contracts/events/base';
 import { UserOnboardedIntegrationEvent, USER_EVENT_CAUSES } from '@app/contracts/events/users';
-import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  IntegrationEventsConsumerPort,
+} from '@app/common/ports/events';
 
 import { EventsService } from './events.service';
 
 @Injectable()
 export class EventsListener implements OnModuleInit {
   public constructor(
-    @Inject(EVENT_CONSUMER_PORT)
-    private readonly eventConsumer: EventsConsumerPort,
+    @Inject(INTEGRATION_EVENT_CONSUMER_PORT)
+    private readonly eventConsumer: IntegrationEventsConsumerPort,
     private readonly eventsService: EventsService,
   ) {}
 
