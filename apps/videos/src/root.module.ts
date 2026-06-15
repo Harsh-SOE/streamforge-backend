@@ -3,9 +3,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { RpcModule } from './presentation/rpc';
 import { EventsModule } from './presentation/events';
-import { PlatformModule } from './infrastructure/platform/platform.module';
+import { CoreModule } from './infrastructure/core/core.module';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), RpcModule, EventsModule, PlatformModule],
+  imports: [ScheduleModule.forRoot(), RpcModule, EventsModule, CoreModule],
 })
 export class RootModule {}

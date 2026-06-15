@@ -1,1 +1,1 @@
-export * from './events-listener';
+export * from './events';

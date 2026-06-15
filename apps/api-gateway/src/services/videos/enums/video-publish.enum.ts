@@ -1,7 +1,0 @@
-export enum VideoRequestPublishStatus {
-  PENDING = 'PENDING',
-  PROCESSING = 'PROCESSING',
-  PROCESSED = 'PROCESSED',
-  PUBLISHED = 'PUBLISHED',
-  FAILED = 'FAILED',
-}

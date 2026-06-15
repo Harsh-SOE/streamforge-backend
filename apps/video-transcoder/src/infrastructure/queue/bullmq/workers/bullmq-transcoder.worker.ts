@@ -2,20 +2,20 @@ import { Job } from 'bullmq';
 import { Inject, Injectable } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 
-import { VideoUploadedIntegrationEvent } from '@app/contracts/events/videos';
-import { TRANSCODER_PORT, TranscoderPort } from '@transcoder/application/ports';
+import { VideoVerifiedIntegrationEvent } from '@app/contracts/events/videos';
+import { PROCESSOR_PORT, VideosProcessorPort } from '@transcoder/application/ports';
 
-import { TRANSCODER_JOB_NAME, TRANSCODER_JOB_QUEUE } from '../constants';
+import { PROCESSING_JOB_NAME, PROCESSOR_JOB_QUEUE } from '../constants';
 
 @Injectable()
-@Processor(TRANSCODER_JOB_QUEUE, { concurrency: 1 })
+@Processor(PROCESSOR_JOB_QUEUE, { concurrency: 1 })
 export class BullMQTranscoderWorker extends WorkerHost {
-  public constructor(@Inject(TRANSCODER_PORT) private readonly transcoder: TranscoderPort) {
+  public constructor(@Inject(PROCESSOR_PORT) private readonly processor: VideosProcessorPort) {
     super();
   }
 
-  public async process(job: Job<VideoUploadedIntegrationEvent>): Promise<any> {
-    if (job.name !== TRANSCODER_JOB_NAME) {
+  public async process(job: Job<VideoVerifiedIntegrationEvent>): Promise<any> {
+    if (job.name !== PROCESSING_JOB_NAME) {
       return;
     }
 
@@ -24,10 +24,7 @@ export class BullMQTranscoderWorker extends WorkerHost {
       percent: 0,
     });
 
-    await this.transcoder.transcodeVideo({
-      videoId: job.data.payload.videoId,
-      fileIdentifier: job.data.payload.newIdentifier,
-    });
+    await this.processor.processVideo(job.data.payload.videoId);
 
     await job.updateProgress({
       stage: 'COMPLETED',

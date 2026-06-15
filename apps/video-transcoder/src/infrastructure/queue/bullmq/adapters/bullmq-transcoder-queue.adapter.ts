@@ -2,19 +2,19 @@ import { Queue } from 'bullmq';
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 
-import { TranscoderQueuePort } from '@transcoder/application/ports';
-import { VideoPublishedIntegrationEvent } from '@app/contracts/events/videos';
+import { ProcessorQueuePort } from '@transcoder/application/ports';
+import { VideoVerifiedIntegrationEvent } from '@app/contracts/events/videos';
 
-import { TRANSCODER_JOB_NAME, TRANSCODER_JOB_QUEUE } from '../constants';
+import { PROCESSING_JOB_NAME, PROCESSOR_JOB_QUEUE } from '../constants';
 
 @Injectable()
-export class BullMQTranscoderQueueAdapter implements TranscoderQueuePort {
-  public constructor(@InjectQueue(TRANSCODER_JOB_QUEUE) private readonly queue: Queue) {}
+export class BullMQTranscoderQueueAdapter implements ProcessorQueuePort {
+  public constructor(@InjectQueue(PROCESSOR_JOB_QUEUE) private readonly queue: Queue) {}
 
-  public async enqueueTranscodeJob(
-    transcodeVideoMessage: VideoPublishedIntegrationEvent,
+  public async enqueueProcessingJob(
+    transcodeVideoMessage: VideoVerifiedIntegrationEvent,
   ): Promise<void> {
-    await this.queue.add(TRANSCODER_JOB_NAME, transcodeVideoMessage, {
+    await this.queue.add(PROCESSING_JOB_NAME, transcodeVideoMessage, {
       jobId: transcodeVideoMessage.payload.videoId,
       attempts: 3,
       backoff: { type: 'exponential', delay: 5000 },

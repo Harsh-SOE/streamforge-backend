@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 
-import { TRANSCODER_PORT } from '@transcoder/application/ports';
+import { PROCESSOR_PORT } from '@transcoder/application/ports';
 import { TranscoderConfigModule, TranscoderConfigService } from '@transcoder/infrastructure/config';
 
 import { REDIS_CACHE_HANDLER_CONFIG, RedisCacheHandlerConfig } from '@app/handlers/cache/redis';
 
-import { FFmpegVideoTranscoderAdapter } from './adapters';
+import { FFmpegVideoProcessorAdapter } from './adapters';
 
 @Module({
   imports: [
@@ -25,8 +25,8 @@ import { FFmpegVideoTranscoderAdapter } from './adapters';
   ],
   providers: [
     {
-      provide: TRANSCODER_PORT,
-      useClass: FFmpegVideoTranscoderAdapter,
+      provide: PROCESSOR_PORT,
+      useClass: FFmpegVideoProcessorAdapter,
     },
     {
       provide: REDIS_CACHE_HANDLER_CONFIG,

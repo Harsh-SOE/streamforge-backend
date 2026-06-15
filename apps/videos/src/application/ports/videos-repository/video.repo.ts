@@ -1,4 +1,4 @@
-import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
+import { DomainVideoState, DomainVideoVisibiltyState } from '@videos/domain/enums';
 import { VideoAggregate } from '@videos/domain/aggregates';
 
 export interface VideoRepositoryPort {
@@ -8,12 +8,12 @@ export interface VideoRepositoryPort {
 
   updateVideoPublishStatusById(
     id: string,
-    newPublishStatus: VideoDomainPublishStatus,
+    newPublishStatus: DomainVideoState,
   ): Promise<VideoAggregate>;
 
   updateVideoVisibilityStatusById(
     id: string,
-    newPublishStatus: VideoDomainVisibiltyStatus,
+    newPublishStatus: DomainVideoVisibiltyState,
   ): Promise<VideoAggregate>;
 
   updateOneVideoById(id: string, newVideoModel: VideoAggregate): Promise<VideoAggregate>;

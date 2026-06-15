@@ -1,11 +1,17 @@
 import {
+  HlsManifestIdentifier,
   VideoCategories,
   VideoChannelId,
   VideoDescription,
+  VideoFileDurationInSeconds,
+  VideoFileHeight,
   VideoFileIdentifier,
+  VideoFileMimetype,
+  VideoFileSizeBytes,
+  VideoFileWidth,
   VideoId,
   VideoOwnerId,
-  VideoPublish,
+  VideoState,
   VideoThumbnailFileIdentifier,
   VideoTitle,
   VideoVisibilty,
@@ -15,37 +21,85 @@ export interface VideoProps {
   readonly id: VideoId;
   readonly ownerId: VideoOwnerId;
   readonly channelId: VideoChannelId;
+
   title: VideoTitle;
-  videoThumbnailIdentifer: VideoThumbnailFileIdentifier;
   categories: VideoCategories;
-  videoFileIdentifier: VideoFileIdentifier;
-  publishStatus: VideoPublish;
-  visibilityStatus: VideoVisibilty;
   description?: VideoDescription;
+
+  videoFileIdentifier?: VideoFileIdentifier;
+  videoThumbnailIdentifier?: VideoThumbnailFileIdentifier;
+  hlsManifestIdentifier?: HlsManifestIdentifier;
+
+  state: VideoState;
+  visibilityState: VideoVisibilty;
+
+  durationSeconds?: VideoFileDurationInSeconds;
+  width?: VideoFileWidth;
+  height?: VideoFileHeight;
+  sizeBytes?: VideoFileSizeBytes;
+  mimeType?: VideoFileMimetype;
+  failureReason?: string;
+
+  uploadedAt?: Date;
+  processingStartedAt?: Date;
+  transcodedAt?: Date;
+  publishedAt?: Date;
 }
 
 export interface CreateVideoEntityOptions {
   readonly id?: string;
-  readonly userId: string;
+  readonly ownerId: string;
   readonly channelId: string;
+
   title: string;
-  videoThumbnailIdentifier: string;
   categories: Array<string>;
-  videoFileIdentifier: string;
-  publishStatus: string;
-  visibilityStatus: string;
   description?: string;
+
+  videoFileIdentifier?: string;
+  videoThumbnailIdentifier?: string;
+  hlsManifestIdentifier?: string;
+
+  state?: string;
+  visibilityState?: string;
+
+  durationSeconds?: number;
+  width?: number;
+  height?: number;
+  sizeBytes?: bigint;
+  mimeType?: string;
+  failureReason?: string;
+
+  uploadedAt?: Date;
+  processingStartedAt?: Date;
+  transcodedAt?: Date;
+  publishedAt?: Date;
 }
 
 export interface VideoSnapshot {
   id: string;
   ownerId: string;
   channelId: string;
+
   title: string;
-  videoFileIdentifier: string;
-  videoThumbnailIdentifier: string;
-  categories: Array<string>;
+  categories: string[];
   description?: string;
-  publishStatus: string;
-  visibilityStatus: string;
+
+  videoFileIdentifier?: string;
+  videoThumbnailIdentifier?: string;
+  hlsManifestIdentifier?: string;
+
+  state: string;
+  visibilityState: string;
+
+  durationSeconds?: number;
+  width?: number;
+  height?: number;
+  sizeBytes?: bigint;
+  mimeType?: string;
+  failureReason?: string;
+
+  uploadedAt?: Date;
+  processingStartedAt?: Date;
+  transcodedAt?: Date;
+  publishedAt?: Date;
 }

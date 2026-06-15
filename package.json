@@ -24,7 +24,7 @@
     "prisma:init": "ts-node scripts/init-prisma.script.ts",
     "prisma:generate:client": "ts-node scripts/generate-client.script.ts",
     "prisma:generate:migrations": "ts-node scripts/generate-migrations.script.ts",
-    "grpc:generate:proto": "ts-node scripts/generate-prototype.script.ts"
+    "grpc:generate:proto": "ts-node scripts/generate-protocols.script.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.848.0",

@@ -1,20 +1,19 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
 
-import {
-  GetPresignedUrlDto,
-  GetPreSignedUrlResponse,
-  VideoCreateDto,
-  VideoPublishedResponse,
-  VideoUpdatedResponse,
-  VideoUpdateDto,
-} from '@app/contracts/protocols/videos';
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
+import {
+  CheckUploadedVideoDto,
+  SaveVideoDraftDto,
+  UpdateVideoDto,
+  VideoDraftSavedResponse,
+  VideoUpdatedResponse,
+  VideoUploadedVerifiedResponse,
+} from '@app/contracts/protocols/videos';
 
 import { UpdateVideoCommand } from '@videos/application/commands/update-video-command';
-import { PublishVideoCommand } from '@videos/application/commands/publish-video-command';
-import { GeneratePreSignedUrlVideoCommand } from '@videos/application/commands/generate-presigned-url-video-command';
-import { GeneratePreSignedUrlThumbnailCommand } from '@videos/application/commands/generate-presigned-url-thumbnail-command';
+import { VideoSaveDraftCommand } from '@videos/application/commands/save-video-draft-command';
+import { VerifyUploadedMediaCommand } from '@videos/application/commands/verify-uploaded-media-command';
 
 @Injectable()
 export class RpcService {
@@ -23,35 +22,27 @@ export class RpcService {
     @Inject(LOGGER_PORT) private readonly logger: LoggerPort,
   ) {}
 
-  async generatePreSignedVideoUrl(
-    getPresignedUrlDto: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> {
-    const result = await this.commandBus.execute<
-      GeneratePreSignedUrlVideoCommand,
-      GetPreSignedUrlResponse
-    >(new GeneratePreSignedUrlVideoCommand(getPresignedUrlDto));
-    this.logger.info(`Result in video is: `, result);
-    return result;
-  }
-
-  async generatePreSignedThumbnailUrl(
-    getPresignedUrlDto: GetPresignedUrlDto,
-  ): Promise<GetPreSignedUrlResponse> {
-    const result = await this.commandBus.execute<
-      GeneratePreSignedUrlVideoCommand,
-      GetPreSignedUrlResponse
-    >(new GeneratePreSignedUrlThumbnailCommand(getPresignedUrlDto));
-    this.logger.info(`Result in video is: `, result);
-    return result;
-  }
-
-  async create(videoCreateDto: VideoCreateDto): Promise<VideoPublishedResponse> {
-    return await this.commandBus.execute<PublishVideoCommand, VideoPublishedResponse>(
-      new PublishVideoCommand(videoCreateDto),
+  async saveDraft(videoSaveDraftDto: SaveVideoDraftDto): Promise<VideoDraftSavedResponse> {
+    return await this.commandBus.execute<VideoSaveDraftCommand, VideoDraftSavedResponse>(
+      new VideoSaveDraftCommand({
+        userId: videoSaveDraftDto.userId,
+        channelId: videoSaveDraftDto.channelId,
+        categories: videoSaveDraftDto.categories,
+        title: videoSaveDraftDto.title,
+        description: videoSaveDraftDto.description,
+      }),
     );
   }
 
-  async update(videoUpdateDto: VideoUpdateDto): Promise<VideoUpdatedResponse> {
+  async verifyUploadedVideo(
+    checkUploadedVideoDto: CheckUploadedVideoDto,
+  ): Promise<VideoUploadedVerifiedResponse> {
+    return await this.commandBus.execute<VerifyUploadedMediaCommand, VideoUploadedVerifiedResponse>(
+      new VerifyUploadedMediaCommand(checkUploadedVideoDto),
+    );
+  }
+
+  async update(videoUpdateDto: UpdateVideoDto): Promise<VideoUpdatedResponse> {
     return await this.commandBus.execute<UpdateVideoCommand, VideoUpdatedResponse>(
       new UpdateVideoCommand(videoUpdateDto),
     );

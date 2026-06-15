@@ -9,14 +9,9 @@ import { VIDEO_SERVICE_NAME, VideoServiceClient } from '@app/contracts/protocols
 import { CHANNEL_SERVICE_NAME, ChannelServiceClient } from '@app/contracts/protocols/channel';
 import { READ_QUERY_SERVICE_NAME, ReadQueryServiceClient } from '@app/contracts/protocols/read';
 
-import {
-  PreSignedUrlRequestResponse,
-  PublishedVideoRequestResponse,
-  UpdatedVideoRequestResponse,
-} from './response';
-import { ClientTransportVideoPublishEnumMapper } from './mappers/video-publish-status';
-import { ClientTransportVideoVisibilityEnumMapper } from './mappers/video-visibility-status';
-import { CreateVideoRequestDto, PreSignedUrlRequestDto, UpdateVideoRequestDto } from './request';
+import { VideoDraftSavedRequestResponse, UpdatedVideoRequestResponse } from './response';
+import { SaveVideoDraftRequestDto, UpdateVideoRequestDto } from './request';
+import { VideoUploadVerifiedRequestResponse } from './response/video-upload-verified-request.response';
 
 @Injectable()
 export class VideoService implements OnModuleInit {
@@ -37,36 +32,10 @@ export class VideoService implements OnModuleInit {
     this.queryService = this.queryClient.getService(READ_QUERY_SERVICE_NAME);
   }
 
-  async getPresignedUploadVideoUrl(
-    preSignedUrlRequestDto: PreSignedUrlRequestDto,
-    userId: string,
-  ): Promise<PreSignedUrlRequestResponse> {
-    const result$ = this.videoService.getPresignedUrlForVideoFileUpload({
-      ...preSignedUrlRequestDto,
-      userId,
-    });
-
-    const result = await firstValueFrom(result$);
-    return result;
-  }
-
-  async getPresignedUploadThumbnailUrl(
-    preSignedUrlRequestDto: PreSignedUrlRequestDto,
-    userId: string,
-  ): Promise<PreSignedUrlRequestResponse> {
-    const result$ = this.videoService.getPresignedUrlForThumbnailFileUpload({
-      ...preSignedUrlRequestDto,
-      userId,
-    });
-
-    const result = await firstValueFrom(result$);
-    return result;
-  }
-
-  async createVideo(
-    video: CreateVideoRequestDto,
+  async createVideoDraft(
+    video: SaveVideoDraftRequestDto,
     user: UserAuthPayload,
-  ): Promise<PublishedVideoRequestResponse> {
+  ): Promise<VideoDraftSavedRequestResponse> {
     const channel$ = this.queryService.getChannelFromUserId({
       userId: user.id,
     });
@@ -77,17 +46,27 @@ export class VideoService implements OnModuleInit {
       throw new Error(`Channel not found`);
     }
 
-    const videoServiceVisibilityStatus = ClientTransportVideoVisibilityEnumMapper[video.visibility];
-    const videoServicePublishStatus = ClientTransportVideoPublishEnumMapper[video.status];
-
-    const response$ = this.videoService.save({
+    const response$ = this.videoService.saveDraft({
       userId: user.id,
       channelId: foundChannel.channel.channelId,
-      videoTransportPublishStatus: videoServicePublishStatus,
-      videoTransportVisibilityStatus: videoServiceVisibilityStatus,
       ...video,
     });
-    return await firstValueFrom(response$);
+    const response = await firstValueFrom(response$);
+
+    return {
+      videoId: response.id,
+      videoPresignedUrl: response.videoFilePresignedUrl,
+      thumbnailPresignedUrl: response.thumbnailFilePresignedUrl,
+    };
+  }
+
+  async verifyVideoUpload(videoId: string): Promise<VideoUploadVerifiedRequestResponse> {
+    const response$ = this.videoService.checkUploadedVideo({ id: videoId });
+    const response = await firstValueFrom(response$);
+    return {
+      videoId: response.id,
+      isVerified: response.uploaded,
+    };
   }
 
   async updateOneVideo(
@@ -96,7 +75,6 @@ export class VideoService implements OnModuleInit {
   ): Promise<UpdatedVideoRequestResponse> {
     const response$ = this.videoService.update({
       id: videoId,
-      categories: updateVideoDto.categories || [],
       ...updateVideoDto,
     });
     return await firstValueFrom(response$);

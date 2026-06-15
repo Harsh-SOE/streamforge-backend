@@ -1,14 +1,28 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 
-import { VideosConfigModule } from '@videos/infrastructure/config';
-import { VideoEventHandler } from '@videos/application/integration-events';
+import { EVENT_CONSUMER_PORT } from '@app/common/ports/events';
 
-import { EventsService } from './events.service';
-import { EventsListenerService } from './events-listener.service';
+import { VideosEventsHandler } from '@videos/application/event-handlers';
+import { VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
+import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
+import { VideosKafkaConsumerAdapter } from '@videos/infrastructure/events-consumer/kafka';
+
+import { IntegrationEventsListener } from './integration-events-listener';
+import { IntegrationEventsConsumer } from './integration-events-consumer';
 
 @Module({
-  imports: [CqrsModule, VideosConfigModule],
-  providers: [EventsService, EventsListenerService, ...VideoEventHandler],
+  providers: [
+    {
+      provide: EVENT_CONSUMER_PORT,
+      useClass: VideosKafkaConsumerAdapter,
+    },
+    {
+      provide: VIDEOS_RESPOSITORY_PORT,
+      useClass: VideoRepositoryAdapter,
+    },
+    IntegrationEventsConsumer,
+    IntegrationEventsListener,
+    ...VideosEventsHandler,
+  ],
 })
 export class EventsModule {}

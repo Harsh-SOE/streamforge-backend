@@ -1,5 +1,5 @@
-import { VideoUpdateDto } from '@app/contracts/protocols/videos';
+import { UpdateVideoDto } from '@app/contracts/protocols/videos';
 
 export class UpdateVideoCommand {
-  constructor(public readonly updateVideoDto: VideoUpdateDto) {}
+  constructor(public readonly updateVideoDto: UpdateVideoDto) {}
 }

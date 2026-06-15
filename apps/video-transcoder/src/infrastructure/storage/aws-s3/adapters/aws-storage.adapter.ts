@@ -1,4 +1,7 @@
+import path from 'path';
 import { Readable } from 'stream';
+import { createReadStream } from 'fs';
+import { readdir } from 'fs/promises';
 import { Upload } from '@aws-sdk/lib-storage';
 import { RpcException } from '@nestjs/microservices';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
@@ -6,8 +9,8 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
 import { LOGGER_PORT, LoggerPort } from '@app/common/ports/logger';
 
-import { UploadResult, UploadOptions, TranscoderStoragePort } from '@transcoder/application/ports';
 import { TranscoderConfigService } from '@transcoder/infrastructure/config';
+import { UploadResult, UploadOptions, TranscoderStoragePort } from '@transcoder/application/ports';
 
 @Injectable()
 export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort {
@@ -90,5 +93,60 @@ export class AwsS3StorageAdapter implements OnModuleInit, TranscoderStoragePort 
     await uploader.done();
 
     return { key: videoId };
+  }
+
+  public async runWithConcurrency<T>(
+    items: T[],
+    concurrency: number,
+    worker: (item: T) => Promise<void>,
+  ): Promise<void> {
+    const executing = new Set<Promise<void>>();
+
+    for (const item of items) {
+      const promise = worker(item).finally(() => {
+        executing.delete(promise);
+      });
+
+      executing.add(promise);
+
+      if (executing.size >= concurrency) {
+        await Promise.race(executing);
+      }
+    }
+
+    await Promise.all(executing);
+  }
+
+  public async uploadTranscodedVideoDirectory(options: {
+    videoId: string;
+    directoryPath: string;
+  }): Promise<{ hlsManifestKey: string }> {
+    const { videoId, directoryPath } = options;
+
+    const files = await readdir(directoryPath);
+
+    const manifestFile = files.find((file) => file.endsWith('.m3u8'));
+
+    if (!manifestFile) {
+      throw new Error(`HLS manifest file not found for video: ${videoId}`);
+    }
+
+    const segmentFiles = files.filter((file) => file !== manifestFile);
+
+    await this.runWithConcurrency(segmentFiles, 8, async (fileName) => {
+      const filePath = path.join(directoryPath, fileName);
+      const fileStream = createReadStream(filePath);
+
+      await this.uploadTranscodedVideoFileAsStream(fileStream, videoId, fileName);
+    });
+
+    const manifestPath = path.join(directoryPath, manifestFile);
+    const manifestStream = createReadStream(manifestPath);
+
+    await this.uploadTranscodedVideoFileAsStream(manifestStream, videoId, manifestFile);
+
+    return {
+      hlsManifestKey: `videos/transcoded/${videoId}/${manifestFile}`,
+    };
   }
 }

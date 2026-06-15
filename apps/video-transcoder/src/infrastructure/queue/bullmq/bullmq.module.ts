@@ -5,7 +5,7 @@ import { TRANSCODER_QUEUE_PORT } from '@transcoder/application/ports';
 import { TranscoderConfigModule, TranscoderConfigService } from '@transcoder/infrastructure/config';
 
 import { BullMQTranscoderWorker } from './workers';
-import { TRANSCODER_JOB_QUEUE } from './constants';
+import { PROCESSOR_JOB_QUEUE } from './constants';
 import { BullMQTranscoderQueueAdapter } from './adapters';
 
 @Module({
@@ -19,7 +19,7 @@ import { BullMQTranscoderQueueAdapter } from './adapters';
         },
       }),
     }),
-    BullModule.registerQueue({ name: TRANSCODER_JOB_QUEUE }),
+    BullModule.registerQueue({ name: PROCESSOR_JOB_QUEUE }),
   ],
   providers: [
     {

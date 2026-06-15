@@ -1,48 +1,81 @@
-import { VideoDomainPublishStatus, VideoDomainVisibiltyStatus } from '@videos/domain/enums';
+import { DomainVideoState, DomainVideoVisibiltyState } from '@videos/domain/enums';
 
 import {
   VideoDescription,
   VideoTitle,
   VideoFileIdentifier,
   VideoVisibilty,
-  VideoPublish,
+  VideoState,
   VideoCategories,
   VideoThumbnailFileIdentifier,
   VideoId,
   VideoChannelId,
   VideoOwnerId,
+  HlsManifestIdentifier,
+  VideoFileDurationInSeconds,
+  VideoFileWidth,
+  VideoFileHeight,
+  VideoFileSizeBytes,
+  VideoFileMimetype,
 } from '../../value-objects';
-
 import { CreateVideoEntityOptions, VideoProps, VideoSnapshot } from './options';
 
 export class VideoEntity {
   private constructor(private videoProps: VideoProps) {}
 
-  public static create(data: CreateVideoEntityOptions) {
+  public static create(data: CreateVideoEntityOptions): VideoEntity {
     const {
       id,
-      userId,
+      ownerId,
       channelId,
       categories,
-      publishStatus,
       title,
       videoFileIdentifier,
       videoThumbnailIdentifier,
-      visibilityStatus,
+      hlsManifestIdentifier,
+      state,
+      visibilityState,
       description,
+      durationSeconds,
+      width,
+      height,
+      sizeBytes,
+      mimeType,
+      failureReason,
+      uploadedAt,
+      processingStartedAt,
+      transcodedAt,
+      publishedAt,
     } = data;
 
     return new VideoEntity({
       id: VideoId.create(id),
       channelId: VideoChannelId.create(channelId),
-      ownerId: VideoOwnerId.create(userId),
+      ownerId: VideoOwnerId.create(ownerId),
       categories: VideoCategories.create(categories),
       title: VideoTitle.create(title),
-      publishStatus: VideoPublish.create(publishStatus),
-      videoFileIdentifier: VideoFileIdentifier.create(videoFileIdentifier),
-      videoThumbnailIdentifer: VideoThumbnailFileIdentifier.create(videoThumbnailIdentifier),
-      visibilityStatus: VideoVisibilty.create(visibilityStatus),
-      description: VideoDescription.create(description),
+      state: VideoState.create(state),
+      visibilityState: VideoVisibilty.create(visibilityState),
+      description: description ? VideoDescription.create(description) : undefined,
+      videoFileIdentifier: videoFileIdentifier
+        ? VideoFileIdentifier.create(videoFileIdentifier)
+        : undefined,
+      videoThumbnailIdentifier: videoThumbnailIdentifier
+        ? VideoThumbnailFileIdentifier.create(videoThumbnailIdentifier)
+        : undefined,
+      hlsManifestIdentifier: hlsManifestIdentifier
+        ? HlsManifestIdentifier.create(hlsManifestIdentifier)
+        : undefined,
+      durationSeconds: VideoFileDurationInSeconds.create(durationSeconds),
+      width: VideoFileWidth.create(width),
+      height: VideoFileHeight.create(height),
+      sizeBytes: VideoFileSizeBytes.create(sizeBytes),
+      mimeType: VideoFileMimetype.create(mimeType),
+      failureReason,
+      uploadedAt,
+      processingStartedAt,
+      transcodedAt,
+      publishedAt,
     });
   }
 
@@ -62,12 +95,16 @@ export class VideoEntity {
     return this.videoProps.title.getValue();
   }
 
-  public getVideoFileIdentifier(): string {
-    return this.videoProps.videoFileIdentifier.getValue();
+  public getVideoFileIdentifier(): string | undefined {
+    return this.videoProps.videoFileIdentifier?.getValue();
   }
 
-  public getVideoThumbnailIdentifier(): string {
-    return this.videoProps.videoThumbnailIdentifer.getValue();
+  public getVideoThumbnailIdentifier(): string | undefined {
+    return this.videoProps.videoThumbnailIdentifier?.getValue();
+  }
+
+  public getHlsManifestIdentifier(): string | undefined {
+    return this.videoProps.hlsManifestIdentifier?.getValue();
   }
 
   public getDescription(): string | undefined {
@@ -78,12 +115,52 @@ export class VideoEntity {
     return this.videoProps.categories.getValue();
   }
 
-  public getPublishStatus(): VideoDomainPublishStatus {
-    return this.videoProps.publishStatus.getValue();
+  public getVideoState(): DomainVideoState {
+    return this.videoProps.state.getValue();
   }
 
-  public getVisibiltyStatus(): VideoDomainVisibiltyStatus {
-    return this.videoProps.visibilityStatus.getValue();
+  public getVisibilityState(): DomainVideoVisibiltyState {
+    return this.videoProps.visibilityState.getValue();
+  }
+
+  public getDurationSeconds(): number | undefined {
+    return this.videoProps.durationSeconds?.getValue();
+  }
+
+  public getVideoWidth(): number | undefined {
+    return this.videoProps.width?.getValue();
+  }
+
+  public getVideoHeight(): number | undefined {
+    return this.videoProps.height?.getValue();
+  }
+
+  public getSizeInBytes(): bigint | undefined {
+    return this.videoProps.sizeBytes?.getValue();
+  }
+
+  public getMimetype(): string | undefined {
+    return this.videoProps.mimeType?.getValue();
+  }
+
+  public getFailureReason() {
+    return this.videoProps.failureReason;
+  }
+
+  public getUploadedAt(): Date | undefined {
+    return this.videoProps.uploadedAt;
+  }
+
+  public getProcessingStartedAt(): Date | undefined {
+    return this.videoProps.processingStartedAt;
+  }
+
+  public getTranscodedAt(): Date | undefined {
+    return this.videoProps.transcodedAt;
+  }
+
+  public getPublishedAt(): Date | undefined {
+    return this.videoProps.publishedAt;
   }
 
   public getSnapShot(): VideoSnapshot {
@@ -92,22 +169,37 @@ export class VideoEntity {
       ownerId: this.videoProps.ownerId.getValue(),
       channelId: this.videoProps.channelId.getValue(),
       title: this.videoProps.title.getValue(),
-      videoFileIdentifier: this.videoProps.videoFileIdentifier.getValue(),
-      videoThumbnailIdentifier: this.videoProps.videoThumbnailIdentifer.getValue(),
+      videoFileIdentifier: this.videoProps.videoFileIdentifier?.getValue(),
+      videoThumbnailIdentifier: this.videoProps.videoThumbnailIdentifier?.getValue(),
+      hlsManifestIdentifier: this.videoProps.hlsManifestIdentifier?.getValue(),
       categories: this.videoProps.categories.getValue(),
       description: this.videoProps.description?.getValue(),
-      publishStatus: this.videoProps.publishStatus.getValue(),
-      visibilityStatus: this.videoProps.visibilityStatus.getValue(),
+      state: this.videoProps.state.getValue(),
+      visibilityState: this.videoProps.visibilityState.getValue(),
+      durationSeconds: this.videoProps.durationSeconds?.getValue(),
+      width: this.videoProps.width?.getValue(),
+      height: this.videoProps.height?.getValue(),
+      sizeBytes: this.videoProps.sizeBytes?.getValue(),
+      mimeType: this.videoProps.mimeType?.getValue(),
+      failureReason: this.videoProps.failureReason,
+      uploadedAt: this.videoProps.uploadedAt,
+      processingStartedAt: this.videoProps.processingStartedAt,
+      transcodedAt: this.videoProps.transcodedAt,
+      publishedAt: this.videoProps.publishedAt,
     };
   }
 
   public updateVideoThumbnailIdentifier(newThumbnailIdentifier: string): void {
-    this.videoProps.videoThumbnailIdentifer =
+    this.videoProps.videoThumbnailIdentifier =
       VideoThumbnailFileIdentifier.create(newThumbnailIdentifier);
   }
 
   public updateVideoFileIdentifier(newFileIdentifier: string): void {
     this.videoProps.videoFileIdentifier = VideoFileIdentifier.create(newFileIdentifier);
+  }
+
+  public updateHlsManifestIdentifier(newHlsManifestIdentifier: string): void {
+    this.videoProps.hlsManifestIdentifier = HlsManifestIdentifier.create(newHlsManifestIdentifier);
   }
 
   public updateTitle(newTitle: string): void {
@@ -122,11 +214,47 @@ export class VideoEntity {
     this.videoProps.description = VideoDescription.create(newDescription);
   }
 
-  public updatePublishStatus(newStatus: string): void {
-    this.videoProps.publishStatus = VideoPublish.create(newStatus);
+  public updateVideoState(newStatus: string): void {
+    this.videoProps.state = VideoState.create(newStatus);
   }
 
-  public updateVisibiltyStatus(newVisibiltyStatus: string): void {
-    this.videoProps.visibilityStatus = VideoVisibilty.create(newVisibiltyStatus);
+  public updateVisibilityState(newVisibiltyStatus: string): void {
+    this.videoProps.visibilityState = VideoVisibilty.create(newVisibiltyStatus);
+  }
+
+  public updateVideoFileWidth(newWidth: number): void {
+    this.videoProps.width = VideoFileWidth.create(newWidth);
+  }
+
+  public updateVideoFileHeight(newHeight: number): void {
+    this.videoProps.height = VideoFileHeight.create(newHeight);
+  }
+
+  public updateVideoFileMimetype(mimeType: string): void {
+    this.videoProps.mimeType = VideoFileMimetype.create(mimeType);
+  }
+
+  public updateVideoFileSizeInBytes(sizeInBytes: bigint): void {
+    this.videoProps.sizeBytes = VideoFileSizeBytes.create(sizeInBytes);
+  }
+
+  public updateVideoFileDurationInSeconds(durationSeconds: number): void {
+    this.videoProps.durationSeconds = VideoFileDurationInSeconds.create(durationSeconds);
+  }
+
+  public updateUploadedAt(uploadedAt: Date) {
+    this.videoProps.uploadedAt = uploadedAt;
+  }
+
+  public updateProcesssingStartedAt(processingStartedAt: Date) {
+    this.videoProps.processingStartedAt = processingStartedAt;
+  }
+
+  public updateTranscodedAt(transcodedAt: Date) {
+    this.videoProps.transcodedAt = transcodedAt;
+  }
+
+  public updatePublishedAt(publishedAt: Date) {
+    this.videoProps.publishedAt = publishedAt;
   }
 }

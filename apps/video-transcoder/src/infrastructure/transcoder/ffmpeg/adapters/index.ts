@@ -1,1 +1,1 @@
-export * from './ffmpeg-transcoder.adapter';
+export * from './ffmpeg-processor.adapter';
