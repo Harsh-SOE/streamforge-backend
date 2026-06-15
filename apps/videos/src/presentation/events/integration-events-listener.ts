@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 
-import { VideoTranscodedIntegrationEvent } from '@app/contracts/events/videos';
+import { VideoProcessedIntegrationEvent } from '@app/contracts/events/videos';
 import { EVENT_CONSUMER_PORT, EventsConsumerPort } from '@app/common/ports/events';
 
 import { IntegrationEventsConsumer } from './integration-events-consumer';
@@ -19,7 +19,7 @@ export class IntegrationEventsListener implements OnModuleInit {
       switch (event.cause) {
         case 'VIDEO_TRANSCODED_EVENT': {
           await this.eventsService.onVideoTranscodedEventConsumer(
-            event as VideoTranscodedIntegrationEvent,
+            event as VideoProcessedIntegrationEvent,
           );
           break;
         }

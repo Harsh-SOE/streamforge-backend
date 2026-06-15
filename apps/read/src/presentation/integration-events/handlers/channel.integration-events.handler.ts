@@ -9,7 +9,7 @@ import {
 } from '@read/application/ports';
 
 @Injectable()
-export class ChannelEventsService {
+export class ChannelIntegrationEventsHandler {
   public constructor(
     @Inject(CHANNEL_PROJECTION_REPOSITORY_PORT)
     private readonly channelProjectionRespository: ChannelProjectionRepositoryPort,

@@ -4,7 +4,7 @@ import { IEventHandler } from '@nestjs/cqrs';
 import { EVENT_PUBLISHER_PORT, EventsPublisherPort } from '@app/common/ports/events';
 
 import { VideoVerifiedDomainEvent } from '@videos/domain/domain-events';
-import { VideoVerifiedIntegrationEvent } from '@app/contracts/events/videos';
+import { VideoUploadVerifiedIntegrationEvent } from '@app/contracts/events/videos';
 
 export class VideoVerifiedHandler implements IEventHandler<VideoVerifiedDomainEvent> {
   public constructor(
@@ -14,7 +14,7 @@ export class VideoVerifiedHandler implements IEventHandler<VideoVerifiedDomainEv
   async handle({ eventId, occurredAt, payload }: VideoVerifiedDomainEvent) {
     const { thumbnailFileIdentifier, videoFileIdentifier, videoId } = payload;
 
-    const videoVerifiedIntegrationEvent = new VideoVerifiedIntegrationEvent({
+    const videoVerifiedIntegrationEvent = new VideoUploadVerifiedIntegrationEvent({
       eventId,
       occurredAt: occurredAt.toISOString(),
       payload: {

@@ -5,8 +5,8 @@ import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/eve
 import { RedisCacheAdapter } from '@transcoder/infrastructure/cache/redis';
 import { AwsS3StorageAdapter } from '@transcoder/infrastructure/storage/aws-s3';
 import { FFmpegVideoProcessorAdapter } from '@transcoder/infrastructure/transcoder/ffmpeg';
-import { TranscoderKafkaConsumerAdapter } from '@transcoder/infrastructure/events-consumer/kafka';
-import { TranscoderKafkaPublisherAdapter } from '@transcoder/infrastructure/events-publisher/kafka';
+import { TranscoderKafkaConsumerAdapter } from '@transcoder/infrastructure/integration-events-consumer/kafka';
+import { TranscoderKafkaPublisherAdapter } from '@transcoder/infrastructure/integration-events-publisher/kafka';
 import {
   CACHE_PORT,
   PROCESSOR_PORT,
@@ -18,12 +18,12 @@ import {
   BullMQTranscoderQueueAdapter,
 } from '@transcoder/infrastructure/queue/bullmq';
 
-import { EventsListenerService } from './events-listener.service';
+import { IntegrationEventsListenerService } from './integration-events-consumer.service';
 
 @Module({
   imports: [BullMQTranscoderModule],
   providers: [
-    EventsListenerService,
+    IntegrationEventsListenerService,
     {
       provide: EVENT_CONSUMER_PORT,
       useClass: TranscoderKafkaConsumerAdapter,
@@ -50,4 +50,4 @@ import { EventsListenerService } from './events-listener.service';
     },
   ],
 })
-export class EventsListenerModule {}
+export class IntegrationEventsListenerModule {}

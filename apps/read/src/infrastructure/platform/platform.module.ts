@@ -62,8 +62,8 @@ import {
 } from '../repository/adapters';
 import { KafkaBufferAdapter } from '../buffer/adapters';
 import { ReadConfigModule, ReadConfigService } from '../config';
-import { ReadKafkaConsumerAdapter } from '../events-consumer/adapters';
-import { ReadKafkaPublisherAdapter } from '../events-producer/adapters';
+import { ReadKafkaConsumerAdapter } from '../integration-events-consumer/adapters';
+import { ReadKafkaPublisherAdapter } from '../integration-events-producer/adapters';
 
 @Global()
 @Module({

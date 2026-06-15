@@ -9,7 +9,7 @@ import {
 } from '@read/application/ports';
 
 @Injectable()
-export class UsersEventsService {
+export class UsersIntergrationEventsHandler {
   public constructor(
     @Inject(USER_PROJECTION_REPOSITORY_PORT)
     private readonly userProjectionRespository: UserProjectionRepositoryPort,

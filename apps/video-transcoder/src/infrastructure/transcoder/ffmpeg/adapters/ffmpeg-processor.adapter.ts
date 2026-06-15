@@ -75,7 +75,7 @@ export class FFmpegVideoProcessorAdapter implements VideosProcessorPort {
     });
   }
 
-  public async transcodeVideo(videoId: string, totalDuration: number): Promise<void> {
+  public async transcodeVideo(videoId: string, totalDuration: number): Promise<string> {
     this.logger.alert(`Transcoding video now: ${videoId}`);
 
     const filePath = `${this.ROOT_VIDEOS_FILE_DIR}/${this.RAW_VIDEOS_FILE_DIR}/${videoId}`;
@@ -142,11 +142,26 @@ export class FFmpegVideoProcessorAdapter implements VideosProcessorPort {
       force: true,
     });
     await fs.rm(filePath, { force: true });
+
+    return hlsManifestKey;
   }
 
-  async processVideo(videoId: string): Promise<void> {
+  async processVideo(videoId: string): Promise<{
+    videoId: string;
+    durationSeconds: number;
+    sizeBytes: bigint;
+    mimeType: string;
+    height: number;
+    width: number;
+    hlsManifestKey: string;
+  }> {
     const filePath = await this.downloadRawFileFromS3(videoId);
     const metadata = await this.extractMetadata(filePath);
-    await this.transcodeVideo(videoId, metadata.durationSeconds);
+    const hlsManifestKey = await this.transcodeVideo(videoId, metadata.durationSeconds);
+    return {
+      videoId,
+      ...metadata,
+      hlsManifestKey,
+    };
   }
 }
