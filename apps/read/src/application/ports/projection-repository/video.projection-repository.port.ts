@@ -1,9 +1,7 @@
-import { VideoPublishedProjection } from '@read/application/payload/projection';
+import { VideoCreatorReadModel } from '@read/infrastructure/repository/models/videos';
 
 export interface VideoProjectionRepositoryPort {
-  saveVideo(data: VideoPublishedProjection): Promise<boolean>;
-
-  saveManyVideos(data: VideoPublishedProjection[]): Promise<number>;
+  saveCreatorVideo(data: VideoCreatorReadModel): Promise<boolean>;
 
   // todo: make an integration event for video updated and deleted events...
 }

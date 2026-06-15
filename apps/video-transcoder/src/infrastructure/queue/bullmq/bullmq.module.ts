@@ -4,9 +4,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { TRANSCODER_QUEUE_PORT } from '@transcoder/application/ports';
 import { TranscoderConfigModule, TranscoderConfigService } from '@transcoder/infrastructure/config';
 
-import { BullMQTranscoderWorker } from './workers';
 import { PROCESSOR_JOB_QUEUE } from './constants';
-import { BullMQTranscoderQueueAdapter } from './adapters';
+import { BullMQTranscoderWorker } from './workers';
+import { BullMQTranscoderQueueAdapter } from './bullmq-transcoder-queue.adapter';
 
 @Module({
   imports: [

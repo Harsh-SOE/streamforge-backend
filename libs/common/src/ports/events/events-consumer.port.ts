@@ -1,6 +1,6 @@
 import { IntegrationEvent } from '@app/contracts/events/base';
 
-export interface EventsConsumerPort {
+export interface IntegrationEventsConsumerPort {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   consumeMessage(
@@ -8,4 +8,4 @@ export interface EventsConsumerPort {
   ): Promise<void>;
 }
 
-export const EVENT_CONSUMER_PORT = Symbol('EVENT_CONSUMER_PORT');
+export const INTEGRATION_EVENT_CONSUMER_PORT = Symbol('INTEGRATION_EVENT_CONSUMER_PORT');

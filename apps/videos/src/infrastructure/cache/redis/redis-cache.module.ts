@@ -4,6 +4,7 @@ import {
   RedisCacheHandler,
   RedisCacheHandlerConfig,
 } from '@app/handlers/cache/redis';
+
 import { VideosConfigService } from '@videos/infrastructure/config';
 
 @Module({

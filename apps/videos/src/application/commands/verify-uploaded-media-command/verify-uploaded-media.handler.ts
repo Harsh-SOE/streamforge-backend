@@ -4,7 +4,7 @@ import { ICommandHandler } from '@nestjs/cqrs';
 import { VideoUploadedVerifiedResponse } from '@app/contracts/protocols/videos';
 
 import { VideoNotFoundException } from '@videos/application/exceptions';
-import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
+import { VideoPrismaRepositoryAdapter } from '@videos/infrastructure/database/prisma';
 import {
   STORAGE_PORT,
   VIDEOS_RESPOSITORY_PORT,
@@ -18,7 +18,7 @@ export class VerifyUploadedMediaHandler implements ICommandHandler<VerifyUploade
     @Inject(STORAGE_PORT)
     private readonly videoStorageAdapter: VideosStoragePort,
     @Inject(VIDEOS_RESPOSITORY_PORT)
-    private readonly videoRepositoryAdapter: VideoRepositoryAdapter,
+    private readonly videoRepositoryAdapter: VideoPrismaRepositoryAdapter,
   ) {}
 
   async execute({

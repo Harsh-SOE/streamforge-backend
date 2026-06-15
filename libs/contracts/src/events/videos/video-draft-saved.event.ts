@@ -6,7 +6,6 @@ export interface VideoDraftSavedEventPayload {
   userId: string;
   channelId: string;
   title: string;
-  visibility: string;
   description?: string;
   categories: Array<string>;
 }
@@ -30,7 +29,7 @@ export class VideoDraftSavedIntegrationEvent implements IntegrationEvent<VideoDr
     this.id = eventId;
     this.name = TOPICS.VIDEOS;
     this.producer = 'video-service';
-    this.cause = VIDEO_EVENT_CAUSES.VIDEO_PUBLISHED;
+    this.cause = VIDEO_EVENT_CAUSES.VIDEO_DRAFTED;
     this.publishedAt = occurredAt;
     this.payload = payload;
   }

@@ -24,7 +24,10 @@ import {
 } from '@app/handlers/events-publisher/kafka';
 import { LOGGER_PORT } from '@app/common/ports/logger';
 import { REDIS_CLIENT_CONFIG, RedisClientConfig } from '@app/clients/redis';
-import { EVENT_CONSUMER_PORT, EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import {
+  INTEGRATION_EVENT_CONSUMER_PORT,
+  INTEGRATION_EVENT_PUBLISHER_PORT,
+} from '@app/common/ports/events';
 import { KAFKA_CLIENT_CONFIG, KafkaClientConfig, KafkaClient } from '@app/clients/kafka';
 import { LOKI_CONFIG, LokiConfig, LokiConsoleLogger } from '@app/utils/loki-console-logger';
 import { KAFKA_BUFFER_HANDLER_CONFIG, KafkaBufferHandler } from '@app/handlers/buffer/kafka';
@@ -62,8 +65,8 @@ import {
 } from '../repository/adapters';
 import { KafkaBufferAdapter } from '../buffer/adapters';
 import { ReadConfigModule, ReadConfigService } from '../config';
-import { ReadKafkaConsumerAdapter } from '../events-consumer/adapters';
-import { ReadKafkaPublisherAdapter } from '../events-producer/adapters';
+import { ReadKafkaConsumerAdapter } from '../integration-events-consumer/adapters';
+import { ReadKafkaPublisherAdapter } from '../integration-events-producer/adapters';
 
 @Global()
 @Module({
@@ -131,8 +134,8 @@ import { ReadKafkaPublisherAdapter } from '../events-producer/adapters';
       provide: VIDEO_PROJECTION_REPOSITORY_PORT,
       useClass: VideoProjectionRepository,
     },
-    { provide: EVENT_PUBLISHER_PORT, useClass: ReadKafkaPublisherAdapter },
-    { provide: EVENT_CONSUMER_PORT, useClass: ReadKafkaConsumerAdapter },
+    { provide: INTEGRATION_EVENT_PUBLISHER_PORT, useClass: ReadKafkaPublisherAdapter },
+    { provide: INTEGRATION_EVENT_CONSUMER_PORT, useClass: ReadKafkaConsumerAdapter },
     { provide: PROJECTION_BUFFER_PORT, useClass: KafkaBufferAdapter },
     {
       provide: LOGGER_PORT,
@@ -274,8 +277,8 @@ import { ReadKafkaPublisherAdapter } from '../events-producer/adapters';
     KafkaClient,
     KafkaEventConsumerHandler,
     KafkaEventPublisherHandler,
-    EVENT_PUBLISHER_PORT,
-    EVENT_CONSUMER_PORT,
+    INTEGRATION_EVENT_PUBLISHER_PORT,
+    INTEGRATION_EVENT_CONSUMER_PORT,
     KAFKA_EVENT_PUBLISHER_HANDLER_CONFIG,
     KAFKA_EVENT_CONSUMER_HANDLER_CONFIG,
     LOGGER_PORT,

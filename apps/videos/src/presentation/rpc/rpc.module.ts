@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
+import { INTEGRATION_EVENT_PUBLISHER_PORT } from '@app/common/ports/events';
 
 import { VideoCommandHandlers } from '@videos/application/commands';
-import { AwsS3StorageAdapter } from '@videos/infrastructure/storage/aws-s3';
-import { VideoRepositoryAdapter } from '@videos/infrastructure/database/prisma';
+import { VideosAwsS3StorageAdapter } from '@videos/infrastructure/storage/aws-s3';
+import { VideoPrismaRepositoryAdapter } from '@videos/infrastructure/database/prisma';
 import { STORAGE_PORT, VIDEOS_RESPOSITORY_PORT } from '@videos/application/ports';
-import { VideosKafkaPublisherAdapter } from '@videos/infrastructure/events-publisher/kafka';
+import { VideosKafkaPublisherAdapter } from '@videos/infrastructure/integration-events-publisher/kafka';
 
 import { RpcService } from './rpc.service';
 import { RpcController } from './rpc.controller';
@@ -16,14 +16,14 @@ import { RpcController } from './rpc.controller';
   providers: [
     {
       provide: VIDEOS_RESPOSITORY_PORT,
-      useClass: VideoRepositoryAdapter,
+      useClass: VideoPrismaRepositoryAdapter,
     },
     {
       provide: STORAGE_PORT,
-      useClass: AwsS3StorageAdapter,
+      useClass: VideosAwsS3StorageAdapter,
     },
     {
-      provide: EVENT_PUBLISHER_PORT,
+      provide: INTEGRATION_EVENT_PUBLISHER_PORT,
       useClass: VideosKafkaPublisherAdapter,
     },
     ...VideoCommandHandlers,

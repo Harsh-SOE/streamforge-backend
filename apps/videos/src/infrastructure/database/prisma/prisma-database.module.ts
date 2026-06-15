@@ -33,9 +33,9 @@ import { VideoAggregatePersistanceACL } from '@videos/infrastructure/anti-corrup
       provide: PRISMA_CLIENT_NAME,
       useValue: 'videos',
     },
-    VideoAggregatePersistanceACL,
     PrismaHandler,
     PrismaDBClient,
+    VideoAggregatePersistanceACL,
   ],
 })
 export class PrismaDatabaseModule {}
